@@ -7,7 +7,8 @@
     "build:customer": "pnpm --filter customer-web build",
     "build:admin": "pnpm --filter admin-web build",
     "start:customer": "pnpm --filter customer-web start",
-    "start:admin": "pnpm --filter admin-web start"
+    "start:admin": "pnpm --filter admin-web start",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "husky": "^9.1.7"

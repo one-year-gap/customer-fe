@@ -19,7 +19,7 @@ const dunggeunmo = localFont({
 });
 
 const mulmaru = localFont({
-  src: "../assets/fonts/MulMaru.woff2",
+  src: "../assets/fonts/Mulmaru.woff2",
   weight: "400",
   variable: "--font-mulmaru",
   display: "swap",

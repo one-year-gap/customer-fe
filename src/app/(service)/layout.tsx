@@ -1,3 +1,5 @@
+import React from "react";
+
 import { BottomNavbar } from "@/components/common/BottomNavbar";
 
 export default function ServiceLayout({ children }: { children: React.ReactNode }) {

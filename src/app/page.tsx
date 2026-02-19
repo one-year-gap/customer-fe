@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const TEST_API_URL = "https://holliverse.site/api/v1/test";
+const TEST_API_URL = "https://api.holliverse.site/api/v1/test";
 
 export default function Home() {
   const [loading, setLoading] = useState(false);

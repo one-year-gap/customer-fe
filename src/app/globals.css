@@ -9,7 +9,7 @@ body {
   max-width: 402px;
   min-height: 100vh;
   margin: 0 auto;
-  background-color: gray;
+  /* background-color: gray; */
 }
 
 @custom-variant dark (&:is(.dark *));

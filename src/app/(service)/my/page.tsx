@@ -28,7 +28,7 @@ export default function My() {
     { title: "약관 및 정책", icon: FileText },
   ];
   return (
-    <div className="bg-neutral-0 flex min-h-full flex-col">
+    <div className="flex min-h-full flex-col bg-neutral-50">
       <section className="bg-primary-500 text-neutral-0 relative rounded-b-[40px] p-6 text-center">
         <Image src={logo} alt="LG U+NIVERSE 로고" width={37} height={37} />
         <div className="mx-auto mb-4 flex items-center justify-center overflow-hidden">

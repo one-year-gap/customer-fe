@@ -34,6 +34,33 @@ export default function Terms() {
         <h1 className="text-2xl font-bold text-[#1E2A4A]">약관 동의</h1>
         <p className="mt-2 text-sm text-gray-500">서비스 이용을 위해 아래 약관에 동의해주세요</p>
 
+        <div className="mx-2 mt-6 mb-10 flex w-full items-center">
+          <div className="flex items-center">
+            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-xs font-semibold text-white">
+              1
+            </div>
+            <span className="ml-2 text-xs font-medium text-blue-600">약관 동의</span>
+          </div>
+
+          <div className="mx-3 h-px flex-1 bg-blue-600" />
+
+          <div className="flex items-center">
+            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-xs font-semibold text-white">
+              2
+            </div>
+            <span className="ml-2 text-xs font-medium text-blue-600">회원 가입</span>
+          </div>
+
+          <div className="mx-3 h-px flex-1 bg-gray-300" />
+
+          <div className="flex items-center">
+            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-300 text-xs font-semibold text-gray-600">
+              3
+            </div>
+            <span className="ml-2 text-xs font-medium text-gray-500">완료</span>
+          </div>
+        </div>
+
         <div className="mt-8 space-y-4">
           <div
             onClick={toggleAll}

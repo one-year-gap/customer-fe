@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 
-import { Eye, X } from "lucide-react";
+import { Eye, EyeOff, X } from "lucide-react";
 
 export default function SignupModal() {
   const [gender, setGender] = useState<"male" | "female">("male");
+  const [showPw, setShowPw] = useState(false);
+  const [showPwConfirm, setShowPwConfirm] = useState(false);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-white px-6 py-10">
@@ -19,8 +21,11 @@ export default function SignupModal() {
 
         <form className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-bold text-blue-950">이름</label>
+            <label htmlFor="name" className="mb-1 block text-sm font-bold text-blue-950">
+              이름
+            </label>
             <input
+              id="name"
               type="text"
               placeholder="이름"
               className="w-full border border-gray-200 bg-gray-100 px-4 py-3 text-sm outline-none focus:border-blue-500"
@@ -28,19 +33,23 @@ export default function SignupModal() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-bold text-blue-950">전화번호</label>
+            <label htmlFor="phone" className="mb-1 block text-sm font-bold text-blue-950">
+              전화번호
+            </label>
             <input
+              id="phone"
               type="text"
               placeholder="휴대전화 번호 - 빼고 작성"
               className="w-full border border-gray-200 bg-gray-100 px-4 py-3 text-sm outline-none focus:border-blue-500"
             />
           </div>
 
-          <div>
-            <label className="mb-2 block text-sm font-bold text-blue-950">성별</label>
+          <fieldset>
+            <legend className="mb-2 block text-sm font-bold text-blue-950">성별</legend>
             <div className="flex items-center gap-6 text-sm">
-              <label className="flex items-center gap-2">
+              <label htmlFor="gender-male" className="flex items-center gap-2">
                 <input
+                  id="gender-male"
                   type="radio"
                   name="gender"
                   checked={gender === "male"}
@@ -49,8 +58,9 @@ export default function SignupModal() {
                 />
                 남자
               </label>
-              <label className="flex items-center gap-2">
+              <label htmlFor="gender-female" className="flex items-center gap-2">
                 <input
+                  id="gender-female"
                   type="radio"
                   name="gender"
                   checked={gender === "female"}
@@ -60,33 +70,37 @@ export default function SignupModal() {
                 여자
               </label>
             </div>
-          </div>
+          </fieldset>
 
-          <div>
-            <label className="mb-2 block text-sm font-bold text-blue-950">생년월일</label>
+          <fieldset>
+            <legend className="mb-2 block text-sm font-bold text-blue-950">생년월일</legend>
             <div className="flex gap-2">
               <input
+                id="birth-year"
                 type="number"
                 placeholder="연도"
                 className="w-1/3 border border-gray-200 bg-gray-100 px-3 py-3 text-sm outline-none focus:border-blue-500"
               />
               <input
+                id="birth-month"
                 type="number"
                 placeholder="월"
                 className="w-1/3 border border-gray-200 bg-gray-100 px-3 py-3 text-sm outline-none focus:border-blue-500"
               />
               <input
+                id="birth-day"
                 type="number"
                 placeholder="일"
                 className="w-1/3 border border-gray-200 bg-gray-100 px-3 py-3 text-sm outline-none focus:border-blue-500"
               />
             </div>
-          </div>
+          </fieldset>
 
-          <div>
-            <label className="mb-2 block text-sm font-bold text-blue-950">주소</label>
+          <fieldset>
+            <legend className="mb-2 block text-sm font-bold text-blue-950">주소</legend>
             <div className="mb-2 flex gap-2">
               <input
+                id="zipcode"
                 type="text"
                 placeholder="우편번호"
                 className="flex-1 border border-gray-200 bg-gray-100 px-3 py-3 text-sm outline-none focus:border-blue-500"
@@ -96,15 +110,19 @@ export default function SignupModal() {
               </button>
             </div>
             <input
+              id="address"
               type="text"
               placeholder="주소"
               className="w-full border border-gray-200 bg-gray-100 px-3 py-3 text-sm outline-none focus:border-blue-500"
             />
-          </div>
+          </fieldset>
 
           <div>
-            <label className="mb-1 block text-sm font-bold text-blue-950">아이디 (이메일)</label>
+            <label htmlFor="email" className="mb-1 block text-sm font-bold text-blue-950">
+              아이디 (이메일)
+            </label>
             <input
+              id="email"
               type="email"
               placeholder="아이디 입력"
               className="w-full border border-gray-200 bg-gray-100 px-4 py-3 text-sm outline-none focus:border-blue-500"
@@ -112,26 +130,52 @@ export default function SignupModal() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-bold text-blue-950">비밀번호</label>
+            <label htmlFor="password" className="mb-1 block text-sm font-bold text-blue-950">
+              비밀번호
+            </label>
             <div className="relative">
               <input
-                type="password"
+                id="password"
+                type={showPw ? "text" : "password"}
                 placeholder="비밀번호 입력"
                 className="w-full border border-gray-200 bg-gray-100 px-4 py-3 pr-10 text-sm outline-none focus:border-blue-500"
               />
-              <Eye className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <button
+                type="button"
+                onClick={() => setShowPw((prev) => !prev)}
+                className="absolute top-1/2 right-3 -translate-y-1/2">
+                {showPw ? (
+                  <EyeOff className="h-4 w-4 text-gray-400" />
+                ) : (
+                  <Eye className="h-4 w-4 text-gray-400" />
+                )}
+              </button>
             </div>
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-bold text-blue-950">비밀번호 확인</label>
+            <label
+              htmlFor="password-confirm"
+              className="mb-1 block text-sm font-bold text-blue-950">
+              비밀번호 확인
+            </label>
             <div className="relative">
               <input
-                type="password"
+                id="password-confirm"
+                type={showPwConfirm ? "text" : "password"}
                 placeholder="비밀번호 확인"
                 className="w-full border border-gray-200 bg-gray-100 px-4 py-3 pr-10 text-sm outline-none focus:border-blue-500"
               />
-              <Eye className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <button
+                type="button"
+                onClick={() => setShowPwConfirm((prev) => !prev)}
+                className="absolute top-1/2 right-3 -translate-y-1/2">
+                {showPwConfirm ? (
+                  <EyeOff className="h-4 w-4 text-gray-400" />
+                ) : (
+                  <Eye className="h-4 w-4 text-gray-400" />
+                )}
+              </button>
             </div>
           </div>
 

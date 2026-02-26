@@ -12,7 +12,7 @@ export default function Login() {
   const [show, setShow] = useState(false);
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-[#f2f2f2] px-6">
+    <div className="relative flex min-h-screen items-center justify-center px-6">
       <div className="w-full max-w-90">
         <div className="flex flex-col items-center">
           <Image src={logo} alt="logo" width={96} height={96} className="rounded-2xl" priority />

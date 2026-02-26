@@ -1,0 +1,26 @@
+name: customer-web-manual-release
+
+on:
+  workflow_dispatch:
+    inputs:
+      source-ref:
+        description: "배포 ref (branch/tag/sha)"
+        required: true
+        default: "main"
+        type: string
+      release-label:
+        description: "release label"
+        required: true
+        type: choice
+        options:
+          - release:major
+          - release:minor
+          - release:patch
+
+jobs:
+  release:
+    uses: one-year-gap/infra/.github/workflows/reusable-customer-web-manual-release.yml@main
+    with:
+      source-ref: ${{ inputs.source-ref }}
+      release-label: ${{ inputs.release-label }}
+    secrets: inherit

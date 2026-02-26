@@ -30,8 +30,10 @@ const chartData = [
   { name: "Used", value: data.usedData, isHighlight: false },
 ];
 
-const callPercentage = (data.call / data.callMax) * 100;
-const smsPercentage = (data.sms / data.smsMax) * 100;
+const safePercent = (value: number, max: number) =>
+  max > 0 ? Math.min(100, Math.max(0, (value / max) * 100)) : 0;
+const callPercentage = safePercent(data.call, data.callMax);
+const smsPercentage = safePercent(data.sms, data.smsMax);
 
 export default function Home() {
   return (
@@ -62,6 +64,7 @@ export default function Home() {
         <div className="no-scrollbar flex gap-3 overflow-x-auto">
           {["맞춤 요금제 추천", "상품 조회", "나의 요금제", "나의 가입 정보"].map((menu, idx) => (
             <button
+              type="button"
               key={idx}
               className="border-secondary-300 bg-neutral-0 rounded-full border px-5 py-2 text-xs whitespace-nowrap">
               {menu}
@@ -163,7 +166,9 @@ export default function Home() {
               <p className="text-xs text-neutral-500">
                 기본 정보와 사용패턴을 조합해 추천해드려요!
               </p>
-              <button className="bg-secondary-500 text-neutral-0 mt-3 flex rounded-full px-2 py-2 text-xs">
+              <button
+                type="button"
+                className="bg-secondary-500 text-neutral-0 mt-3 flex rounded-full px-2 py-2 text-xs">
                 확인하기
                 <ChevronRight size={12} className="text-neutral-300" />
               </button>

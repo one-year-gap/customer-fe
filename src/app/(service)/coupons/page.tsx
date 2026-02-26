@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 
-import { ChevronLeft,Gift, Wifi } from "lucide-react";
+import { ChevronLeft, Gift, Wifi } from "lucide-react";
 
 import hole from "@/assets/images/HoleUniv.png";
 const initialCoupons = [
@@ -54,7 +54,9 @@ export default function Coupon() {
             <div>
               <p className="mb-1 text-xs">보유중인 쿠폰을 확인하세요</p>
               <h1 className="text-lg">우주에서 온 특별한 혜택</h1>
-              <button className="bg-primary-500 text-neutral-0 mt-4 rounded-full px-4 py-1 font-sans text-xs">
+              <button
+                type="button"
+                className="bg-primary-500 text-neutral-0 mt-4 rounded-full px-4 py-1 font-sans text-xs">
                 전체
               </button>
             </div>
@@ -100,6 +102,7 @@ export default function Coupon() {
                 </div>
 
                 <button
+                  type="button"
                   onClick={() => setActiveCouponId(coupon.id)}
                   className={`text-md w-full rounded-3xl py-2 transition-all ${
                     isActive

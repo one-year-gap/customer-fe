@@ -38,7 +38,7 @@ function CheckIcon({ checked }: { checked: boolean }) {
   return (
     <div
       className={`flex h-5 w-5 items-center justify-center rounded-full border transition ${
-        checked ? "border-blue-600 bg-blue-600" : "border-gray-300 bg-white"
+        checked ? "border-primary bg-primary" : "bg-neutral-0 border-neutral-300"
       }`}>
       {checked && (
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
@@ -57,11 +57,11 @@ function CheckIcon({ checked }: { checked: boolean }) {
 
 function Badge({ required }: { required: boolean }) {
   return required ? (
-    <span className="ml-2 rounded bg-red-100 px-2 py-0.5 text-[10px] font-semibold text-red-500">
+    <span className="bg-primary-100 text-primary-700 ml-2 rounded px-2 py-0.5 text-[10px] font-semibold">
       필수
     </span>
   ) : (
-    <span className="ml-2 rounded bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-500">
+    <span className="bg-secondary-100 text-secondary-700 ml-2 rounded px-2 py-0.5 text-[10px] font-semibold">
       선택
     </span>
   );
@@ -71,28 +71,28 @@ function StepIndicator() {
   return (
     <div className="mt-6 flex items-center justify-between text-xs">
       <div className="flex items-center gap-2">
-        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 font-bold text-white">
+        <div className="bg-secondary-500 text-neutral-0 flex h-6 w-6 items-center justify-center rounded-full font-semibold">
           1
         </div>
-        <span className="font-semibold text-blue-700">약관 동의</span>
+        <span className="font-semibold text-neutral-900">약관 동의</span>
       </div>
 
-      <div className="mx-2 h-px flex-1 bg-blue-300" />
+      <div className="bg-secondary-500 mx-2 h-0.5 flex-1" />
 
       <div className="flex items-center gap-2">
-        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 font-bold text-white">
+        <div className="bg-secondary-500 text-neutral-0 flex h-6 w-6 items-center justify-center rounded-full font-semibold">
           2
         </div>
-        <span className="font-semibold text-blue-700">회원 가입</span>
+        <span className="font-semibold text-neutral-900">회원 가입</span>
       </div>
 
-      <div className="mx-2 h-px flex-1 bg-gray-300" />
+      <div className="bg-secondary-500 mx-2 h-0.5 flex-1" />
 
       <div className="flex items-center gap-2">
-        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-300 font-bold text-white">
+        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-neutral-300 font-semibold text-neutral-700">
           3
         </div>
-        <span className="text-gray-400">완료</span>
+        <span className="text-neutral-500">완료</span>
       </div>
     </div>
   );
@@ -116,16 +116,16 @@ function TermCard({
       type="button"
       onClick={onClick}
       className={`w-full rounded-2xl border px-4 py-4 text-left shadow-sm transition ${
-        checked ? "border-blue-600 bg-blue-50" : "border-gray-200 bg-white"
+        checked ? "border-primary bg-primary-100" : "bg-neutral-0 border-neutral-200"
       }`}>
       <div className="flex items-start gap-3">
         <CheckIcon checked={checked} />
         <div className="flex-1">
           <div className="flex items-center">
-            <p className="text-[14px] font-bold text-gray-800">{title}</p>
+            <p className="text-[14px] font-bold text-neutral-900">{title}</p>
             <Badge required={required} />
           </div>
-          <p className="mt-1 text-[12px] text-gray-500">{desc}</p>
+          <p className="mt-1 text-[12px] text-neutral-500">{desc}</p>
         </div>
       </div>
     </button>
@@ -142,9 +142,7 @@ export default function TermsPage() {
   });
 
   const requiredKeys = useMemo(() => TERMS.filter((t) => t.required).map((t) => t.key), []);
-
   const isAllChecked = useMemo(() => TERMS.every((t) => state[t.key]), [state]);
-
   const isRequiredOk = useMemo(() => requiredKeys.every((k) => state[k]), [state, requiredKeys]);
 
   const toggleOne = (key: Exclude<TermKey, "all">) => {
@@ -168,9 +166,9 @@ export default function TermsPage() {
 
   return (
     <div className="bg-background flex min-h-screen justify-center px-6 py-10">
-      <div className="w-full max-w-100.5">
-        <h1 className="font-display2 font-regular text-[20px] text-gray-900">약관 동의</h1>
-        <p className="mt-1 text-[12px] text-gray-500">
+      <div className="w-full max-w-[402px]">
+        <h1 className="font-regular text-[20px] text-neutral-900">약관 동의</h1>
+        <p className="mt-1 text-[12px] text-neutral-500">
           서비스 이용을 위해 아래 약관에 동의해주세요
         </p>
 
@@ -200,7 +198,7 @@ export default function TermsPage() {
         <div className="mt-10 flex flex-col items-center">
           <Image src={splash} alt="robot" width={70} height={70} />
           {!isRequiredOk && (
-            <p className="mt-2 text-[12px] font-semibold text-red-500">
+            <p className="text-primary-700 mt-2 text-[12px] font-semibold">
               필수 약관에 모두 동의해 주세요
             </p>
           )}
@@ -211,8 +209,8 @@ export default function TermsPage() {
           disabled={!isRequiredOk}
           className={`mt-6 w-full rounded-2xl border py-3 text-sm font-semibold transition ${
             isRequiredOk
-              ? "border-blue-600 bg-blue-50 text-blue-600"
-              : "border-gray-300 bg-gray-100 text-gray-400"
+              ? "border-primary bg-primary-100 text-primary-700"
+              : "border-neutral-300 bg-neutral-100 text-neutral-400"
           }`}>
           동의하고 가입 완료
         </button>

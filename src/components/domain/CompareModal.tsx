@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ArrowRight,ArrowUpDown, TrendingUp, X } from "lucide-react";
+import { ArrowRight, ArrowUpDown, TrendingUp, X } from "lucide-react";
 export default function CompareModal() {
   // props는 isOpen, chooseProdutId, onClose로 할 예정
   const d = {
@@ -27,11 +27,12 @@ export default function CompareModal() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/20 pb-[64px] backdrop-blur-[2px]"
+      className="fixed inset-0 z-50 flex items-end justify-center pb-[64px]"
       //   onClick={onClose}
     >
       <div
-        className="animate-in slide-in-from-bottom relative max-h-[92vh] w-full max-w-[402px] overflow-y-auto rounded-t-[32px] bg-white shadow-2xl duration-300 sm:rounded-t-3xl" // onClick={(e) => e.stopPropagation()}
+        className="animate-in slide-in-from-bottom relative max-h-[92vh] w-full max-w-[402px] overflow-y-auto rounded-t-[32px] bg-white shadow-2xl duration-300 sm:rounded-t-3xl"
+        // onClick={(e) => e.stopPropagation()}
       >
         {/* 헤더 섹션 */}
         <div className="flex items-center justify-between p-6">

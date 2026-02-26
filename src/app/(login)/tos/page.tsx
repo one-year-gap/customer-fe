@@ -37,11 +37,11 @@ const TERMS = [
 function CheckIcon({ checked }: { checked: boolean }) {
   return (
     <div
-      className={`flex h-6 w-6 items-center justify-center rounded-full transition ${
-        checked ? "bg-primary-500" : "border border-neutral-200 bg-white"
+      className={`flex h-5 w-5 items-center justify-center rounded-full border transition ${
+        checked ? "border-blue-600 bg-blue-600" : "border-gray-300 bg-white"
       }`}>
       {checked && (
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
           <path
             d="M20 6L9 17l-5-5"
             stroke="white"
@@ -61,7 +61,7 @@ function Badge({ required }: { required: boolean }) {
       필수
     </span>
   ) : (
-    <span className="ml-2 rounded bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-600">
+    <span className="ml-2 rounded bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-500">
       선택
     </span>
   );
@@ -69,30 +69,30 @@ function Badge({ required }: { required: boolean }) {
 
 function StepIndicator() {
   return (
-    <div className="mt-6 flex items-center gap-4">
+    <div className="mt-6 flex items-center justify-between text-xs">
       <div className="flex items-center gap-2">
-        <div className="bg-primary-300 flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white">
+        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 font-bold text-white">
           1
         </div>
-        <span className="text-primary-500 text-xs font-semibold">약관 동의</span>
+        <span className="font-semibold text-blue-700">약관 동의</span>
       </div>
 
-      <div className="h-0.5 w-16 bg-blue-300" />
+      <div className="mx-2 h-px flex-1 bg-blue-300" />
 
       <div className="flex items-center gap-2">
-        <div className="bg-primary-300 flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white">
+        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 font-bold text-white">
           2
         </div>
-        <span className="text-primary-500 text-xs font-semibold">회원 가입</span>
+        <span className="font-semibold text-blue-700">회원 가입</span>
       </div>
 
-      <div className="h-0.5 w-16 bg-neutral-200" />
+      <div className="mx-2 h-px flex-1 bg-gray-300" />
 
       <div className="flex items-center gap-2">
-        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-neutral-200 text-xs font-bold text-white">
+        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-300 font-bold text-white">
           3
         </div>
-        <span className="text-xs text-neutral-500">완료</span>
+        <span className="text-gray-400">완료</span>
       </div>
     </div>
   );
@@ -115,8 +115,8 @@ function TermCard({
     <button
       type="button"
       onClick={onClick}
-      className={`w-full rounded-xl border px-4 py-4 text-left shadow-sm transition ${
-        checked ? "border-primary-500 bg-blue-50" : "bg-background border-neutral-200"
+      className={`w-full rounded-2xl border px-4 py-4 text-left shadow-sm transition ${
+        checked ? "border-blue-600 bg-blue-50" : "border-gray-200 bg-white"
       }`}>
       <div className="flex items-start gap-3">
         <CheckIcon checked={checked} />
@@ -167,10 +167,10 @@ export default function TermsPage() {
   };
 
   return (
-    <div className="flex min-h-screen justify-center bg-neutral-50 px-6 py-10">
-      <div className="w-full max-w-105">
-        <h1 className="text-[20px] font-extrabold text-neutral-950">약관 동의</h1>
-        <p className="mt-1 text-[12px] text-neutral-700">
+    <div className="bg-background flex min-h-screen justify-center px-6 py-10">
+      <div className="w-full max-w-100.5">
+        <h1 className="font-display2 font-regular text-[20px] text-gray-900">약관 동의</h1>
+        <p className="mt-1 text-[12px] text-gray-500">
           서비스 이용을 위해 아래 약관에 동의해주세요
         </p>
 
@@ -199,7 +199,6 @@ export default function TermsPage() {
 
         <div className="mt-10 flex flex-col items-center">
           <Image src={splash} alt="robot" width={70} height={70} />
-
           {!isRequiredOk && (
             <p className="mt-2 text-[12px] font-semibold text-red-500">
               필수 약관에 모두 동의해 주세요
@@ -210,10 +209,10 @@ export default function TermsPage() {
         <button
           type="button"
           disabled={!isRequiredOk}
-          className={`mt-6 w-full rounded-xl border py-3 text-sm font-semibold transition ${
+          className={`mt-6 w-full rounded-2xl border py-3 text-sm font-semibold transition ${
             isRequiredOk
-              ? "border-primary-300 text-primary-300 bg-blue-50"
-              : "border-neutral-200 bg-neutral-100 text-neutral-500"
+              ? "border-blue-600 bg-blue-50 text-blue-600"
+              : "border-gray-300 bg-gray-100 text-gray-400"
           }`}>
           동의하고 가입 완료
         </button>

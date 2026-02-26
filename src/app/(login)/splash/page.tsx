@@ -37,20 +37,20 @@ export default function Splash() {
       className="bg-background flex min-h-screen cursor-pointer flex-col items-center justify-center pt-10">
       <Image src={logo} alt="LG U+NIVERSE 로고" width={70} height={70} priority />
 
-      <h2 className="text-primary-500 mt-6 text-xl font-bold">LG U+NIVERSE</h2>
+      <h2 className="text-primary-500 font-display2 font-regular mt-6 text-xl">LG U+NIVERSE</h2>
 
-      <p className="text-sm text-neutral-500">우주에서 만나는 새로운 경험</p>
+      <p className="text-muted-foreground text-sm">우주에서 만나는 새로운 경험</p>
 
       <Image src={splash} alt="space image" width={120} height={120} className="mt-8" />
 
-      <div className="mt-10 h-1 w-64 rounded bg-gray-300">
+      <div className="mt-10 h-1 w-64 rounded-full bg-neutral-100">
         <div
-          className="bg-primary-700 h-full rounded transition-all duration-200"
+          className="bg-primary-700 h-full rounded-full transition-all duration-200"
           style={{ width: `${progress}%` }}
         />
       </div>
 
-      <p className="mt-2 text-xs text-neutral-800">{progress}%</p>
+      <p className="text-foreground mt-2 text-xs">{progress}%</p>
     </div>
   );
 }

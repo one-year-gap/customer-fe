@@ -57,7 +57,7 @@ function CheckIcon({ checked }: { checked: boolean }) {
 
 function Badge({ required }: { required: boolean }) {
   return required ? (
-    <span className="bg-primary-100 text-primary-700 ml-2 rounded px-2 py-0.5 text-[10px] font-semibold">
+    <span className="bg-hit-100 text-hit-500 ml-2 rounded px-2 py-0.5 text-[10px] font-semibold">
       필수
     </span>
   ) : (

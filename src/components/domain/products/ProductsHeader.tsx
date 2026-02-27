@@ -15,12 +15,12 @@ export function ProductsHeader() {
         </div>
 
         <div className="text-primary-500 flex flex-col">
-          <span className="text-md font-semibold">나에게 맞는 요금제를 찾아보세요</span>
+          <span className="text-[14px] font-semibold">나에게 맞는 요금제를 찾아보세요</span>
 
-          <span className="font-display2 text-lg">우주 탐험가를 위한 추천 상품!</span>
+          <span className="font-display2 my-2 text-[18px]">우주 탐험가를 위한 추천 상품!</span>
         </div>
       </div>
-      <Image src={holeStar} alt="우주탐험가" width={156} height={116} className="shrink-0" />
+      <Image src={holeStar} alt="우주탐험가" width={140} height={90} className="shrink-0" />
     </div>
   );
 }

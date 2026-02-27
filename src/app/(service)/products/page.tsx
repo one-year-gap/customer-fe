@@ -4,16 +4,10 @@ import { ProductsList } from "@/components/domain/products/ProductsList";
 
 export default function ProductsPage() {
   return (
-    <div>
-      <section className="col-span-4">
-        <ProductsHeader />
-      </section>
-      <section className="col-span-4">
-        <ProductsFilter />
-      </section>
-      <section className="col-span-4">
-        <ProductsList />
-      </section>
+    <div className="space-y-6">
+      <ProductsHeader />
+      <ProductsFilter />
+      <ProductsList />
     </div>
   );
 }

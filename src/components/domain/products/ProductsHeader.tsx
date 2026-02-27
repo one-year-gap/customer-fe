@@ -20,7 +20,13 @@ export function ProductsHeader() {
           <span className="font-display2 my-2 text-[18px]">우주 탐험가를 위한 추천 상품!</span>
         </div>
       </div>
-      <Image src={holeStar} alt="우주탐험가" width={140} height={90} className="shrink-0" />
+      <Image
+        src={holeStar}
+        alt="우주탐험가"
+        width={171}
+        height={147}
+        className="h-auto w-30 shrink-0"
+      />
     </div>
   );
 }

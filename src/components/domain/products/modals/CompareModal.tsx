@@ -5,9 +5,10 @@ import { ArrowRight, ArrowUpDown, ArrowUpRight, X } from "lucide-react";
 interface CompareModalProps {
   open: boolean;
   onClose: () => void;
+  onChangePlan: () => void;
 }
 
-export default function CompareModal({ open, onClose }: CompareModalProps) {
+export default function CompareModal({ open, onClose, onChangePlan }: CompareModalProps) {
   if (!open) return null;
 
   const d = {
@@ -104,7 +105,9 @@ export default function CompareModal({ open, onClose }: CompareModalProps) {
           </div>
 
           <div className="mt-8">
-            <button className="flex w-full items-center justify-center gap-2 rounded-3xl bg-blue-600 py-4 text-sm font-semibold text-white shadow-md transition hover:bg-blue-700">
+            <button
+              onClick={onChangePlan}
+              className="flex w-full items-center justify-center gap-2 rounded-3xl bg-blue-600 py-4 text-sm font-semibold text-white shadow-md transition hover:bg-blue-700">
               <ArrowRight size={18} />
               요금제 바꾸기
             </button>

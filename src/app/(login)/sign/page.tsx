@@ -1,16 +1,70 @@
 "use client";
 
-import { useState } from "react";
+import { useRef,useState } from "react";
+import Script from "next/script";
 
 import { Eye, EyeOff, X } from "lucide-react";
+
+import type { DaumPostcodeData } from "@/types/daum";
 
 export default function SignupModal() {
   const [gender, setGender] = useState<"male" | "female">("male");
   const [showPw, setShowPw] = useState(false);
   const [showPwConfirm, setShowPwConfirm] = useState(false);
+  const [addressInfo, setAddressInfo] = useState({
+    zonecode: "",
+    roadAddress: "",
+    sido: "",
+    sigungu: "",
+  });
+
+  const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
+  const wrapRef = useRef<HTMLDivElement>(null);
+
+  const handleOpenPostcode = () => {
+    setIsPostcodeOpen(true);
+    setTimeout(() => {
+      if (wrapRef.current && window.daum) {
+        new window.daum.Postcode({
+          oncomplete: (data: DaumPostcodeData) => {
+            setAddressInfo((prev) => ({
+              ...prev,
+              zonecode: data.zonecode,
+              roadAddress: data.roadAddress,
+              sido: data.sido,
+              sigungu: data.sigungu,
+            }));
+            setIsPostcodeOpen(false);
+          },
+          onresize: (size) => {
+            if (wrapRef.current) {
+              wrapRef.current.style.height = `${size.height}px`;
+            }
+          },
+          width: "100%",
+          height: "100%",
+        }).embed(wrapRef.current);
+      }
+    }, 0);
+  };
 
   return (
     <div className="bg-background flex min-h-screen items-center justify-center px-6 py-10">
+      <Script src="//t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" />
+
+      {isPostcodeOpen && (
+        <div className="bg-card fixed inset-0 z-[100] mx-auto flex max-w-sm flex-col overflow-hidden">
+          <div className="border-muted bg-card flex h-14 items-center justify-between border-b px-4">
+            <div className="font-bold">주소 검색</div>
+            <button type="button" onClick={() => setIsPostcodeOpen(false)}>
+              <X className="text-muted-foreground h-5 w-5" />
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto pt-2">
+            <div ref={wrapRef} className="w-100%" />
+          </div>
+        </div>
+      )}
       <div className="bg-card text-card-foreground w-full max-w-sm rounded-xl p-6">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-primary-500 font-display2 font-regular text-lg">LG U+NIVERSE</h1>
@@ -97,18 +151,23 @@ export default function SignupModal() {
               <input
                 type="text"
                 placeholder="우편번호"
+                value={addressInfo.zonecode}
+                readOnly
                 className="bg-input text-foreground focus:ring-ring flex-1 rounded-md px-3 py-3 text-sm outline-none focus:ring-2"
               />
               <button
                 type="button"
+                onClick={handleOpenPostcode}
                 className="text-primary-300 hover:bg-accent hover:text-accent-foreground rounded-md px-4 text-sm font-medium">
                 우편번호 찾기
               </button>
             </div>
             <input
               type="text"
-              placeholder="주소"
-              className="bg-input text-foreground focus:ring-ring w-full rounded-md px-3 py-3 text-sm outline-none focus:ring-2"
+              placeholder="도로명 주소"
+              value={addressInfo.roadAddress}
+              readOnly
+              className="bg-input text-foreground focus:ring-ring mb-2 w-full rounded-md px-3 py-3 text-sm outline-none focus:ring-2"
             />
           </fieldset>
 

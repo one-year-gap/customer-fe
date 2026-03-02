@@ -1,19 +1,34 @@
 "use client";
 
-import { useRef,useState } from "react";
+import type { ChangeEvent} from "react";
+import type { FormEvent } from "react";
+import { useRef, useState } from "react";
 import Script from "next/script";
 
 import { Eye, EyeOff, X } from "lucide-react";
 
+import { useSignup } from "@/lib/tanstack/mutation/user";
+import type { SignupRequestDTO } from "@/models/user";
 import type { DaumPostcodeData } from "@/types/daum";
 
 export default function SignupModal() {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "", //비번 입력시 비밀번호는 8자 이상 64자 이하로 입력해야함
+    passwordConfirm: "",
+    name: "",
+    phone: "",
+    year: "",
+    month: "",
+    day: "",
+    gender: "",
+  });
   const [gender, setGender] = useState<"male" | "female">("male");
   const [showPw, setShowPw] = useState(false);
   const [showPwConfirm, setShowPwConfirm] = useState(false);
   const [addressInfo, setAddressInfo] = useState({
-    zonecode: "",
-    roadAddress: "",
+    zonecode: "", //우편번호
+    roadAddress: "", //도로명 주소
     sido: "",
     sigungu: "",
   });
@@ -21,6 +36,19 @@ export default function SignupModal() {
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
 
+  const { mutate: signup, isPending } = useSignup({
+    onSuccess: () => {
+      console.log("회원가입 성공하였습니다.");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
   const handleOpenPostcode = () => {
     setIsPostcodeOpen(true);
     setTimeout(() => {
@@ -48,8 +76,40 @@ export default function SignupModal() {
     }, 0);
   };
 
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+
+    if (formData.password !== formData.passwordConfirm) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+    // 주소 가공: roadAddress에서 sido + sigungu 부분을 제거
+    const streetAddress = addressInfo.roadAddress
+      .replace(addressInfo.sido, "")
+      .replace(addressInfo.sigungu, "")
+      .trim();
+
+    const payload: SignupRequestDTO = {
+      email: formData.email,
+      password: formData.password,
+      name: formData.name,
+      phone: formData.phone,
+      birthDate: `${formData.year}-${formData.month.padStart(2, "0")}-${formData.day.padStart(2, "0")}`,
+      gender: gender === "male" ? "M" : "F",
+      membership: "BASIC",
+      address: {
+        province: addressInfo.sido,
+        city: addressInfo.sigungu,
+        streetAddress: streetAddress,
+        postalCode: addressInfo.zonecode,
+      },
+    };
+    console.log("전송 데이터 확인:", payload);
+    signup(payload);
+  };
+
   return (
-    <div className="bg-background flex min-h-screen items-center justify-center px-6 py-10">
+    <div className="bg-background flex min-h-screen items-center justify-center overflow-y-auto px-6 py-10">
       <Script src="//t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" />
 
       {isPostcodeOpen && (
@@ -65,7 +125,7 @@ export default function SignupModal() {
           </div>
         </div>
       )}
-      <div className="bg-card text-card-foreground w-full max-w-sm rounded-xl p-6">
+      <div className="bg-card text-card-foreground h-fit w-full max-w-sm rounded-xl p-6">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-primary-500 font-display2 font-regular text-lg">LG U+NIVERSE</h1>
           <button type="button">
@@ -73,7 +133,7 @@ export default function SignupModal() {
           </button>
         </div>
 
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="name" className="text-primary-500 mb-1 block text-sm font-bold">
               이름
@@ -82,6 +142,8 @@ export default function SignupModal() {
               id="name"
               type="text"
               placeholder="이름"
+              value={formData.name}
+              onChange={handleInputChange}
               className="bg-input text-foreground focus:ring-ring w-full rounded-md px-4 py-3 text-sm outline-none focus:ring-2"
             />
           </div>
@@ -94,6 +156,8 @@ export default function SignupModal() {
               id="phone"
               type="text"
               placeholder="휴대전화 번호 - 빼고 작성"
+              value={formData.phone}
+              onChange={handleInputChange}
               className="bg-input text-foreground focus:ring-ring w-full rounded-md px-4 py-3 text-sm outline-none focus:ring-2"
             />
           </div>
@@ -129,17 +193,26 @@ export default function SignupModal() {
             <div className="flex gap-2">
               <input
                 type="number"
+                id="year"
                 placeholder="연도"
+                value={formData.year}
+                onChange={handleInputChange}
                 className="bg-input text-foreground focus:ring-ring w-1/3 rounded-md px-3 py-3 text-sm outline-none focus:ring-2"
               />
               <input
                 type="number"
+                id="month"
                 placeholder="월"
+                value={formData.month}
+                onChange={handleInputChange}
                 className="bg-input text-foreground focus:ring-ring w-1/3 rounded-md px-3 py-3 text-sm outline-none focus:ring-2"
               />
               <input
                 type="number"
+                id="day"
                 placeholder="일"
+                value={formData.day}
+                onChange={handleInputChange}
                 className="bg-input text-foreground focus:ring-ring w-1/3 rounded-md px-3 py-3 text-sm outline-none focus:ring-2"
               />
             </div>
@@ -179,6 +252,8 @@ export default function SignupModal() {
               id="email"
               type="email"
               placeholder="아이디 입력"
+              value={formData.email}
+              onChange={handleInputChange}
               className="bg-input text-foreground focus:ring-ring w-full rounded-md px-4 py-3 text-sm outline-none focus:ring-2"
             />
           </div>
@@ -192,6 +267,8 @@ export default function SignupModal() {
                 id="password"
                 type={showPw ? "text" : "password"}
                 placeholder="비밀번호 입력"
+                value={formData.password}
+                onChange={handleInputChange}
                 className="bg-input text-foreground focus:ring-ring w-full rounded-md px-4 py-3 pr-10 text-sm outline-none focus:ring-2"
               />
               <button
@@ -211,9 +288,11 @@ export default function SignupModal() {
             </label>
             <div className="relative">
               <input
-                id="password-confirm"
+                id="passwordConfirm"
                 type={showPwConfirm ? "text" : "password"}
                 placeholder="비밀번호 확인"
+                value={formData.passwordConfirm}
+                onChange={handleInputChange}
                 className="bg-input text-foreground focus:ring-ring w-full rounded-md px-4 py-3 pr-10 text-sm outline-none focus:ring-2"
               />
               <button
@@ -224,10 +303,9 @@ export default function SignupModal() {
               </button>
             </div>
           </div>
-
           <button
             type="submit"
-            className="bg-primary text-primary-foreground mt-4 w-full rounded-md px-4 py-3 text-sm font-semibold transition-opacity hover:opacity-90">
+            className="bg-primary-500 text-primary-foreground mt-4 w-full rounded-md px-4 py-3 text-sm font-semibold hover:opacity-90">
             회원가입
           </button>
         </form>

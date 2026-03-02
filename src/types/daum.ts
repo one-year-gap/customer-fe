@@ -1,6 +1,4 @@
-export type { DaumPostcodeData };
-
-interface DaumPostcodeData {
+export interface DaumPostcodeData {
   sido: string;
   sigungu: string;
   roadAddress: string;

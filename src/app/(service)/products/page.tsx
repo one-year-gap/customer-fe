@@ -14,12 +14,13 @@ type ModalType = "none" | "detail" | "compare" | "confirmChange" | "changeComple
 
 export default function ProductsPage() {
   const [modal, setModal] = useState<ModalType>("none");
+  const [category, setCategory] = useState<string>("mobile");
 
   return (
     <div className="space-y-6">
       <ProductsHeader />
-      <ProductsFilter />
-      <ProductsList onOpenDetail={() => setModal("detail")} />
+      <ProductsFilter selected={category} onChange={setCategory} />
+      <ProductsList category={category} onOpenDetail={() => setModal("detail")} />
 
       <DetailModal
         open={modal === "detail"}

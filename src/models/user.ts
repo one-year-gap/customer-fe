@@ -16,3 +16,14 @@ export interface SignupRequestDTO {
 export interface SignupResponseDTO {
   username: string;
 }
+
+export interface LoginRequestDTO {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponseDTO {
+  accessToken: string;
+  tokenType: string;
+  expiresIn: number;
+}

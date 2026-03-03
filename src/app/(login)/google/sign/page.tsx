@@ -1,21 +1,20 @@
 "use client";
 
 import type { ChangeEvent } from "react";
+import type { FormEvent } from "react";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
 
-import { Eye, EyeOff, X } from "lucide-react";
+import { X } from "lucide-react";
 
 import { useSignup } from "@/lib/tanstack/mutation/user";
 import type { SignupRequestDTO } from "@/models/user";
 import type { DaumPostcodeData } from "@/types/daum";
 
-export default function SignupJwt() {
+export default function SignupGoogle() {
   const [formData, setFormData] = useState({
     email: "",
-    password: "", //비번 입력시 비밀번호는 8자 이상 64자 이하로 입력해야함
-    passwordConfirm: "",
     name: "",
     phone: "",
     year: "",
@@ -24,8 +23,6 @@ export default function SignupJwt() {
     gender: "",
   });
   const [gender, setGender] = useState<"male" | "female">("male");
-  const [showPw, setShowPw] = useState(false);
-  const [showPwConfirm, setShowPwConfirm] = useState(false);
   const [addressInfo, setAddressInfo] = useState({
     zonecode: "", //우편번호
     roadAddress: "", //도로명 주소
@@ -56,12 +53,13 @@ export default function SignupJwt() {
       if (wrapRef.current && window.daum) {
         new window.daum.Postcode({
           oncomplete: (data: DaumPostcodeData) => {
-            setAddressInfo({
+            setAddressInfo((prev) => ({
+              ...prev,
               zonecode: data.zonecode,
               roadAddress: data.roadAddress,
               sido: data.sido,
               sigungu: data.sigungu,
-            });
+            }));
             setIsPostcodeOpen(false);
           },
           onresize: (size) => {
@@ -76,11 +74,9 @@ export default function SignupJwt() {
     }, 0);
   };
 
-  const handleClickSign = () => {
-    if (formData.password !== formData.passwordConfirm) {
-      alert("비밀번호가 일치하지 않습니다.");
-      return;
-    }
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+
     // 주소 가공: roadAddress에서 sido + sigungu 부분을 제거
     const streetAddress = addressInfo.roadAddress
       .replace(addressInfo.sido, "")
@@ -89,7 +85,6 @@ export default function SignupJwt() {
 
     const payload: SignupRequestDTO = {
       email: formData.email,
-      password: formData.password,
       name: formData.name,
       phone: formData.phone,
       birthDate: `${formData.year}-${formData.month.padStart(2, "0")}-${formData.day.padStart(2, "0")}`,
@@ -131,7 +126,7 @@ export default function SignupJwt() {
           </button>
         </div>
 
-        <div className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="name" className="text-primary-500 mb-1 block text-sm font-bold">
               이름
@@ -256,59 +251,12 @@ export default function SignupJwt() {
             />
           </div>
 
-          <div>
-            <label htmlFor="password" className="text-primary-500 mb-1 block text-sm font-bold">
-              비밀번호
-            </label>
-            <div className="relative">
-              <input
-                id="password"
-                type={showPw ? "text" : "password"}
-                placeholder="비밀번호 입력"
-                value={formData.password}
-                onChange={handleInputChange}
-                className="bg-input text-foreground focus:ring-ring w-full rounded-md px-4 py-3 pr-10 text-sm outline-none focus:ring-2"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPw((prev) => !prev)}
-                className="text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2">
-                {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
-            </div>
-          </div>
-
-          <div>
-            <label
-              htmlFor="password-confirm"
-              className="text-primary-500 mb-1 block text-sm font-bold">
-              비밀번호 확인
-            </label>
-            <div className="relative">
-              <input
-                id="passwordConfirm"
-                type={showPwConfirm ? "text" : "password"}
-                placeholder="비밀번호 확인"
-                value={formData.passwordConfirm}
-                onChange={handleInputChange}
-                className="bg-input text-foreground focus:ring-ring w-full rounded-md px-4 py-3 pr-10 text-sm outline-none focus:ring-2"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPwConfirm((prev) => !prev)}
-                className="text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2">
-                {showPwConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
-            </div>
-          </div>
           <button
-            onClick={handleClickSign}
-            disabled={isPending}
-            type="button"
+            type="submit"
             className="bg-primary-500 text-primary-foreground mt-4 w-full rounded-md px-4 py-3 text-sm font-semibold hover:opacity-90">
             회원가입
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );

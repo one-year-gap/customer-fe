@@ -38,6 +38,7 @@ export default function ProductsPage() {
 
       <CompareModal
         open={modal === "compare"}
+        targetPlanId={selectedId}
         onClose={() => setModal("none")}
         onChangePlan={() => setModal("confirmChange")}
       />

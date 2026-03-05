@@ -50,7 +50,7 @@ function SignupGoogleForm({ initialUser }: { initialUser?: { name: string; email
   const router = useRouter();
   const { mutate: googleSignup, isPending } = useGoogleSignup({
     onSuccess: () => {
-      router.push("/login");
+      router.push("/tos");
     },
     onError: (error) => {
       console.log(error);
@@ -87,6 +87,7 @@ function SignupGoogleForm({ initialUser }: { initialUser?: { name: string; email
       }
     }, 0);
   };
+
   const handleClickSign = () => {
     const streetAddress = addressInfo.roadAddress
       .replace(addressInfo.sido, "")

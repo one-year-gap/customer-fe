@@ -38,7 +38,7 @@ export default function SignupJwt() {
   const router = useRouter();
   const { mutate: signup, isPending } = useSignup({
     onSuccess: () => {
-      router.push("/login");
+      router.push("/tos");
     },
     onError: (error) => {
       console.log(error);

@@ -9,7 +9,7 @@ import type {
 } from "@/models/user";
 
 export const signUp = async (data: SignupRequestDTO): Promise<SignupResponseDTO> => {
-  const response = await api.post("/signup", data);
+  const response = await api.post("/api/v1/signup", data);
   return response.data;
 };
 

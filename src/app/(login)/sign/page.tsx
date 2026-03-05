@@ -38,7 +38,6 @@ export default function SignupJwt() {
   const router = useRouter();
   const { mutate: signup, isPending } = useSignup({
     onSuccess: () => {
-      console.log("회원가입 성공하였습니다.");
       router.push("/login");
     },
     onError: (error) => {
@@ -94,7 +93,7 @@ export default function SignupJwt() {
       phone: formData.phone,
       birthDate: `${formData.year}-${formData.month.padStart(2, "0")}-${formData.day.padStart(2, "0")}`,
       gender: gender === "male" ? "M" : "F",
-      membership: "BASIC",
+      membership: "GOLD",
       address: {
         province: addressInfo.sido,
         city: addressInfo.sigungu,

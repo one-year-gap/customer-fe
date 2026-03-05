@@ -1,6 +1,6 @@
 "use client";
 
-import type { ChangeEvent} from "react";
+import type { ChangeEvent } from "react";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,8 +8,11 @@ import { useRouter } from "next/navigation";
 
 import { Eye, EyeOff, Lock, User } from "lucide-react";
 
+import google from "@/assets/images/Google.png";
 import logo from "@/assets/images/Logo.png";
 import { useLogin } from "@/lib/tanstack/mutation/user";
+import { refreshAccessToken } from "@/services/domain/user";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function Login() {
   const [show, setShow] = useState(false);
@@ -19,8 +22,16 @@ export default function Login() {
   });
   const router = useRouter();
   const { mutate: login, isPending } = useLogin({
-    onSuccess: () => {
-      console.log("로그인 성공하였습니다.");
+    onSuccess: async () => {
+      try {
+        // 로그인 성공 후 accessToken 갱신
+        const refreshResponse = await refreshAccessToken();
+        if (refreshResponse?.accessToken) {
+          useAuthStore.getState().setAccessToken(refreshResponse.accessToken);
+        }
+      } catch (error) {
+        console.error("로그인 직후 토큰 갱신 실패:", error);
+      }
       router.push("/");
     },
     onError: (error) => {
@@ -38,6 +49,10 @@ export default function Login() {
       return;
     }
     login(formData);
+  };
+  const googleLoginUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/oauth2/authorization/google`;
+  const handleGoogleLogin = async () => {
+    router.push(googleLoginUrl);
   };
 
   return (
@@ -91,16 +106,19 @@ export default function Login() {
             로그인
           </button>
 
-          <Link href="/signup" className="block text-center text-[12px] text-neutral-500">
+          <Link href="/sign" className="block text-center text-[12px] text-neutral-500">
             회원가입
           </Link>
         </div>
       </div>
 
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-neutral-300 bg-neutral-100 text-sm text-neutral-500">
-          G
-        </div>
+        <button
+          type="button"
+          onClick={handleGoogleLogin}
+          className="bg-neutral-0 flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 p-1 text-sm text-neutral-500">
+          <Image src={google} alt="google image" />
+        </button>
       </div>
     </div>
   );

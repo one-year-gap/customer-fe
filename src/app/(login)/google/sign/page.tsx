@@ -1,21 +1,36 @@
 "use client";
 
 import type { ChangeEvent } from "react";
-import type { FormEvent } from "react";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
 
 import { X } from "lucide-react";
 
-import { useSignup } from "@/lib/tanstack/mutation/user";
-import type { SignupRequestDTO } from "@/models/user";
+import { useGoogleSignup } from "@/lib/tanstack/mutation/user";
+import { useOnboardingMe } from "@/lib/tanstack/query/user";
+import type { GoogleSignupRequestDTO } from "@/models/user";
 import type { DaumPostcodeData } from "@/types/daum";
 
 export default function SignupGoogle() {
+  const { data: onboardingData, isLoading } = useOnboardingMe();
+  console.log(onboardingData);
+  if (isLoading) {
+    return (
+      <div className="bg-background flex min-h-screen items-center justify-center">
+        <p className="text-sm text-neutral-500">회원 정보를 불러오는 중입니다...</p>
+      </div>
+    );
+  }
+  const initialUser = onboardingData
+    ? { name: onboardingData.name, email: onboardingData.email }
+    : undefined;
+
+  return <SignupGoogleForm initialUser={initialUser} />;
+}
+
+function SignupGoogleForm({ initialUser }: { initialUser?: { name: string; email: string } }) {
   const [formData, setFormData] = useState({
-    email: "",
-    name: "",
     phone: "",
     year: "",
     month: "",
@@ -33,9 +48,8 @@ export default function SignupGoogle() {
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const { mutate: signup, isPending } = useSignup({
+  const { mutate: googleSignup, isPending } = useGoogleSignup({
     onSuccess: () => {
-      console.log("회원가입 성공하였습니다.");
       router.push("/login");
     },
     onError: (error) => {
@@ -73,23 +87,16 @@ export default function SignupGoogle() {
       }
     }, 0);
   };
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-
-    // 주소 가공: roadAddress에서 sido + sigungu 부분을 제거
+  const handleClickSign = () => {
     const streetAddress = addressInfo.roadAddress
       .replace(addressInfo.sido, "")
       .replace(addressInfo.sigungu, "")
       .trim();
 
-    const payload: SignupRequestDTO = {
-      email: formData.email,
-      name: formData.name,
+    const payload: GoogleSignupRequestDTO = {
       phone: formData.phone,
       birthDate: `${formData.year}-${formData.month.padStart(2, "0")}-${formData.day.padStart(2, "0")}`,
       gender: gender === "male" ? "M" : "F",
-      membership: "BASIC",
       address: {
         province: addressInfo.sido,
         city: addressInfo.sigungu,
@@ -97,8 +104,7 @@ export default function SignupGoogle() {
         postalCode: addressInfo.zonecode,
       },
     };
-    console.log("전송 데이터 확인:", payload);
-    signup(payload);
+    googleSignup(payload);
   };
 
   return (
@@ -126,19 +132,14 @@ export default function SignupGoogle() {
           </button>
         </div>
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <div className="space-y-4">
           <div>
             <label htmlFor="name" className="text-primary-500 mb-1 block text-sm font-bold">
               이름
             </label>
-            <input
-              id="name"
-              type="text"
-              placeholder="이름"
-              value={formData.name}
-              onChange={handleInputChange}
-              className="bg-input text-foreground focus:ring-ring w-full rounded-md px-4 py-3 text-sm outline-none focus:ring-2"
-            />
+            <div className="bg-input text-foreground focus:ring-ring w-full rounded-md px-4 py-3 text-sm outline-none focus:ring-2">
+              {initialUser?.name || "정보 없음"}
+            </div>
           </div>
 
           <div>
@@ -241,22 +242,18 @@ export default function SignupGoogle() {
             <label htmlFor="email" className="text-primary-500 mb-1 block text-sm font-bold">
               아이디 (이메일)
             </label>
-            <input
-              id="email"
-              type="email"
-              placeholder="아이디 입력"
-              value={formData.email}
-              onChange={handleInputChange}
-              className="bg-input text-foreground focus:ring-ring w-full rounded-md px-4 py-3 text-sm outline-none focus:ring-2"
-            />
+            <div className="bg-input text-foreground focus:ring-ring w-full rounded-md px-4 py-3 text-sm outline-none focus:ring-2">
+              {initialUser?.email || "정보 없음"}
+            </div>
           </div>
 
           <button
-            type="submit"
+            type="button"
+            onClick={handleClickSign}
             className="bg-primary-500 text-primary-foreground mt-4 w-full rounded-md px-4 py-3 text-sm font-semibold hover:opacity-90">
             회원가입
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );

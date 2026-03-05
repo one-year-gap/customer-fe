@@ -7,7 +7,7 @@ export async function getPlanCompare(targetPlanId: number): Promise<PlanCompareR
     params: { targetPlanId },
     headers: {
       Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMyIsImVtYWlsIjoidXNlcjEzXzI1MDVAZ21haWwuY29tIiwicm9sZSI6IkNVU1RPTUVSIiwic3RhdHVzIjoiQUNUSVZFIiwidG9rZW5UeXBlIjoiQUNDRVNTIiwiaWF0IjoxNzcyNTI2MDA1LCJleHAiOjE3NzMxMzA4MDV9.wTzihny7lv3fYMTy3bSRY4AcDTs7QwGPP4IN3BvMBfE",
+        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImVtYWlsIjoidXNlcjEwXzEwNTJAZ21haWwuY29tIiwicm9sZSI6IkNVU1RPTUVSIiwic3RhdHVzIjoiQUNUSVZFIiwidG9rZW5UeXBlIjoiQUNDRVNTIiwiaWF0IjoxNzcyNjc2MTMzLCJleHAiOjE3NzMyODA5MzN9.OEyOMAm229WvS6gHAdq_ixlGdtxOv7OvflOoVKi4VA0",
     },
   });
 

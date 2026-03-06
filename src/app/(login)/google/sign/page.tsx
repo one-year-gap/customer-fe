@@ -47,7 +47,7 @@ function SignupGoogleForm({ initialUser }: { initialUser?: { name: string; email
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const { mutate: googleSignup, isPending } = useGoogleSignup({
+  const { mutate: googleSignup } = useGoogleSignup({
     onSuccess: () => {
       router.push("/tos");
     },
@@ -88,6 +88,17 @@ function SignupGoogleForm({ initialUser }: { initialUser?: { name: string; email
   };
 
   const handleClickSign = () => {
+    if (
+      !formData.phone ||
+      !formData.year ||
+      !formData.month ||
+      !formData.day ||
+      !addressInfo.zonecode ||
+      !addressInfo.roadAddress
+    ) {
+      alert("필수 정보를 모두 입력해주세요.");
+      return;
+    }
     const streetAddress = addressInfo.roadAddress
       .replace(addressInfo.sido, "")
       .replace(addressInfo.sigungu, "")
@@ -116,7 +127,9 @@ function SignupGoogleForm({ initialUser }: { initialUser?: { name: string; email
       <Script src="//t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" />
 
       {isPostcodeOpen && (
-        <div className="bg-card fixed inset-0 z-[100] mx-auto flex max-w-sm flex-col overflow-hidden">
+        <div
+          role="dialog"
+          className="bg-card fixed inset-0 z-[100] mx-auto flex max-w-sm flex-col overflow-hidden">
           <div className="border-muted bg-card flex h-14 items-center justify-between border-b px-4">
             <div className="font-bold">주소 검색</div>
             <button type="button" onClick={() => setIsPostcodeOpen(false)}>

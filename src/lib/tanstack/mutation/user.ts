@@ -49,6 +49,7 @@ export const useRefresh = () => {
       if (newToken) {
         setAccessToken(newToken);
         console.log("토큰 갱신 완료");
+        console.log(newToken);
       }
     },
     onError: (error) => {

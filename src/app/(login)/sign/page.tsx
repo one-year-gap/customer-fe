@@ -76,6 +76,20 @@ export default function SignupJwt() {
   };
 
   const handleClickSign = () => {
+    if (
+      !formData.email ||
+      !formData.password ||
+      !formData.name ||
+      !formData.phone ||
+      !formData.year ||
+      !formData.month ||
+      !formData.day ||
+      !addressInfo.zonecode ||
+      !addressInfo.roadAddress
+    ) {
+      alert("필수 항목을 입력해주세요");
+      return;
+    }
     if (formData.password !== formData.passwordConfirm) {
       alert("비밀번호가 일치하지 않습니다.");
       return;
@@ -104,6 +118,9 @@ export default function SignupJwt() {
 
     signup(payload);
   };
+  const handleBack = () => {
+    router.back();
+  };
 
   return (
     <div className="bg-background flex min-h-screen items-center justify-center overflow-y-auto px-6 py-10">
@@ -125,7 +142,7 @@ export default function SignupJwt() {
       <div className="bg-card text-card-foreground h-fit w-full max-w-sm rounded-xl p-6">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-primary-500 font-display2 font-regular text-lg">LG U+NIVERSE</h1>
-          <button type="button">
+          <button type="button" onClick={handleBack}>
             <X className="text-muted-foreground h-5 w-5" />
           </button>
         </div>

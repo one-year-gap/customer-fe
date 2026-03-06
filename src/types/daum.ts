@@ -15,14 +15,14 @@ export interface PostcodeOptions {
 
 declare global {
   interface Window {
-    daum: {
+    daum?: {
       Postcode: new (options: {
         oncomplete: (data: DaumPostcodeData) => void;
         onresize?: (size: { width: number; height: number }) => void;
         width?: string | number;
         height?: string | number;
       }) => {
-        embed: (element: HTMLElement, options?: { autoClose: boolean }) => void;
+        embed: (element: HTMLElement, options?: { autoClose?: boolean }) => void;
       };
     };
   }

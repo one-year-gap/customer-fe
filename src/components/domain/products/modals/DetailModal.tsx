@@ -2,29 +2,23 @@
 
 import { BarChart3, Gauge, Mail, Phone, X } from "lucide-react";
 
+import { usePlanDetail } from "@/lib/tanstack/query/usePlanDetail";
+
 interface DetailModalProps {
   open: boolean;
+  productId: number | null;
   onClose: () => void;
   onCompare: () => void;
 }
 
-export default function DetailModal({ open, onClose, onCompare }: DetailModalProps) {
-  if (!open) return null;
+export default function DetailModal({ open, productId, onClose, onCompare }: DetailModalProps) {
+  const { data, isLoading } = usePlanDetail(productId);
 
-  const d = {
-    name: "5G 라이트",
-    price: 45000,
-    data: "8GB (소진후 1Mbps)",
-    call: "무제한",
-    speed: "최대 5Gbps",
-    text: "무제한",
-    details: [
-      "기본 데이터 8GB 제공",
-      "소진 후 1Mbps 속도 유지",
-      "테더링/핫스팟 월 5GB",
-      "기본 통화/문자 무제한",
-    ],
-  };
+  if (!open) return null;
+  if (isLoading) return <div className="fixed inset-0 bg-black/40">로딩중...</div>;
+  if (!data) return null;
+
+  const d = data;
 
   return (
     <div
@@ -36,7 +30,7 @@ export default function DetailModal({ open, onClose, onCompare }: DetailModalPro
         <div className="flex-1 overflow-y-auto px-5 pt-5">
           <div className="mb-4 flex items-center justify-between">
             <span className="rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
-              실속
+              요금제
             </span>
             <button onClick={onClose} className="rounded-full bg-gray-200 p-2">
               <X size={18} />
@@ -47,26 +41,37 @@ export default function DetailModal({ open, onClose, onCompare }: DetailModalPro
 
           <div className="mt-2 mb-6 flex items-end gap-1">
             <span className="text-3xl font-extrabold text-blue-700">
-              {d.price.toLocaleString()}
+              {(d.salePrice ?? d.price).toLocaleString("ko-KR")}
             </span>
             <span className="text-sm text-gray-500">원/월</span>
           </div>
 
           <div className="mb-6 grid grid-cols-2 gap-3">
-            <SpecBox label="데이터" value={d.data} icon={BarChart3} />
-            <SpecBox label="통화" value={d.call} icon={Phone} />
-            <SpecBox label="속도" value={d.speed} icon={Gauge} />
-            <SpecBox label="문자" value={d.text} icon={Mail} />
+            <SpecBox label="데이터" value={d.content.dataAmount ?? "-"} icon={BarChart3} />
+            <SpecBox label="통화" value={d.content.benefitVoiceCall ?? "-"} icon={Phone} />
+            <SpecBox
+              label="테더링"
+              value={d.content.tetheringSharingData ? `${d.content.tetheringSharingData}GB` : "-"}
+              icon={Gauge}
+            />
+            <SpecBox label="문자" value={d.content.benefitSms ?? "-"} icon={Mail} />
           </div>
 
           <h3 className="mb-3 text-sm font-bold text-gray-700">상세 정보</h3>
 
           <div className="space-y-3 pb-6">
-            {d.details.map((item, i) => (
-              <div key={i} className="rounded-xl bg-gray-100 px-4 py-3 text-sm">
-                ✓ {item}
-              </div>
-            ))}
+            {[
+              d.content.benefitBrands,
+              d.content.benefitMedia,
+              d.content.benefitPremium,
+              d.content.benefitSignatureFamilyDiscount,
+            ]
+              .filter(Boolean)
+              .map((item, i) => (
+                <div key={i} className="rounded-xl bg-gray-100 px-4 py-3 text-sm">
+                  ✓ {item}
+                </div>
+              ))}
           </div>
         </div>
 

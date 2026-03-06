@@ -47,7 +47,7 @@ function SignupGoogleForm({ initialUser }: { initialUser?: { name: string; email
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const { mutate: googleSignup, isPending } = useGoogleSignup({
+  const { mutate: googleSignup } = useGoogleSignup({
     onSuccess: () => {
       router.push("/tos");
     },

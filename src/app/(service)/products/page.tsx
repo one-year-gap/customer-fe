@@ -9,34 +9,61 @@ import DetailModal from "@/components/domain/products/modals/DetailModal";
 import { ProductsFilter } from "@/components/domain/products/ProductsFilter";
 import { ProductsHeader } from "@/components/domain/products/ProductsHeader";
 import { ProductsList } from "@/components/domain/products/ProductsList";
+import { useChangePlan } from "@/lib/tanstack/mutation/useChangePlan";
 
 type ModalType = "none" | "detail" | "compare" | "confirmChange" | "changeComplete";
 
 export default function ProductsPage() {
   const [modal, setModal] = useState<ModalType>("none");
+  const [category, setCategory] = useState<string>("mobile");
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
+  const { mutateAsync } = useChangePlan();
+
+  const handleConfirmChange = async () => {
+    if (!selectedId) return;
+
+    try {
+      await mutateAsync({
+        targetProductId: selectedId,
+      });
+
+      setModal("changeComplete");
+    } catch (error) {
+      console.error("요금제 변경 실패", error);
+    }
+  };
 
   return (
     <div className="space-y-6">
       <ProductsHeader />
-      <ProductsFilter />
-      <ProductsList onOpenDetail={() => setModal("detail")} />
+
+      <ProductsFilter selected={category} onChange={setCategory} />
+
+      <ProductsList
+        category={category}
+        onOpenDetail={(id) => {
+          setSelectedId(id);
+          setModal("detail");
+        }}
+      />
 
       <DetailModal
         open={modal === "detail"}
+        productId={selectedId}
         onClose={() => setModal("none")}
         onCompare={() => setModal("compare")}
       />
 
       <CompareModal
         open={modal === "compare"}
+        targetPlanId={selectedId}
         onClose={() => setModal("none")}
-        onChangePlan={() => setModal("confirmChange")}
       />
-
       <ConfirmChangeModal
         open={modal === "confirmChange"}
         onCancel={() => setModal("compare")}
-        onConfirm={() => setModal("changeComplete")}
+        onConfirm={handleConfirmChange}
       />
 
       <ChangeCompleteModal open={modal === "changeComplete"} onClose={() => setModal("none")} />

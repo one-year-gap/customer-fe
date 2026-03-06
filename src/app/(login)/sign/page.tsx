@@ -149,9 +149,7 @@ export default function SignupJwt() {
 
         <div className="space-y-4">
           <div>
-            <label htmlFor="name" className="text-primary-500 mb-1 block text-sm font-bold">
-              이름
-            </label>
+            <div className="text-primary-500 mb-1 block text-sm font-bold">이름</div>
             <input
               id="name"
               type="text"
@@ -163,9 +161,7 @@ export default function SignupJwt() {
           </div>
 
           <div>
-            <label htmlFor="phone" className="text-primary-500 mb-1 block text-sm font-bold">
-              전화번호
-            </label>
+            <div className="text-primary-500 mb-1 block text-sm font-bold">전화번호</div>
             <input
               id="phone"
               type="text"
@@ -177,9 +173,9 @@ export default function SignupJwt() {
           </div>
 
           <fieldset>
-            <legend className="text-primary-700 mb-2 block text-sm font-bold">성별</legend>
+            <div className="text-primary-700 mb-2 block text-sm font-bold">성별</div>
             <div className="text-foreground flex items-center gap-6 text-sm">
-              <label className="flex items-center gap-2">
+              <div className="flex items-center gap-2">
                 <input
                   type="radio"
                   name="gender"
@@ -188,8 +184,8 @@ export default function SignupJwt() {
                   className="accent-secondary-500"
                 />
                 남자
-              </label>
-              <label className="flex items-center gap-2">
+              </div>
+              <div className="flex items-center gap-2">
                 <input
                   type="radio"
                   name="gender"
@@ -198,12 +194,12 @@ export default function SignupJwt() {
                   className="accent-secondary-500"
                 />
                 여자
-              </label>
+              </div>
             </div>
           </fieldset>
 
           <fieldset>
-            <legend className="text-primary-700 mb-2 block text-sm font-bold">생년월일</legend>
+            <div className="text-primary-700 mb-2 block text-sm font-bold">생년월일</div>
             <div className="flex gap-2">
               <input
                 type="number"
@@ -233,7 +229,7 @@ export default function SignupJwt() {
           </fieldset>
 
           <fieldset>
-            <legend className="text-primary-500 mb-2 block text-sm font-bold">주소</legend>
+            <div className="text-primary-500 mb-2 block text-sm font-bold">주소</div>
             <div className="mb-2 flex gap-2">
               <input
                 type="text"
@@ -259,9 +255,7 @@ export default function SignupJwt() {
           </fieldset>
 
           <div>
-            <label htmlFor="email" className="text-primary-500 mb-1 block text-sm font-bold">
-              아이디 (이메일)
-            </label>
+            <div className="text-primary-500 mb-1 block text-sm font-bold">아이디 (이메일)</div>
             <input
               id="email"
               type="email"
@@ -273,9 +267,7 @@ export default function SignupJwt() {
           </div>
 
           <div>
-            <label htmlFor="password" className="text-primary-500 mb-1 block text-sm font-bold">
-              비밀번호
-            </label>
+            <div className="text-primary-500 mb-1 block text-sm font-bold">비밀번호</div>
             <div className="relative">
               <input
                 id="password"
@@ -295,11 +287,7 @@ export default function SignupJwt() {
           </div>
 
           <div>
-            <label
-              htmlFor="password-confirm"
-              className="text-primary-500 mb-1 block text-sm font-bold">
-              비밀번호 확인
-            </label>
+            <div className="text-primary-500 mb-1 block text-sm font-bold">비밀번호 확인</div>
             <div className="relative">
               <input
                 id="passwordConfirm"

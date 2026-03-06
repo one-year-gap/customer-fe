@@ -151,18 +151,14 @@ function SignupGoogleForm({ initialUser }: { initialUser?: { name: string; email
 
         <div className="space-y-4">
           <div>
-            <label htmlFor="name" className="text-primary-500 mb-1 block text-sm font-bold">
-              이름
-            </label>
+            <div className="text-primary-500 mb-1 block text-sm font-bold">이름</div>
             <div className="bg-input text-foreground focus:ring-ring w-full rounded-md px-4 py-3 text-sm outline-none focus:ring-2">
               {initialUser?.name || "정보 없음"}
             </div>
           </div>
 
           <div>
-            <label htmlFor="phone" className="text-primary-500 mb-1 block text-sm font-bold">
-              전화번호
-            </label>
+            <div className="text-primary-500 mb-1 block text-sm font-bold">전화번호</div>
             <input
               id="phone"
               type="text"
@@ -174,9 +170,9 @@ function SignupGoogleForm({ initialUser }: { initialUser?: { name: string; email
           </div>
 
           <fieldset>
-            <legend className="text-primary-700 mb-2 block text-sm font-bold">성별</legend>
+            <div className="text-primary-700 mb-2 block text-sm font-bold">성별</div>
             <div className="text-foreground flex items-center gap-6 text-sm">
-              <label className="flex items-center gap-2">
+              <div className="flex items-center gap-2">
                 <input
                   type="radio"
                   name="gender"
@@ -185,8 +181,8 @@ function SignupGoogleForm({ initialUser }: { initialUser?: { name: string; email
                   className="accent-secondary-500"
                 />
                 남자
-              </label>
-              <label className="flex items-center gap-2">
+              </div>
+              <div className="flex items-center gap-2">
                 <input
                   type="radio"
                   name="gender"
@@ -195,12 +191,12 @@ function SignupGoogleForm({ initialUser }: { initialUser?: { name: string; email
                   className="accent-secondary-500"
                 />
                 여자
-              </label>
+              </div>
             </div>
           </fieldset>
 
           <fieldset>
-            <legend className="text-primary-700 mb-2 block text-sm font-bold">생년월일</legend>
+            <div className="text-primary-700 mb-2 block text-sm font-bold">생년월일</div>
             <div className="flex gap-2">
               <input
                 type="number"
@@ -230,7 +226,7 @@ function SignupGoogleForm({ initialUser }: { initialUser?: { name: string; email
           </fieldset>
 
           <fieldset>
-            <legend className="text-primary-500 mb-2 block text-sm font-bold">주소</legend>
+            <div className="text-primary-500 mb-2 block text-sm font-bold">주소</div>
             <div className="mb-2 flex gap-2">
               <input
                 type="text"
@@ -256,9 +252,7 @@ function SignupGoogleForm({ initialUser }: { initialUser?: { name: string; email
           </fieldset>
 
           <div>
-            <label htmlFor="email" className="text-primary-500 mb-1 block text-sm font-bold">
-              아이디 (이메일)
-            </label>
+            <div className="text-primary-500 mb-1 block text-sm font-bold">아이디 (이메일)</div>
             <div className="bg-input text-foreground focus:ring-ring w-full rounded-md px-4 py-3 text-sm outline-none focus:ring-2">
               {initialUser?.email || "정보 없음"}
             </div>

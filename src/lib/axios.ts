@@ -9,12 +9,11 @@ export const api = axios.create({
 });
 
 // 단일 토큰 갱신 Promise (Token Race 방지용 Single-Flight 패턴)
-let refreshPromise: Promise<string | null> | null = null;
+let refreshPromise: Promise<string> | null = null;
 
-const executeRefresh = async (): Promise<string | null> => {
+const executeRefresh = async (): Promise<string> => {
   if (refreshPromise) return refreshPromise;
-
-  refreshPromise = new Promise(async (resolve, reject) => {
+  refreshPromise = (async () => {
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/auth/refresh`,
@@ -25,21 +24,20 @@ const executeRefresh = async (): Promise<string | null> => {
 
       if (newAccessToken) {
         useAuthStore.getState().setAccessToken(newAccessToken);
-        resolve(newAccessToken);
-      } else {
-        reject(new Error("받아온 응답에 엑세스 토큰이 비어있습니다."));
+        return newAccessToken;
       }
+      throw new Error("받아온 응답에 엑세스 토큰이 비어있습니다.");
     } catch (error) {
       useAuthStore.getState().clearAuth();
       if (typeof window !== "undefined") {
         window.location.href = "/login";
       }
-      reject(error);
+      throw error;
     } finally {
+      // 3. 작업 완료 후 초기화
       refreshPromise = null;
     }
-  });
-
+  })();
   return refreshPromise;
 };
 

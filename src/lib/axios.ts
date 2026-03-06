@@ -11,3 +11,13 @@ export const axiosInstance = axios.create({
   timeout: 10000,
   withCredentials: true,
 });
+
+axiosInstance.interceptors.request.use((config) => {
+  const token = process.env.NEXT_PUBLIC_DEV_ACCESS_TOKEN;
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});

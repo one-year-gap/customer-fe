@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 
 import {
@@ -14,7 +16,18 @@ import {
 
 import hole from "@/assets/images/HoleMan.png";
 import logo from "@/assets/images/Logo.png";
+import { useCustomerProfile } from "@/lib/tanstack/query/customer/useCustomerProfile";
+
 export default function My() {
+  // const customerId = 1;
+  // const { data, isLoading, isError } = useCustomerProfile(customerId);
+  const { data, isLoading, isError } = useCustomerProfile();
+  console.log("API RESULT:", data);
+  console.log(isError);
+
+  // if (isLoading) return <div>로딩중...</div>;
+  // if (isError) return <div>에러</div>;
+
   const recentActivities = [
     { title: "데이터 쿠폰 사용", desc: "1GB 쿠폰 적용", time: "23:35", icon: Ticket },
     { title: "요금제 조회", desc: "5G 프리미어 에센셜 조회", time: "23:40", icon: Search },
@@ -34,8 +47,8 @@ export default function My() {
         <div className="mx-auto mb-4 flex items-center justify-center overflow-hidden">
           <Image src={hole} alt="holeMan image" width={96} height={96} />
         </div>
-        <h2 className="mb-1 text-lg">김우주</h2>
-        <p className="text-xs text-neutral-300">010-1234-5678</p>
+        <h2 className="mb-1 text-lg">{data?.name}</h2>
+        <p className="text-xs text-neutral-300">{data?.phone}</p>
       </section>
 
       <div className="space-y-6 px-5 py-8">

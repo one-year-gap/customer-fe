@@ -42,7 +42,7 @@ export default function Home() {
         <div className="flex items-start justify-between">
           <div className="flex flex-col">
             <Image src={logo} alt="LG U+NIVERSE 로고" width={37} height={37} />
-            <div className="pt-6 text-xl font-bold">
+            <div className="pt-6 text-xl">
               {data.character}
               <span className="pl-3 text-lg">
                 {data.name}

@@ -8,6 +8,41 @@ export const api = axios.create({
   withCredentials: true,
 });
 
+// 단일 토큰 갱신 Promise (Token Race 방지용 Single-Flight 패턴)
+let refreshPromise: Promise<string | null> | null = null;
+
+const executeRefresh = async (): Promise<string | null> => {
+  if (refreshPromise) return refreshPromise;
+
+  refreshPromise = new Promise(async (resolve, reject) => {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/auth/refresh`,
+        {},
+        { withCredentials: true },
+      );
+      const newAccessToken = response.data?.accessToken;
+
+      if (newAccessToken) {
+        useAuthStore.getState().setAccessToken(newAccessToken);
+        resolve(newAccessToken);
+      } else {
+        reject(new Error("받아온 응답에 엑세스 토큰이 비어있습니다."));
+      }
+    } catch (error) {
+      useAuthStore.getState().clearAuth();
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
+      reject(error);
+    } finally {
+      refreshPromise = null;
+    }
+  });
+
+  return refreshPromise;
+};
+
 // accessToken 헤더에 삽입
 api.interceptors.request.use(async (config) => {
   let token = useAuthStore.getState().accessToken;
@@ -20,22 +55,9 @@ api.interceptors.request.use(async (config) => {
   // 토큰이 없고, 로그인이/회원가입/리프레시 요청이 아닐 때 미리 refresh 시도
   if (!token && !isAuthOrRefresh) {
     try {
-      const refreshResponse = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/auth/refresh`,
-        {},
-        { withCredentials: true },
-      );
-      const newAccessToken = refreshResponse.data?.accessToken;
-
-      if (newAccessToken) {
-        useAuthStore.getState().setAccessToken(newAccessToken);
-        token = newAccessToken;
-      }
+      const newAccessToken = await executeRefresh();
+      if (newAccessToken) token = newAccessToken;
     } catch (refreshError) {
-      useAuthStore.getState().clearAuth();
-      if (typeof window !== "undefined") {
-        window.location.href = "/login";
-      }
       return Promise.reject(refreshError);
     }
   }
@@ -46,7 +68,7 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
-// 응답 인터셉터: 401 에러(만료) 발생 시 refresh 호출 및 1회 재시도
+// 응답 인터셉터: 401 에러(만료) 발생 시 1회 refresh 호출
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -56,25 +78,13 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        // 인터셉터 무한 루프 방지를 위해 api 인스턴스 대신 axios 사용
-        const refreshResponse = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/auth/refresh`,
-          {},
-          { withCredentials: true },
-        );
-        const newAccessToken = refreshResponse.data?.accessToken;
+        const newAccessToken = await executeRefresh();
 
         if (newAccessToken) {
-          useAuthStore.getState().setAccessToken(newAccessToken);
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return api(originalRequest);
         }
       } catch (refreshError) {
-        // 리프레시 토큰도 만료된 경우 상태 초기화 후 로그인 유도
-        useAuthStore.getState().clearAuth();
-        if (typeof window !== "undefined") {
-          window.location.href = "/login";
-        }
         return Promise.reject(refreshError);
       }
     }

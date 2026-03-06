@@ -8,7 +8,8 @@ import type {
   SignupRequestDTO,
   SignupResponseDTO,
 } from "@/models/user";
-import { logIn, onboardingComplete, signUp } from "@/services/domain/user";
+import { logIn, onboardingComplete, refreshAccessToken, signUp } from "@/services/domain/user";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export const useSignup = (
   options?: UseMutationOptions<SignupResponseDTO, Error, SignupRequestDTO>,
@@ -34,5 +35,25 @@ export const useGoogleSignup = (
   return useMutation({
     mutationFn: onboardingComplete,
     ...options,
+  });
+};
+
+export const useRefresh = () => {
+  const setAccessToken = useAuthStore((state) => state.setAccessToken);
+  const clearAuth = useAuthStore((state) => state.clearAuth);
+
+  return useMutation({
+    mutationFn: refreshAccessToken,
+    onSuccess: (res) => {
+      const newToken = res.data.accessToken;
+      if (newToken) {
+        setAccessToken(newToken);
+        console.log("토큰 갱신 완료");
+      }
+    },
+    onError: (error) => {
+      console.error("토큰 갱신 실패:", error);
+      clearAuth();
+    },
   });
 };

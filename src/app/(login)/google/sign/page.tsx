@@ -14,7 +14,6 @@ import type { DaumPostcodeData } from "@/types/daum";
 
 export default function SignupGoogle() {
   const { data: onboardingData, isLoading } = useOnboardingMe();
-  console.log(onboardingData);
   if (isLoading) {
     return (
       <div className="bg-background flex min-h-screen items-center justify-center">
@@ -108,6 +107,10 @@ function SignupGoogleForm({ initialUser }: { initialUser?: { name: string; email
     googleSignup(payload);
   };
 
+  const handleBack = () => {
+    router.back();
+  };
+
   return (
     <div className="bg-background flex min-h-screen items-center justify-center overflow-y-auto px-6 py-10">
       <Script src="//t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" />
@@ -121,14 +124,14 @@ function SignupGoogleForm({ initialUser }: { initialUser?: { name: string; email
             </button>
           </div>
           <div className="flex-1 overflow-y-auto pt-2">
-            <div ref={wrapRef} className="w-100%" />
+            <div ref={wrapRef} className="w-full" />
           </div>
         </div>
       )}
       <div className="bg-card text-card-foreground h-fit w-full max-w-sm rounded-xl p-6">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-primary-500 font-display2 font-regular text-lg">LG U+NIVERSE</h1>
-          <button type="button">
+          <button type="button" onClick={handleBack}>
             <X className="text-muted-foreground h-5 w-5" />
           </button>
         </div>

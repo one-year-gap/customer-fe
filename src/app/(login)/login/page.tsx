@@ -10,9 +10,7 @@ import { Eye, EyeOff, Lock, User } from "lucide-react";
 
 import google from "@/assets/images/Google.png";
 import logo from "@/assets/images/Logo.png";
-import { useLogin } from "@/lib/tanstack/mutation/user";
-import { refreshAccessToken } from "@/services/domain/user";
-import { useAuthStore } from "@/stores/useAuthStore";
+import { useLogin, useRefresh } from "@/lib/tanstack/mutation/user";
 
 export default function Login() {
   const [show, setShow] = useState(false);
@@ -21,18 +19,15 @@ export default function Login() {
     password: "",
   });
   const router = useRouter();
+  const { mutate: refresh } = useRefresh();
   const { mutate: login, isPending } = useLogin({
     onSuccess: async () => {
       try {
-        // 로그인 성공 후 accessToken 갱신
-        const refreshResponse = await refreshAccessToken();
-        if (refreshResponse?.accessToken) {
-          useAuthStore.getState().setAccessToken(refreshResponse.accessToken);
-        }
+        await refresh();
+        router.push("/");
       } catch (error) {
         console.error("로그인 직후 토큰 갱신 실패:", error);
       }
-      router.push("/");
     },
     onError: (error) => {
       console.log(error);

@@ -33,3 +33,8 @@ export const refreshAccessToken = async () => {
   const response = await api.post("/v1/auth/refresh");
   return response.data;
 };
+
+export const ex = async () => {
+  const response = await api.get("/api/v1/customers/1/recent-plans");
+  return response.data;
+};

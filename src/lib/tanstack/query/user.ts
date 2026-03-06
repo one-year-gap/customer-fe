@@ -1,20 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getOnboardingMe, refreshAccessToken } from "@/services/domain/user";
-import { useAuthStore } from "@/stores/useAuthStore";
+import { getOnboardingMe } from "@/services/domain/user";
+
+import { useRefresh } from "../mutation/user";
 
 export const useOnboardingMe = () => {
+  const { mutateAsync: refresh } = useRefresh();
   return useQuery({
     queryKey: ["onboardingMe"],
     queryFn: async () => {
-      const refreshResponse = await refreshAccessToken(); //refresh를 먼저 하고, onboarding 호출
-      const { setAccessToken } = useAuthStore.getState();
-
-      if (refreshResponse?.data.accessToken) {
-        setAccessToken(refreshResponse.data.accessToken);
-      }
-      const response = await getOnboardingMe();
-
+      await refresh();
+      const response = await getOnboardingMe(); //refresh를 먼저 하고, onboarding 호출
       return response.data;
     },
   });

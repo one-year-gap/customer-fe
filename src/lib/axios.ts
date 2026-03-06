@@ -9,8 +9,37 @@ export const api = axios.create({
 });
 
 // accessToken 헤더에 삽입
-api.interceptors.request.use((config) => {
-  const token = useAuthStore.getState().accessToken;
+api.interceptors.request.use(async (config) => {
+  let token = useAuthStore.getState().accessToken;
+
+  const isAuthOrRefresh =
+    config.url?.includes("/auth/login") ||
+    config.url?.includes("/signup") ||
+    config.url?.includes("/auth/refresh");
+
+  // 토큰이 없고, 로그인이/회원가입/리프레시 요청이 아닐 때 미리 refresh 시도
+  if (!token && !isAuthOrRefresh) {
+    try {
+      const refreshResponse = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/auth/refresh`,
+        {},
+        { withCredentials: true },
+      );
+      const newAccessToken = refreshResponse.data?.accessToken;
+
+      if (newAccessToken) {
+        useAuthStore.getState().setAccessToken(newAccessToken);
+        token = newAccessToken;
+      }
+    } catch (refreshError) {
+      useAuthStore.getState().clearAuth();
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
+      return Promise.reject(refreshError);
+    }
+  }
+
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -24,7 +53,7 @@ api.interceptors.response.use(
     const originalRequest = error.config;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true; // 1회 재시도 플래그
+      originalRequest._retry = true;
 
       try {
         // 인터셉터 무한 루프 방지를 위해 api 인스턴스 대신 axios 사용
@@ -36,7 +65,6 @@ api.interceptors.response.use(
         const newAccessToken = refreshResponse.data?.accessToken;
 
         if (newAccessToken) {
-          // 원본 요청 1회 재시도
           useAuthStore.getState().setAccessToken(newAccessToken);
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return api(originalRequest);

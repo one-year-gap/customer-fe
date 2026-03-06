@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { House, ShoppingBag, User, Users } from "lucide-react";
 
 const items = [
-  { href: "/home", label: "홈", icon: House },
+  { href: "/", label: "홈", icon: House },
   { href: "/products", label: "상품", icon: ShoppingBag },
   { href: "/characters", label: "유형", icon: Users },
   { href: "/my", label: "마이", icon: User },

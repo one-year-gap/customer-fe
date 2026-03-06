@@ -14,6 +14,7 @@ import {
 
 import hole from "@/assets/images/HoleMan.png";
 import logo from "@/assets/images/Logo.png";
+
 export default function My() {
   const recentActivities = [
     { title: "데이터 쿠폰 사용", desc: "1GB 쿠폰 적용", time: "23:35", icon: Ticket },
@@ -27,6 +28,7 @@ export default function My() {
     { title: "로그아웃", icon: LogOut },
     { title: "약관 및 정책", icon: FileText },
   ];
+
   return (
     <div className="flex min-h-full flex-col bg-neutral-50">
       <section className="bg-primary-500 text-neutral-0 relative rounded-b-[40px] p-6 text-center">

@@ -101,7 +101,7 @@ export default function SignupJwt() {
         postalCode: addressInfo.zonecode,
       },
     };
-    console.log("전송 데이터 확인:", payload);
+
     signup(payload);
   };
 

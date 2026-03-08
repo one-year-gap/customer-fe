@@ -37,32 +37,6 @@ export default function My() {
     { title: "약관 및 정책", icon: FileText },
   ];
 
-  const membershipChip = (membership: string | undefined) => {
-    if (membership === "GOLD") {
-      return {
-        text: "우수",
-        style: "bg-secondary-300 text-neutral-0",
-      };
-    }
-    if (membership === "VIP") {
-      return {
-        text: "VIP",
-        style: "bg-secondary-500 text-neutral-0",
-      };
-    }
-    if (membership === "VVIP") {
-      return {
-        text: "VVIP",
-        style: "bg-secondary-700 text-neutral-0",
-      };
-    }
-    return {
-      text: membership || "우수",
-      style: "bg-secondary-300 text-neutral-0",
-    };
-  };
-  const { text, style } = membershipChip(data?.membership);
-
   return (
     <div className="flex min-h-full flex-col bg-neutral-50">
       {/* 헤더 섹션 */}

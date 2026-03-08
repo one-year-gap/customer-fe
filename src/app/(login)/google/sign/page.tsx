@@ -5,18 +5,31 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
 
-import { Eye, EyeOff, X } from "lucide-react";
+import { X } from "lucide-react";
 
-import { useSignup } from "@/lib/tanstack/mutation/user";
-import type { SignupRequestDTO } from "@/models/user";
+import { useGoogleSignup } from "@/lib/tanstack/mutation/user";
+import { useOnboardingMe } from "@/lib/tanstack/query/user";
+import type { GoogleSignupRequestDTO } from "@/models/user";
 import type { DaumPostcodeData } from "@/types/daum";
 
-export default function SignupJwt() {
+export default function SignupGoogle() {
+  const { data: onboardingData, isLoading } = useOnboardingMe();
+  if (isLoading) {
+    return (
+      <div className="bg-background flex min-h-screen items-center justify-center">
+        <p className="text-sm text-neutral-500">회원 정보를 불러오는 중입니다...</p>
+      </div>
+    );
+  }
+  const initialUser = onboardingData
+    ? { name: onboardingData.name, email: onboardingData.email }
+    : undefined;
+
+  return <SignupGoogleForm initialUser={initialUser} />;
+}
+
+function SignupGoogleForm({ initialUser }: { initialUser?: { name: string; email: string } }) {
   const [formData, setFormData] = useState({
-    email: "",
-    password: "", //비번 입력시 비밀번호는 8자 이상 64자 이하로 입력해야함
-    passwordConfirm: "",
-    name: "",
     phone: "",
     year: "",
     month: "",
@@ -24,8 +37,6 @@ export default function SignupJwt() {
     gender: "",
   });
   const [gender, setGender] = useState<"male" | "female">("male");
-  const [showPw, setShowPw] = useState(false);
-  const [showPwConfirm, setShowPwConfirm] = useState(false);
   const [addressInfo, setAddressInfo] = useState({
     zonecode: "", //우편번호
     roadAddress: "", //도로명 주소
@@ -36,7 +47,7 @@ export default function SignupJwt() {
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const { mutate: signup, isPending } = useSignup({
+  const { mutate: googleSignup } = useGoogleSignup({
     onSuccess: () => {
       router.push("/tos");
     },
@@ -55,12 +66,13 @@ export default function SignupJwt() {
       if (wrapRef.current && window.daum) {
         new window.daum.Postcode({
           oncomplete: (data: DaumPostcodeData) => {
-            setAddressInfo({
+            setAddressInfo((prev) => ({
+              ...prev,
               zonecode: data.zonecode,
               roadAddress: data.roadAddress,
               sido: data.sido,
               sigungu: data.sigungu,
-            });
+            }));
             setIsPostcodeOpen(false);
           },
           onresize: (size) => {
@@ -77,9 +89,6 @@ export default function SignupJwt() {
 
   const handleClickSign = () => {
     if (
-      !formData.email ||
-      !formData.password ||
-      !formData.name ||
       !formData.phone ||
       !formData.year ||
       !formData.month ||
@@ -87,27 +96,18 @@ export default function SignupJwt() {
       !addressInfo.zonecode ||
       !addressInfo.roadAddress
     ) {
-      alert("필수 항목을 입력해주세요");
+      alert("필수 정보를 모두 입력해주세요.");
       return;
     }
-    if (formData.password !== formData.passwordConfirm) {
-      alert("비밀번호가 일치하지 않습니다.");
-      return;
-    }
-    // 주소 가공: roadAddress에서 sido + sigungu 부분을 제거
     const streetAddress = addressInfo.roadAddress
       .replace(addressInfo.sido, "")
       .replace(addressInfo.sigungu, "")
       .trim();
 
-    const payload: SignupRequestDTO = {
-      email: formData.email,
-      password: formData.password,
-      name: formData.name,
+    const payload: GoogleSignupRequestDTO = {
       phone: formData.phone,
       birthDate: `${formData.year}-${formData.month.padStart(2, "0")}-${formData.day.padStart(2, "0")}`,
       gender: gender === "male" ? "M" : "F",
-      membership: "GOLD",
       address: {
         province: addressInfo.sido,
         city: addressInfo.sigungu,
@@ -115,9 +115,9 @@ export default function SignupJwt() {
         postalCode: addressInfo.zonecode,
       },
     };
-
-    signup(payload);
+    googleSignup(payload);
   };
+
   const handleBack = () => {
     router.back();
   };
@@ -127,7 +127,9 @@ export default function SignupJwt() {
       <Script src="//t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" />
 
       {isPostcodeOpen && (
-        <div className="bg-card fixed inset-0 z-[100] mx-auto flex max-w-sm flex-col overflow-hidden">
+        <div
+          role="dialog"
+          className="bg-card fixed inset-0 z-[100] mx-auto flex max-w-sm flex-col overflow-hidden">
           <div className="border-muted bg-card flex h-14 items-center justify-between border-b px-4">
             <div className="font-bold">주소 검색</div>
             <button type="button" onClick={() => setIsPostcodeOpen(false)}>
@@ -135,7 +137,7 @@ export default function SignupJwt() {
             </button>
           </div>
           <div className="flex-1 overflow-y-auto pt-2">
-            <div ref={wrapRef} className="w-100%" />
+            <div ref={wrapRef} className="w-full" />
           </div>
         </div>
       )}
@@ -150,14 +152,9 @@ export default function SignupJwt() {
         <div className="space-y-4">
           <div>
             <div className="text-primary-500 mb-1 block text-sm font-bold">이름</div>
-            <input
-              id="name"
-              type="text"
-              placeholder="이름"
-              value={formData.name}
-              onChange={handleInputChange}
-              className="bg-input text-foreground focus:ring-ring w-full rounded-md px-4 py-3 text-sm outline-none focus:ring-2"
-            />
+            <div className="bg-input text-foreground focus:ring-ring w-full rounded-md px-4 py-3 text-sm outline-none focus:ring-2">
+              {initialUser?.name || "정보 없음"}
+            </div>
           </div>
 
           <div>
@@ -256,59 +253,14 @@ export default function SignupJwt() {
 
           <div>
             <div className="text-primary-500 mb-1 block text-sm font-bold">아이디 (이메일)</div>
-            <input
-              id="email"
-              type="email"
-              placeholder="아이디 입력"
-              value={formData.email}
-              onChange={handleInputChange}
-              className="bg-input text-foreground focus:ring-ring w-full rounded-md px-4 py-3 text-sm outline-none focus:ring-2"
-            />
-          </div>
-
-          <div>
-            <div className="text-primary-500 mb-1 block text-sm font-bold">비밀번호</div>
-            <div className="relative">
-              <input
-                id="password"
-                type={showPw ? "text" : "password"}
-                placeholder="비밀번호 입력"
-                value={formData.password}
-                onChange={handleInputChange}
-                className="bg-input text-foreground focus:ring-ring w-full rounded-md px-4 py-3 pr-10 text-sm outline-none focus:ring-2"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPw((prev) => !prev)}
-                className="text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2">
-                {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
+            <div className="bg-input text-foreground focus:ring-ring w-full rounded-md px-4 py-3 text-sm outline-none focus:ring-2">
+              {initialUser?.email || "정보 없음"}
             </div>
           </div>
 
-          <div>
-            <div className="text-primary-500 mb-1 block text-sm font-bold">비밀번호 확인</div>
-            <div className="relative">
-              <input
-                id="passwordConfirm"
-                type={showPwConfirm ? "text" : "password"}
-                placeholder="비밀번호 확인"
-                value={formData.passwordConfirm}
-                onChange={handleInputChange}
-                className="bg-input text-foreground focus:ring-ring w-full rounded-md px-4 py-3 pr-10 text-sm outline-none focus:ring-2"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPwConfirm((prev) => !prev)}
-                className="text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2">
-                {showPwConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
-            </div>
-          </div>
           <button
-            onClick={handleClickSign}
-            disabled={isPending}
             type="button"
+            onClick={handleClickSign}
             className="bg-primary-500 text-primary-foreground mt-4 w-full rounded-md px-4 py-3 text-sm font-semibold hover:opacity-90">
             회원가입
           </button>

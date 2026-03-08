@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import splash from "@/assets/images/splash.png";
 
@@ -74,7 +75,7 @@ function StepIndicator() {
         <div className="bg-secondary-500 text-neutral-0 flex h-6 w-6 items-center justify-center rounded-full font-semibold">
           1
         </div>
-        <span className="font-semibold text-neutral-900">약관 동의</span>
+        <span className="font-semibold text-neutral-900">회원 가입</span>
       </div>
 
       <div className="bg-secondary-500 mx-2 h-0.5 flex-1" />
@@ -83,7 +84,7 @@ function StepIndicator() {
         <div className="bg-secondary-500 text-neutral-0 flex h-6 w-6 items-center justify-center rounded-full font-semibold">
           2
         </div>
-        <span className="font-semibold text-neutral-900">회원 가입</span>
+        <span className="font-semibold text-neutral-900">약관 동의</span>
       </div>
 
       <div className="bg-secondary-500 mx-2 h-0.5 flex-1" />
@@ -163,6 +164,10 @@ export default function TermsPage() {
       location: next,
     });
   };
+  const router = useRouter();
+  const handleCompleteTos = () => {
+    router.push("/login");
+  };
 
   return (
     <div className="bg-background flex min-h-screen justify-center px-6 py-10">
@@ -207,6 +212,7 @@ export default function TermsPage() {
         <button
           type="button"
           disabled={!isRequiredOk}
+          onClick={handleCompleteTos}
           className={`mt-6 w-full rounded-2xl border py-3 text-sm font-semibold transition ${
             isRequiredOk
               ? "border-primary bg-primary-100 text-primary-700"

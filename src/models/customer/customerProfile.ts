@@ -23,5 +23,11 @@ export interface CustomerMobilePlan {
   isDay: boolean;
   benefitSms: string;
   benefitVoiceCall: string;
-  usageDetails: Record<string, unknown>;
+  usageDetails: CustomerUsageDetails;
+}
+
+export interface CustomerUsageDetails {
+  dataGb: number | null;
+  smsCnt: number | null;
+  voiceMin: number | null;
 }

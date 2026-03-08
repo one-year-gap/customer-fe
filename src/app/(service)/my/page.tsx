@@ -20,8 +20,6 @@ import { useCustomerProfile } from "@/lib/tanstack/query/customer/useCustomerPro
 
 export default function My() {
   const { data, isLoading, isError } = useCustomerProfile();
-  console.log("API RESULT:", data);
-  console.log(isError);
 
   if (isLoading) return <div>로딩중...</div>;
   if (isError) return <div>에러</div>;

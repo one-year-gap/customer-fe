@@ -12,9 +12,6 @@ import { useCustomerProfile } from "@/lib/tanstack/query/customer/useCustomerPro
 export default function Home() {
   const { data, isLoading, isError } = useCustomerProfile();
 
-  console.log("API RESULT:", data);
-  console.log(isError);
-
   if (isLoading) return <div>로딩중...</div>;
   if (isError || !data) return <div>에러</div>;
 
@@ -203,12 +200,12 @@ export default function Home() {
 
         <div className="my-8 px-5">
           <div className="bg-secondary-50 flex items-center justify-between rounded-lg p-6 shadow-sm">
-            <div className="text-md flex flex-col gap-1 text-xs font-medium">
+            <div className="flex flex-col gap-1 font-medium">
               <h3 className="text-sm">{data.name} 님에게 맞는 상품 추천!</h3>
-              <p className="text-neutral-500">기본 정보와 사용패턴을 조합해 추천해드려요!</p>
+              <p className="text-xs text-neutral-500">사용패턴을 분석하여 추천해드려요!</p>
               <button
                 type="button"
-                className="bg-secondary-500 text-neutral-0 flex w-fit items-center justify-center rounded-full px-4 py-2 font-semibold">
+                className="bg-secondary-500 text-neutral-0 mt-1 flex w-fit cursor-pointer items-center justify-center rounded-full py-1 pr-1 pl-3 text-xs font-semibold">
                 확인하기
                 <ChevronRight className="h-4 w-4 text-neutral-100" />
               </button>

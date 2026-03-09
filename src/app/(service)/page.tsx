@@ -16,30 +16,32 @@ export default function Home() {
   if (isError || !data) return <div>에러</div>;
 
   const totalData = Number(data?.mobilePlan.dataAmount.replace("GB", ""));
-
-  // const usedData = data?.mobilePlan.usageDetails.dataGb ?? 0;
-  const usedData = 20; // API에 있음, null이라서 임시 데이터
-
+  const usedData = data?.mobilePlan.usageDetails.dataGb ?? 0;
   const remaining = parseFloat((totalData - usedData).toFixed(2));
-
   const chartData = [
     { name: "Remaining", value: remaining, isHighlight: true },
     { name: "Used", value: usedData, isHighlight: false },
   ];
 
   // const callUsed = data?.mobilePlan.usageDetails.voiceMin ?? 0;
-  const callUsed = 100; // API에 있음, null이라서 임시 데이터
-  const callMax = 300; // API에 없음, 임시 데이터
+  // const callUsed = 100; // API에 있음, null이라서 임시 데이터
+  // const callMax = 300; // API에 없음, 임시 데이터
+  const callUsed = data?.mobilePlan.usageDetails.voiceMin ?? 0;
+  const callMax = data?.mobilePlan.benefitVoiceCall;
+  const isCallInfi = callMax.includes("무제한");
 
   // const smsUsed = data?.mobilePlan.usageDetails.smsCnt ?? 0;
-  const smsUsed = 50; // API에 있음, null이라서 임시 데이터
-  const smsMax = 100; // API에 없음, 임시데이터
+  // const smsUsed = 50; // API에 있음, null이라서 임시 데이터
+  // const smsMax = 100; // API에 없음, 임시데이터
+  const smsUsed = data?.mobilePlan.usageDetails.smsCnt ?? 0;
+  const smsMax = data?.mobilePlan.benefitSms;
+  const isSmsInfi = smsMax.includes("기본제공");
 
   const safePercent = (value: number, max: number) =>
     max > 0 ? Math.min(100, Math.max(0, (value / max) * 100)) : 0;
 
-  const callPercentage = safePercent(callUsed, callMax);
-  const smsPercentage = safePercent(smsUsed, smsMax);
+  const callPercentage = !!isCallInfi ? 100 : safePercent(callUsed, parseInt(callMax));
+  const smsPercentage = !!isSmsInfi ? 100 : safePercent(smsUsed, parseInt(smsMax));
 
   return (
     <div className="bg-neutral-0 flex min-h-full flex-col">
@@ -141,7 +143,7 @@ export default function Home() {
                 <div className="mb-1 flex justify-between">
                   <span className="font-medium">영상, 부가전화</span>
                   <span className="text-neutral-500">
-                    {callUsed}분 / {callMax}분
+                    {!!isCallInfi ? "무제한" : `{callUsed}분 / {callMax}분`}
                   </span>
                 </div>
 
@@ -155,20 +157,9 @@ export default function Home() {
               {/* 문자 사용량 막대바 */}
               <div>
                 <div className="mb-1 flex justify-between">
-                  {/* 1번째 방법 */}
-                  {/* <span>{smsUsed === smsMax ? "기본제공" : `${smsUsed} / ${smsMax}`}</span> */}
-                  {/* <span className="font-medium">SMS/MMS </span>
-                  <span className="text-neutral-500">
-                    {callUsed}분 / {callMax}분
-                  </span> */}
-
-                  {/* 2번째 방법 */}
-                  {/* <span>{smsUsed === smsMax ? "기본제공" : `${smsUsed}건 / ${smsMax}건`}</span> */}
-
-                  {/* 3번째 방법 */}
                   <span className="font-medium">SMS/MMS</span>
                   <span className="text-neutral-500">
-                    {smsUsed}건 / {smsMax}건
+                    {!!isCallInfi ? "기본제공" : `{smsUsed}건/{smsMax}건`}
                   </span>
                 </div>
 

@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 
 import {
@@ -14,8 +16,14 @@ import {
 
 import hole from "@/assets/images/HoleMan.png";
 import logo from "@/assets/images/Logo.png";
+import { useCustomerProfile } from "@/lib/tanstack/query/customer/useCustomerProfile";
 
 export default function My() {
+  const { data, isLoading, isError } = useCustomerProfile();
+
+  if (isLoading) return <div>로딩중...</div>;
+  if (isError) return <div>에러</div>;
+
   const recentActivities = [
     { title: "데이터 쿠폰 사용", desc: "1GB 쿠폰 적용", time: "23:35", icon: Ticket },
     { title: "요금제 조회", desc: "5G 프리미어 에센셜 조회", time: "23:40", icon: Search },
@@ -31,13 +39,19 @@ export default function My() {
 
   return (
     <div className="flex min-h-full flex-col bg-neutral-50">
-      <section className="bg-primary-500 text-neutral-0 relative rounded-b-[40px] p-6 text-center">
-        <Image src={logo} alt="LG U+NIVERSE 로고" width={37} height={37} />
-        <div className="mx-auto mb-4 flex items-center justify-center overflow-hidden">
-          <Image src={hole} alt="holeMan image" width={96} height={96} />
+      {/* 헤더 섹션 */}
+      <section className="bg-primary-500 text-neutral-0 relative rounded-b-[40px] p-4 text-center font-medium">
+        <Image src={logo} alt="LG U+NIVERSE 로고" width={95} height={95} className="h-9 w-9" />
+        <div className="\ mx-auto flex flex-col items-center justify-center gap-2">
+          <Image src={hole} alt="holeMan image" width={96} height={96} className="h-24 w-24" />
+
+          <div className="flex items-center justify-center gap-2">
+            <h2 className="text-lg">{data?.name}</h2>
+            <span className={`rounded-full px-2 py-1 text-xs font-semibold ${style}`}>{text}</span>
+          </div>
+
+          <p className="text-md text-neutral-300">{data?.phone}</p>
         </div>
-        <h2 className="mb-1 text-lg">김우주</h2>
-        <p className="text-xs text-neutral-300">010-1234-5678</p>
       </section>
 
       <div className="space-y-6 px-5 py-8">

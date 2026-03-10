@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -17,10 +18,12 @@ import {
 
 import hole from "@/assets/images/HoleMan.png";
 import logo from "@/assets/images/Logo.png";
+import LogoutModal from "@/components/domain/my/LogoutModal";
 import { useCustomerProfile } from "@/lib/tanstack/query/customer/useCustomerProfile";
 
 export default function My() {
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data, isLoading, isError } = useCustomerProfile();
 
@@ -123,7 +126,13 @@ export default function My() {
                 <button
                   type="button"
                   key={menu.title}
-                  onClick={() => router.push(menu.path)}
+                  onClick={() => {
+                    if (menu.title === "로그아웃") {
+                      setIsModalOpen(true);
+                    } else {
+                      router.push(menu.path);
+                    }
+                  }}
                   className="flex w-full cursor-pointer items-center justify-between p-4">
                   <div className="flex items-center gap-4">
                     <div className="text-secondary-500 bg-secondary-100 ml-2 flex h-8 w-8 items-center justify-center rounded-lg">
@@ -138,6 +147,14 @@ export default function My() {
           </div>
         </section>
       </div>
+
+      <LogoutModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => {
+          setIsModalOpen(false);
+        }}
+      />
     </div>
   );
 }

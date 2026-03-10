@@ -54,48 +54,48 @@ interface Plan {
 
 function RecommendCard({ plan }: { plan: Plan }) {
   return (
-    <div className="rounded-2xl border-2 border-blue-400 bg-white p-5">
-      <span className="rounded-full bg-blue-500 px-3 py-1 text-xs font-semibold text-white">
+    <div className="border-primary-200 rounded-2xl border-2 bg-white p-5">
+      <span className="bg-primary-500 rounded-full px-3 py-1 text-xs font-semibold text-white">
         추천
       </span>
       <div className="mt-2 flex items-center justify-between">
-        <h3 className="text-base font-bold text-gray-900">{plan.name}</h3>
+        <h3 className="text-base font-bold text-neutral-800">{plan.name}</h3>
 
-        <p className="font-bold text-blue-600">
+        <p className="text-primary-500 font-bold">
           {plan.price.toLocaleString()}
-          <span className="ml-1 text-xs text-gray-500">원/월</span>
+          <span className="text- ml-1 text-xs">원/월</span>
         </p>
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-6">
         <div className="flex gap-2">
-          <Wifi size={18} className="mt-1 text-blue-500" />
+          <Wifi size={18} className="text-secondary-700 mt-1" />
           <div>
-            <p className="text-xs text-gray-500">데이터</p>
+            <p className="text-xs text-neutral-700">데이터</p>
             <p className="text-sm font-bold">{plan.data}</p>
           </div>
         </div>
 
         <div className="flex gap-2">
-          <Smartphone size={18} className="mt-1 text-blue-500" />
+          <Smartphone size={18} className="text-secondary-700 mt-1" />
           <div>
-            <p className="text-xs text-gray-500">통화</p>
+            <p className="text-xs text-neutral-700">통화</p>
             <p className="text-sm font-bold">{plan.call}</p>
           </div>
         </div>
       </div>
 
       <div className="mt-3 flex justify-end">
-        <button className="flex items-center gap-1 text-xs font-bold text-blue-600">
+        <button className="text-secondary-700 flex items-center gap-1 text-xs font-bold">
           상세보기
           <ChevronRight size={16} />
         </button>
       </div>
 
       <div className="mt-4 border-t pt-3">
-        <p className="text-sm font-semibold text-blue-600">추천이유</p>
+        <p className="text--secondary-700 text-sm font-semibold">추천이유</p>
 
-        <ul className="mt-2 space-y-1 text-xs text-gray-600">
+        <ul className="mt-2 space-y-1 text-xs text-neutral-700">
           {plan.reasons.map((r, i) => (
             <li key={i}>• {r}</li>
           ))}

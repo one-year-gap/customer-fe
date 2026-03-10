@@ -38,7 +38,7 @@ export default function MyInfoPage() {
   const [isEditing, setIsEditing] = useState(false);
 
   return (
-    <main className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <header className="bg-primary-500 font-display2 flex flex-col gap-2 px-6 py-4">
         <span className="text-neutral-0 text-lg">회원 정보</span>
         <span className="text-xs text-neutral-500">내 정보를 확인하고 수정하는 곳입니다.</span>
@@ -78,6 +78,6 @@ export default function MyInfoPage() {
           </UpdateButton>
         </section>
       )}
-    </main>
+    </div>
   );
 }

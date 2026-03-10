@@ -24,7 +24,7 @@ export default function LogoutModal({ isOpen, onClose, onConfirm }: LogoutModalP
       <div className="bg-neutral-0 relative z-10 flex w-72 flex-col gap-4 rounded-2xl p-4 shadow-lg">
         <X
           onClick={onClose}
-          className="hover: absolute top-4 right-4 h-6 w-6 cursor-pointer text-neutral-500 hover:text-neutral-900"
+          className="absolute top-4 right-4 h-6 w-6 cursor-pointer text-neutral-500 hover:text-neutral-900"
         />
         <div className="flex justify-center">
           <Image src={logout} alt="로그아웃" width={90} height={55} className="mt-1" />

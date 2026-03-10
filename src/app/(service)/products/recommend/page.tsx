@@ -93,7 +93,7 @@ function RecommendCard({ plan }: { plan: Plan }) {
       </div>
 
       <div className="mt-4 border-t pt-3">
-        <p className="text--secondary-700 text-sm font-semibold">추천이유</p>
+        <p className="text-secondary-700 text-sm font-semibold">추천이유</p>
 
         <ul className="mt-2 space-y-1 text-xs text-neutral-700">
           {plan.reasons.map((r, i) => (

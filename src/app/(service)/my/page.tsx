@@ -16,10 +16,12 @@ import {
 
 import hole from "@/assets/images/HoleMan.png";
 import logo from "@/assets/images/Logo.png";
+import { useLogger } from "@/hooks/useLogger";
 import { useCustomerProfile } from "@/lib/tanstack/query/customer/useCustomerProfile";
 
 export default function My() {
   const { data, isLoading, isError } = useCustomerProfile();
+  const { trackClick } = useLogger();
 
   if (isLoading) return <div>로딩중...</div>;
   if (isError) return <div>에러</div>;
@@ -118,6 +120,11 @@ export default function My() {
                 <button
                   type="button"
                   key={menu.title}
+                  onClick={() => {
+                    if (menu.title === "약관 및 정책") {
+                      trackClick("click_penalty", { page_url: "/my" });
+                    }
+                  }}
                   className="flex w-full items-center justify-between p-4">
                   <div className="flex items-center gap-4">
                     <div className="text-secondary-500 bg-secondary-100 ml-2 flex h-8 w-8 items-center justify-center rounded-lg">

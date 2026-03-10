@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { ChevronRight, Smartphone, Wifi } from "lucide-react";
 
+import { useLogger } from "@/hooks/useLogger";
 import { usePlans } from "@/lib/tanstack/query/usePlan";
 
 interface ProductsListProps {
@@ -14,6 +15,7 @@ interface ProductsListProps {
 const formatPrice = (price?: number) => (price ? price.toLocaleString("ko-KR") : "0");
 
 export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
+  const { trackClick } = useLogger();
   const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null);
 
   const { data, isLoading, isError } = usePlans(category);
@@ -73,6 +75,12 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
                 onClick={(e) => {
                   e.stopPropagation();
                   onOpenDetail(plan.productId);
+                  trackClick("click_product_detail", {
+                    product_id: plan.productId,
+                    product_name: plan.name,
+                    product_type: category as "mobile" | "internet" | "tab-watch" | "iptv",
+                    tags: plan.tags,
+                  });
                 }}
                 className="flex items-center gap-1 text-xs font-bold text-blue-600">
                 상세보기

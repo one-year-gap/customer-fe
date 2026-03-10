@@ -2,6 +2,8 @@
 
 import { useRef } from "react";
 
+import { useLogger } from "@/hooks/useLogger";
+
 interface ProductsFilterProps {
   selected: string;
   onChange: (value: string) => void;
@@ -16,6 +18,7 @@ const FILTERS = [
 
 export function ProductsFilter({ selected, onChange }: ProductsFilterProps) {
   const ref = useRef<HTMLDivElement | null>(null);
+  const { trackClick } = useLogger();
 
   return (
     <div className="flex items-center gap-2 py-3">
@@ -26,7 +29,12 @@ export function ProductsFilter({ selected, onChange }: ProductsFilterProps) {
           return (
             <button
               key={item.value}
-              onClick={() => onChange(item.value)}
+              onClick={() => {
+                onChange(item.value);
+                trackClick("click_list_type", {
+                  product_type: item.value as "mobile" | "internet" | "tab-watch" | "iptv",
+                });
+              }}
               className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${
                 isActive ? "bg-[#162C5B] text-white" : "bg-gray-200 text-gray-600"
               }`}>

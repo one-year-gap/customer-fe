@@ -30,19 +30,19 @@ export default function PolicyPage() {
   return (
     <div className="bg-background min-h-screen">
       <div className="bg-primary-700 relative overflow-hidden px-6 py-10 text-white">
-        <h1 className="text-2xl font-bold">약관 및 정책</h1>
+        <div className="text-2xl font-bold">약관 및 정책</div>
         <p className="mt-2 text-sm text-white/80">약관을 확인해보세요.</p>
 
         <div className="absolute -top-20 -right-20 h-55 w-55 rounded-full border border-white/20" />
       </div>
 
       <div className="px-6 py-8">
-        <h2 className="mb-6 text-center text-lg font-semibold">약관 및 정책</h2>
+        <div className="mb-6 text-center text-lg font-semibold">약관 및 정책</div>
 
         <div className="space-y-6 border-t border-neutral-300 pt-6">
           {policies.map((policy, index) => (
             <div key={index}>
-              <h3 className="mb-2 font-semibold text-neutral-800">{policy.title}</h3>
+              <div className="text-md mb-2 font-semibold text-neutral-800">{policy.title}</div>
               <div className="rounded-md bg-neutral-200 p-4 text-sm leading-relaxed whitespace-pre-line text-neutral-700">
                 {policy.content}
               </div>

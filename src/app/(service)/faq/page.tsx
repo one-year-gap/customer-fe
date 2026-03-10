@@ -32,14 +32,14 @@ export default function FAQPage() {
   return (
     <div className="min-h-screen">
       <div className="relative overflow-hidden bg-[#1E3A6D] px-6 py-10 text-white">
-        <h1 className="text-2xl font-bold">FAQ</h1>
+        <div className="text-2xl font-bold">FAQ</div>
         <p className="mt-2 text-sm text-white/80">자주하는 질문을 확인해보세요.</p>
 
         <div className="absolute -top-20 -right-20 h-55 w-55 rounded-full border border-white/20" />
       </div>
 
       <div className="px-6 py-8">
-        <h2 className="mb-6 text-center text-lg font-semibold">자주 묻는 질문</h2>
+        <div className="mb-6 text-center text-lg font-semibold">자주 묻는 질문</div>
 
         <div className="border-t border-gray-300">
           <div className="flex border-b border-gray-300 py-3 text-sm text-gray-500">

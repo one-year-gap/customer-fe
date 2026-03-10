@@ -17,7 +17,7 @@ export function ProductsHeader() {
         <div className="text-primary-500 flex flex-col">
           <span className="text-[14px] font-semibold">나에게 맞는 요금제를 찾아보세요</span>
 
-          <span className="font-display2 my-2 text-[18px]">우주 탐험가를 위한 추천 상품!</span>
+          <span className="font-display2 my-2 text-[16.5px]">우주 탐험가를 위한 추천 상품!</span>
         </div>
       </div>
       <Image

@@ -54,12 +54,12 @@ interface Plan {
 
 function RecommendCard({ plan }: { plan: Plan }) {
   return (
-    <div className="border-primary-200 rounded-2xl border-2 bg-white p-5">
-      <span className="bg-primary-500 rounded-full px-3 py-1 text-xs font-semibold text-white">
+    <div className="border-primary-200 bg-background rounded-2xl border-2 p-5">
+      <span className="bg-primary-500 text-neutral-0 rounded-full px-3 py-1 text-xs font-semibold">
         추천
       </span>
       <div className="mt-2 flex items-center justify-between">
-        <h3 className="text-base font-bold text-neutral-800">{plan.name}</h3>
+        <div className="text-base font-bold text-neutral-800">{plan.name}</div>
 
         <p className="text-primary-500 font-bold">
           {plan.price.toLocaleString()}

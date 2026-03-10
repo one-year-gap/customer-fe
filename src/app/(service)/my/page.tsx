@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import {
   BookUser,
@@ -19,6 +20,8 @@ import logo from "@/assets/images/Logo.png";
 import { useCustomerProfile } from "@/lib/tanstack/query/customer/useCustomerProfile";
 
 export default function My() {
+  const router = useRouter();
+
   const { data, isLoading, isError } = useCustomerProfile();
 
   if (isLoading) return <div>로딩중...</div>;
@@ -31,11 +34,12 @@ export default function My() {
   ];
 
   const supportMenus = [
-    { title: "내 가입 정보", icon: BookUser },
-    { title: "고객 센터", icon: Headset },
-    { title: "로그아웃", icon: LogOut },
-    { title: "약관 및 정책", icon: FileText },
+    { title: "내 가입 정보", icon: BookUser, path: "/my/info" },
+    { title: "고객 센터", icon: Headset, path: "/support" },
+    { title: "로그아웃", icon: LogOut, path: "/logout" },
+    { title: "약관 및 정책", icon: FileText, path: "/policy" },
   ];
+
   const membershipChip = (membership: string | undefined) => {
     if (membership === "GOLD") {
       return {
@@ -90,6 +94,7 @@ export default function My() {
             <p className="text-xs text-neutral-400">23 월요일</p>
             {recentActivities.map((item, idx) => {
               const Icon = item.icon;
+
               return (
                 <div key={idx} className="flex items-center justify-between font-medium">
                   <div className="flex items-center gap-4">
@@ -111,14 +116,15 @@ export default function My() {
         {/* 지원 메뉴 섹션 */}
         <section>
           <h3 className="text-md mb-4 ml-4 font-semibold">지원 메뉴</h3>
-          <div className="divide-y divide-neutral-100 rounded-2xl bg-white text-sm shadow-sm">
+          <div className="bg-neutral-0 divide-y divide-neutral-100 rounded-2xl text-sm shadow-sm">
             {supportMenus.map((menu) => {
               const Icon = menu.icon;
               return (
                 <button
                   type="button"
                   key={menu.title}
-                  className="flex w-full items-center justify-between p-4">
+                  onClick={() => router.push(menu.path)}
+                  className="flex w-full cursor-pointer items-center justify-between p-4">
                   <div className="flex items-center gap-4">
                     <div className="text-secondary-500 bg-secondary-100 ml-2 flex h-8 w-8 items-center justify-center rounded-lg">
                       <Icon size={20} />

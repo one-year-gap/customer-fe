@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { useRouter } from "next/navigation";
 
 interface ProductsFilterProps {
   selected: string;
@@ -8,6 +9,7 @@ interface ProductsFilterProps {
 }
 
 const FILTERS = [
+  { label: "추천", value: "recommend" },
   { label: "5G 요금제", value: "mobile" },
   { label: "스마트워치/태블릿", value: "tab-watch" },
   { label: "인터넷", value: "internet" },
@@ -16,6 +18,7 @@ const FILTERS = [
 
 export function ProductsFilter({ selected, onChange }: ProductsFilterProps) {
   const ref = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
 
   return (
     <div className="flex items-center gap-2 py-3">
@@ -26,7 +29,13 @@ export function ProductsFilter({ selected, onChange }: ProductsFilterProps) {
           return (
             <button
               key={item.value}
-              onClick={() => onChange(item.value)}
+              onClick={() => {
+                if (item.value === "recommend") {
+                  router.push("/products/recommend");
+                } else {
+                  onChange(item.value);
+                }
+              }}
               className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${
                 isActive ? "bg-[#162C5B] text-white" : "bg-gray-200 text-gray-600"
               }`}>

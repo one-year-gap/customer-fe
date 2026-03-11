@@ -1,5 +1,9 @@
+export type ChartData = {
+  subject: "탐색" | "혜택" | "멀티" | "결합" | "보안" | "안정";
+  score: number;
+};
+
 export type CharacterName =
-  | "DEFAULT"
   | "SPACE_SHERLOCK"
   | "SPACE_GRAVITY"
   | "SPACE_OCTOPUS"

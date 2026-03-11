@@ -1,5 +1,7 @@
+export type ChartSubject = "탐색" | "혜택" | "멀티" | "가족" | "보안" | "안정";
+
 export type ChartData = {
-  subject: "탐색" | "혜택" | "멀티" | "결합" | "보안" | "안정";
+  subject: ChartSubject;
   score: number;
 };
 

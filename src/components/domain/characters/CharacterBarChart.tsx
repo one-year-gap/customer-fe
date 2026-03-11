@@ -6,10 +6,11 @@ import Image from "next/image";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 import star from "@/assets/images/characters/StarPick.png";
-import type { ChartData, TscoreIndex } from "@/models/characters/characterTypes";
+import type { ChartData, ChartSubject, TscoreIndex } from "@/models/characters/characterTypes";
 
 interface Props {
   tscoreIndex: TscoreIndex;
+  onSubjectClick: (subject: ChartSubject) => void;
 }
 
 function tscoreToBarData(tscore: TscoreIndex): ChartData[] {
@@ -17,17 +18,17 @@ function tscoreToBarData(tscore: TscoreIndex): ChartData[] {
     { subject: "탐색", score: tscore.exploreTscore },
     { subject: "혜택", score: tscore.benefitTrendTscore },
     { subject: "멀티", score: tscore.multiDeviceTscore },
-    { subject: "결합", score: tscore.familyHomeTscore },
+    { subject: "가족", score: tscore.familyHomeTscore },
     { subject: "보안", score: tscore.internetSecurityTscore },
     { subject: "안정", score: tscore.stabilityTscore },
   ];
 }
 
-export function CharacterBarChart({ tscoreIndex }: Props) {
+export function CharacterBarChart({ tscoreIndex, onSubjectClick }: Props) {
   const [animated, setAnimated] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
-  const data = tscoreToBarData(tscoreIndex).sort((a, b) => b.score - a.score);
+  const data = [...tscoreToBarData(tscoreIndex)].sort((a, b) => b.score - a.score);
   const visibleData = expanded ? data : data.slice(0, 3);
 
   useEffect(() => {
@@ -55,7 +56,10 @@ export function CharacterBarChart({ tscoreIndex }: Props) {
           const color = item.score >= 70 ? "bg-secondary-700" : "bg-secondary-500";
 
           return (
-            <div key={item.subject} className="flex items-center gap-2">
+            <div
+              key={item.subject}
+              className="flex items-center gap-2"
+              onClick={() => onSubjectClick(item.subject)}>
               <span className="text-xs font-medium text-neutral-900">{item.subject}</span>
               <div className="bg-secondary-300 h-2 flex-1 rounded-full">
                 <div

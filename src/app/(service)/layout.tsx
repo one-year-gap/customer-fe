@@ -8,7 +8,7 @@ export default function ServiceLayout({ children }: { children: React.ReactNode 
     <div className="min-h-dvh">
       {/* <main>{children}</main> */}
 
-      <main className="pb-15">{children}</main>
+      <main className="pb-20">{children}</main>
       <BottomNavbar />
     </div>
   );

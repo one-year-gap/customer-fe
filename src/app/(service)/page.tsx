@@ -10,7 +10,7 @@ import hole2 from "@/assets/images/HoleUniv.png";
 import logo from "@/assets/images/Logo.png";
 import { characterImages } from "@/constants/characterImages";
 import { useCharacterType } from "@/lib/tanstack/query/characters/useCharacterType";
-import { useCustomerProfile } from "@/lib/tanstack/query/customer/useCustomerProfile";
+import { useCustomerProfile } from "@/lib/tanstack/query/profile/useCustomerProfile";
 
 export default function Home() {
   const { data: me, isLoading: meLoading, isError: meError } = useCustomerProfile();

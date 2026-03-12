@@ -26,11 +26,7 @@ export function CharacterModal({ subject, onClose }: Props) {
   const character = characterImages[characterKey];
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center px-4"
-      onKeyDown={(e) => {
-        if (e.key === "Escape") onClose();
-      }}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
       {/* 배경 */}
       <div className="absolute inset-0" onClick={onClose}></div>
 
@@ -40,6 +36,9 @@ export function CharacterModal({ subject, onClose }: Props) {
         aria-modal="true"
         tabIndex={0}
         autoFocus
+        onKeyDown={(e) => {
+          if (e.key === "Escape") onClose();
+        }}
         className="relative z-10 w-full rounded-xl border border-neutral-300 bg-neutral-50 p-4 shadow-lg">
         <button
           className="text-neutral-0 absolute top-3 right-3 cursor-pointer rounded-full bg-neutral-300 p-0.5 hover:bg-neutral-500"

@@ -61,7 +61,13 @@ export function CharacterBarChart({ tscoreIndex, onSubjectClick }: Props) {
               tabIndex={0}
               key={item.subject}
               className="flex items-center gap-2"
-              onClick={() => onSubjectClick(item.subject)}>
+              onClick={() => onSubjectClick(item.subject)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onSubjectClick(item.subject);
+                }
+              }}>
               <span className="text-xs font-medium text-neutral-900">{item.subject}</span>
               <div className="bg-secondary-300 h-2 flex-1 rounded-full">
                 <div

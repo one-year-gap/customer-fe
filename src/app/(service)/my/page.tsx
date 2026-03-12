@@ -22,6 +22,7 @@ import {
 import hole from "@/assets/images/HoleMan.png";
 import logo from "@/assets/images/Logo.png";
 import LogoutModal from "@/components/domain/my/LogoutModal";
+import { useLogout } from "@/lib/tanstack/query/my/useLogout";
 import { useRecentProducts } from "@/lib/tanstack/query/my/useRecentProducts";
 import { useCustomerProfile } from "@/lib/tanstack/query/profile/useCustomerProfile";
 import type { ProductType } from "@/models/my/RecentProducts";
@@ -36,6 +37,7 @@ export default function My() {
     isLoading: recentProductLoading,
     isError: recentProductError,
   } = useRecentProducts();
+  const { mutate: logoutMutate } = useLogout();
 
   if (meLoading || recentProductLoading) return <div>로딩중...</div>;
   if (meError || recentProductError) return <div>에러</div>;
@@ -108,7 +110,7 @@ export default function My() {
       {/* 헤더 섹션 */}
       <section className="bg-primary-500 text-neutral-0 relative rounded-b-[40px] p-4 text-center font-medium">
         <Image src={logo} alt="LG U+NIVERSE 로고" width={95} height={95} className="h-9 w-9" />
-        <div className="\ mx-auto flex flex-col items-center justify-center gap-2">
+        <div className="mx-auto flex flex-col items-center justify-center gap-2">
           <Image src={hole} alt="holeMan image" width={96} height={96} className="h-24 w-24" />
 
           <div className="flex items-center justify-center gap-2">
@@ -205,7 +207,11 @@ export default function My() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={() => {
-          setIsModalOpen(false);
+          logoutMutate(undefined, {
+            onSuccess: () => {
+              router.replace("/login");
+            },
+          });
         }}
       />
     </div>

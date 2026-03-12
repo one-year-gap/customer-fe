@@ -57,6 +57,8 @@ export function CharacterBarChart({ tscoreIndex, onSubjectClick }: Props) {
 
           return (
             <div
+              role="button"
+              tabIndex={0}
               key={item.subject}
               className="flex items-center gap-2"
               onClick={() => onSubjectClick(item.subject)}>

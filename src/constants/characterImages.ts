@@ -21,8 +21,8 @@ export const characterImages = {
   SPACE_OCTOPUS: {
     image: c3,
     name: "우주 문어발",
-    description: "새로운 요금제와 서비스를 탐색하며 변화를 즐기는 사용자",
-    tags: ["탐색", "신규서비스", "트렌드"],
+    description: "여러 디바이스와 데이터를 적극적으로 활용하는 멀티 디바이스 사용자",
+    tags: ["멀티디바이스", "데이터쉐어", "활용"],
   },
   SPACE_SURFER: {
     image: c4,

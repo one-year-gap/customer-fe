@@ -23,7 +23,7 @@ export interface TscoreIndex {
   stabilityTscore: number;
 }
 
-export interface CharaterType {
+export interface CharacterType {
   personaTypeId: number;
   characterName: CharacterName;
   shortDesc: string;
@@ -34,8 +34,8 @@ export interface CharaterType {
   tscoreIndex: TscoreIndex;
 }
 
-export interface CharaterTypeResponse {
+export interface CharacterTypeResponse {
   status: string;
-  data: CharaterType;
+  data: CharacterType;
   timestamp: string;
 }

@@ -4,44 +4,59 @@ import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 
+import hole3 from "@/assets/images/HoleFlag.png";
 import hole from "@/assets/images/HoleStar.png";
 import hole2 from "@/assets/images/HoleUniv.png";
 import logo from "@/assets/images/Logo.png";
+import { characterImages } from "@/constants/characterImages";
+import { useCharacterType } from "@/lib/tanstack/query/characters/useCharacterType";
 import { useCustomerProfile } from "@/lib/tanstack/query/customer/useCustomerProfile";
 
 export default function Home() {
-  const { data, isLoading, isError } = useCustomerProfile();
+  const { data: me, isLoading: meLoading, isError: meError } = useCustomerProfile();
+  const {
+    data: character,
+    isLoading: characterLoading,
+    isError: characterError,
+  } = useCharacterType();
 
-  if (isLoading) return <div>로딩중...</div>;
-  if (isError || !data) return <div>에러</div>;
+  if (meLoading || characterLoading) return <div>로딩중...</div>;
+  if (meError || characterError || !me || !character) return <div>에러</div>;
 
-  const totalData = Number(data?.mobilePlan.dataAmount.replace("GB", ""));
-  const usedData = data?.mobilePlan.usageDetails.dataGb ?? 0;
+  /* 고객 기본 정보 */
+  const formatPhoneNumber = (phone: string) => {
+    return phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+  };
+
+  // 데이터가 매일 공급되는 요금제인지
+  const isDay = me?.mobilePlan.isDay;
+
+  // 제공 데이터량
+  const totalData = Number(me?.mobilePlan.dataAmount.replace("GB", ""));
+  const usedData = me?.mobilePlan.usageDetails.dataGb ?? 0;
   const remaining = parseFloat((totalData - usedData).toFixed(2));
   const chartData = [
     { name: "Remaining", value: remaining, isHighlight: true },
     { name: "Used", value: usedData, isHighlight: false },
   ];
 
-  // const callUsed = data?.mobilePlan.usageDetails.voiceMin ?? 0;
-  // const callUsed = 100; // API에 있음, null이라서 임시 데이터
-  // const callMax = 300; // API에 없음, 임시 데이터
-  const callUsed = data?.mobilePlan.usageDetails.voiceMin ?? 0;
-  const callMax = data?.mobilePlan.benefitVoiceCall;
-  const isCallInfi = callMax.includes("무제한");
+  // 제공통화량
+  const callUsed = me?.mobilePlan.usageDetails.voiceMin ?? 0;
+  const callMax = Number(me?.mobilePlan.benefitVoiceCall.match(/\d+/));
+  const isCallInfi = me?.mobilePlan.benefitVoiceCall.includes("무제한");
 
-  // const smsUsed = data?.mobilePlan.usageDetails.smsCnt ?? 0;
-  // const smsUsed = 50; // API에 있음, null이라서 임시 데이터
-  // const smsMax = 100; // API에 없음, 임시데이터
-  const smsUsed = data?.mobilePlan.usageDetails.smsCnt ?? 0;
-  const smsMax = data?.mobilePlan.benefitSms;
-  const isSmsInfi = smsMax.includes("기본제공");
+  // 제공문자량
+  const smsUsed = me?.mobilePlan.usageDetails.smsCnt ?? 0;
+  const smsMax = Number(me?.mobilePlan.benefitSms.match(/\d+/));
+  const isSmsInfi = me?.mobilePlan.benefitSms.includes("기본제공");
 
   const safePercent = (value: number, max: number) =>
     max > 0 ? Math.min(100, Math.max(0, (value / max) * 100)) : 0;
+  const callPercentage = safePercent(callUsed, callMax);
+  const smsPercentage = !!isSmsInfi ? 100 : safePercent(smsUsed, smsMax);
 
-  const callPercentage = !!isCallInfi ? 100 : safePercent(callUsed, parseInt(callMax));
-  const smsPercentage = !!isSmsInfi ? 100 : safePercent(smsUsed, parseInt(smsMax));
+  /* 고객 캐릭터 유형 */
+  const characterType = characterImages[character.characterName];
 
   return (
     <div className="bg-neutral-0 flex min-h-full flex-col">
@@ -52,22 +67,17 @@ export default function Home() {
             <Image src={logo} alt="LG U+NIVERSE 로고" width={95} height={95} className="h-9 w-9" />
 
             <div className="pt-6 text-xl">
-              {/*TODO1: 고객 캐릭터 적용*/}
-              {/* {data.character} */}
-
               <span className="text-lg">
-                <span className="pr-2">우주 탐험가</span>
-                <span className="pr-1">{data.name}</span>
+                <span className="pr-2">{characterType.name}</span>
+                <span className="pr-1">{me.name}</span>
                 <span className="text-md text-neutral-400">님</span>
               </span>
             </div>
 
             <div className="mt-2 flex gap-2 pb-3 text-sm text-neutral-400">
-              {/*TODO2: 고객 캐릭터 해시태그 적용*/}
-              {/* <span>#{data.characterHash[0]}</span> */}
-              <span>#호기심</span>
-              {/* <span>#{data.characterHash[1]}</span> */}
-              <span>#도전정신</span>
+              <span>#{character.tags[0]}</span>
+              <span>#{character.tags[1]}</span>
+              <span>#{character.tags[2]}</span>
             </div>
           </div>
           <div className="justify-center">
@@ -77,7 +87,7 @@ export default function Home() {
       </section>
 
       {/* 메뉴 바로가기 섹션 */}
-      <section className="mt-8 px-5 text-neutral-900">
+      <section className="mt-6 px-5 text-neutral-900">
         <h2 className="text-md mb-4 font-semibold">메뉴 바로가기</h2>
         <div className="no-scrollbar flex gap-3 overflow-x-auto">
           {["맞춤 요금제 추천", "상품 조회", "나의 요금제", "나의 가입 정보"].map((menu, idx) => (
@@ -92,14 +102,13 @@ export default function Home() {
       </section>
 
       {/* 데이터/통화 사용량 섹션 */}
-      {/*TODO3: 데이터/통화/문자 총량 + 사용량 필요 */}
       <section className="mt-8 px-5">
         <h2 className="text-md mb-4 font-semibold">나의 데이터 / 통화</h2>
 
         <div className="bg-neutral-0 rounded-lg p-4 shadow-sm">
           <div className="text-md mb-3 flex items-center justify-between font-medium">
-            <span className="text-neutral-500">{data.phone}</span>
-            <span>{data.subscriptions?.[0]?.productName}</span>
+            <span className="text-neutral-500">{formatPhoneNumber(me.phone)}</span>
+            <span>{me.subscriptions?.[0]?.productName}</span>
           </div>
 
           <div className="flex items-center gap-8">
@@ -133,18 +142,18 @@ export default function Home() {
                   <span className="text-md font-bold">{remaining}GB</span>
                   <span className="text-xs font-medium text-neutral-500">남음</span>
                 </div>
-                <div className="mt-0.5 text-xs text-neutral-500">총 {totalData}GB</div>
+                <div className="mt-0.5 text-xs text-neutral-500">
+                  {!!isDay ? "매일" : "총"} {totalData}GB
+                </div>
               </div>
             </div>
 
             <div className="flex-1 space-y-4 text-sm">
               {/* 전화 사용량 막대바 */}
               <div>
-                <div className="mb-1 flex justify-between">
-                  <span className="font-medium">영상, 부가전화</span>
-                  <span className="text-neutral-500">
-                    {!!isCallInfi ? "무제한" : `{callUsed}분 / {callMax}분`}
-                  </span>
+                <div className="mb-1 flex items-center justify-between">
+                  <span className="font-medium">{!!isCallInfi ? "부가통화량" : "제공통화량"}</span>
+                  <span className="text-xs text-neutral-500">{`${callUsed}분/${callMax}분`}</span>
                 </div>
 
                 <div className="h-2 w-full rounded-full bg-neutral-100">
@@ -152,14 +161,18 @@ export default function Home() {
                     className="bg-chart-2 h-2 rounded-full"
                     style={{ width: `${callPercentage}%` }}></div>
                 </div>
+
+                <div className="mt-1 flex items-center justify-end text-xs text-neutral-500">
+                  {!!isCallInfi ? <span>기본 통화량 무제한</span> : <span></span>}
+                </div>
               </div>
 
               {/* 문자 사용량 막대바 */}
               <div>
-                <div className="mb-1 flex justify-between">
+                <div className="mb-1 flex items-center justify-between">
                   <span className="font-medium">SMS/MMS</span>
-                  <span className="text-neutral-500">
-                    {!!isCallInfi ? "기본제공" : `{smsUsed}건/{smsMax}건`}
+                  <span className="text-xs text-neutral-500">
+                    {!!isSmsInfi ? "기본제공" : `${smsUsed}건 / ${smsMax}건`}
                   </span>
                 </div>
 
@@ -174,7 +187,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 쿠폰 및 상품 추천 섹션 */}
+      {/* 쿠폰 배너 */}
       <section>
         <div className="mt-8 px-5">
           <div className="bg-secondary-50 flex items-center justify-between rounded-lg p-6 shadow-sm">
@@ -185,14 +198,21 @@ export default function Home() {
                 클릭해서 확인하러 가보세요!
               </p>
             </div>
-            <Image src={hole} alt="character" width={130} height={130} className="justify-center" />
+            <Image
+              src={hole3}
+              alt="character"
+              width={130}
+              height={130}
+              className="justify-center"
+            />
           </div>
         </div>
 
+        {/* 상품 추천 배너 */}
         <div className="my-8 px-5">
           <div className="bg-secondary-50 flex items-center justify-between rounded-lg p-6 shadow-sm">
             <div className="flex flex-col gap-1 font-medium">
-              <h3 className="text-sm">{data.name} 님에게 맞는 상품 추천!</h3>
+              <h3 className="text-sm">{me.name} 님에게 맞는 상품 추천!</h3>
               <p className="text-xs text-neutral-500">사용패턴을 분석하여 추천해드려요!</p>
               <button
                 type="button"

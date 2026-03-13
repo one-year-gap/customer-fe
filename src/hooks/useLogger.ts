@@ -2,9 +2,9 @@
 
 import { useCallback } from "react";
 
+import { logger } from "@/components/domain/logger/Logger";
 import { useLogContext } from "@/context/LogContext";
-import { api } from "@/lib/axios";
-import type { EventProperties, LogRequestDTO } from "@/models/log";
+import type { EventProperties, LogDTO } from "@/models/log";
 
 const generateEventId = (): number => {
   // 현재 밀리초와 무작위 수를 조합하여 겹치지 않는 정수값 생성
@@ -16,7 +16,7 @@ export const useLogger = () => {
 
   const trackClick = useCallback(
     async (eventName: string, actionProps?: EventProperties) => {
-      const payload: LogRequestDTO = {
+      const payload: LogDTO = {
         event_id: generateEventId(),
         timestamp: new Date().toISOString(),
         event: "click",
@@ -28,8 +28,8 @@ export const useLogger = () => {
       };
 
       try {
-        // 1. 서버로 로그 데이터 전송
-        await api.post("/api/v1/user-logs", payload);
+        // await api.post("/api/v1/user-logs", payload); 매 요청 시마다 전송
+        await logger.log(payload); //로그를 적재해서 n초마다 보내도록 Storage로 적재
 
         if (process.env.NODE_ENV === "development") {
           console.log(`[Log Success: ${eventName}]`, payload);

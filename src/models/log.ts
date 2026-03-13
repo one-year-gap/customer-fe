@@ -7,10 +7,13 @@ export interface EventProperties {
   [key: string]: any;
 }
 
-export interface LogRequestDTO {
+export interface LogDTO {
   event_id: number; // TSID 정수값
   timestamp: string; // ISO8601
   event: "click"; // 향후 확장 가능
   event_name: string;
   event_properties?: EventProperties;
+}
+export interface LogLogRequestDTO {
+  logs: LogDTO[]; // 백엔드에게 전송할 로그 배열
 }

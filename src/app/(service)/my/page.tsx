@@ -83,6 +83,12 @@ export default function My() {
   };
 
   /* 최근에 본 상품 */
+  const recentItems = recentProduct?.data.items ?? [];
+
+  const uniqueRecentProducts = Array.from(
+    new Map(recentItems.map((item) => [item.productId, item])).values(),
+  ).sort((a, b) => new Date(b.viewedAt).getTime() - new Date(a.viewedAt).getTime());
+
   const productTypeIcon = {
     mobile: Signal,
     tablet: Smartphone,
@@ -140,7 +146,7 @@ export default function My() {
           </div>
 
           <div className="bg-neutral-0 space-y-5 rounded-2xl border border-neutral-300 p-5 shadow-sm">
-            {recentProduct?.data.items.length === 0 ? (
+            {uniqueRecentProducts.length === 0 ? (
               <div className="flex flex-col items-center gap-2 font-medium">
                 <p className="text-center text-sm text-neutral-500">최근 조회한 상품이 없습니다</p>
                 <button
@@ -150,7 +156,7 @@ export default function My() {
                 </button>
               </div>
             ) : (
-              recentProduct?.data.items.map((item) => {
+              uniqueRecentProducts.map((item) => {
                 const Icon = productTypeIcon[item.productType] ?? Search;
 
                 return (

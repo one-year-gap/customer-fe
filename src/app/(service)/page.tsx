@@ -75,9 +75,9 @@ export default function Home() {
             </div>
 
             <div className="mt-2 flex gap-2 pb-3 text-sm text-neutral-400">
-              <span>#{character.tags[0]}</span>
-              <span>#{character.tags[1]}</span>
-              <span>#{character.tags[2]}</span>
+              {character.tags?.slice(0, 3).map((tag) => (
+                <span key={tag}>#{tag}</span>
+              ))}
             </div>
           </div>
           <div className="justify-center">

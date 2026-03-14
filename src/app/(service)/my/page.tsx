@@ -85,9 +85,19 @@ export default function My() {
   /* 최근에 본 상품 */
   const recentItems = recentProduct?.data.items ?? [];
 
-  const uniqueRecentProducts = Array.from(
-    new Map(recentItems.map((item) => [item.productId, item])).values(),
-  ).sort((a, b) => new Date(b.viewedAt).getTime() - new Date(a.viewedAt).getTime());
+  const latestByProductId = recentItems.reduce((acc, item) => {
+    const prev = acc.get(item.productId);
+
+    if (!prev || new Date(item.viewedAt).getTime() > new Date(prev.viewedAt).getTime()) {
+      acc.set(item.productId, item);
+    }
+
+    return acc;
+  }, new Map<(typeof recentItems)[number]["productId"], (typeof recentItems)[number]>());
+
+  const uniqueRecentProducts = Array.from(latestByProductId.values()).sort(
+    (a, b) => new Date(b.viewedAt).getTime() - new Date(a.viewedAt).getTime(),
+  );
 
   const productTypeIcon = {
     mobile: Signal,
@@ -140,7 +150,7 @@ export default function My() {
       <div className="flex flex-col gap-6 px-5 py-8">
         {/* 최근에 본 상품 */}
         <section className="flex flex-col gap-4">
-          <div className="mb- ml- flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <Clock size={20} />
             <h3 className="text-md font-semibold">최근에 본 상품</h3>
           </div>

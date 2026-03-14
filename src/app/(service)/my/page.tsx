@@ -11,6 +11,7 @@ import {
   FileText,
   Gift,
   Headset,
+  Info,
   LogOut,
   Search,
   Signal,
@@ -108,26 +109,32 @@ export default function My() {
   return (
     <div className="bg-neutral-0 flex min-h-full flex-col">
       {/* 헤더 섹션 */}
-      <section className="bg-primary-500 text-neutral-0 relative rounded-b-[40px] p-4 text-center font-medium">
-        <Image src={logo} alt="LG U+NIVERSE 로고" width={95} height={95} className="h-9 w-9" />
-        <div className="mx-auto flex flex-col items-center justify-center gap-2">
-          <Image src={hole} alt="holeMan image" width={96} height={96} className="h-24 w-24" />
+      <section className="bg-primary-500 flex flex-col gap-2 rounded-b-[40px] p-4">
+        <div className="flex justify-between">
+          <div className="flex-1">
+            <Image src={logo} alt="LG U+NIVERSE 로고" width={95} height={95} className="h-9 w-9" />
+          </div>
+          <div className="flex flex-1 justify-center">
+            <Image src={hole} alt="holeMan image" width={96} height={96} className="h-24 w-24" />
+          </div>
+          <div className="flex-1" />
+        </div>
 
+        <div className="text-neutral-0 mx-auto flex flex-col items-center justify-center gap-2 text-center font-medium">
           <div className="flex items-center justify-center gap-2">
             <h2 className="text-lg">{me?.name}</h2>
             <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${style}`}>
               {text}
             </span>
           </div>
-
           <p className="text-md text-neutral-300">{formatPhoneNumber(me?.phone)}</p>
         </div>
       </section>
 
-      <div className="space-y-6 px-5 py-8">
+      <div className="flex flex-col gap-6 px-5 py-8">
         {/* 최근에 본 상품 */}
-        <section>
-          <div className="mb-4 ml-4 flex items-center gap-2">
+        <section className="flex flex-col gap-4">
+          <div className="mb- ml- flex items-center gap-2">
             <Clock size={20} />
             <h3 className="text-md font-semibold">최근에 본 상품</h3>
           </div>
@@ -172,8 +179,12 @@ export default function My() {
         </section>
 
         {/* 지원 메뉴 섹션 */}
-        <section>
-          <h3 className="text-md mb-4 ml-4 font-semibold">지원 메뉴</h3>
+        <section className="flex flex-col gap-4">
+          <div className="flex items-center gap-2">
+            <Info size={20} />
+            <h3 className="text-md font-semibold">지원 메뉴</h3>
+          </div>
+
           <div className="bg-neutral-0 divide-y divide-neutral-100 rounded-2xl border border-neutral-300 text-sm shadow-sm">
             {supportMenus.map((menu) => {
               const Icon = menu.icon;

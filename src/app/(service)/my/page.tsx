@@ -83,7 +83,7 @@ export default function My() {
   };
 
   /* 최근에 본 상품 */
-  const recentItems = recentProduct?.data.items ?? [];
+  const recentItems = recentProduct?.data?.items ?? [];
 
   const latestByProductId = recentItems.reduce((acc, item) => {
     const prev = acc.get(item.productId);

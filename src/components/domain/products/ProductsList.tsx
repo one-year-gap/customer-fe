@@ -69,15 +69,17 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
             </div>
 
             <div className="mt-3 flex justify-end">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onOpenDetail(plan.productId);
-                }}
-                className="flex items-center gap-1 text-xs font-bold text-blue-600">
-                상세보기
-                <ChevronRight size={16} />
-              </button>
+              {(category === "mobile" || category === "recommend") && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onOpenDetail(plan.productId);
+                  }}
+                  className="flex items-center gap-1 text-xs font-bold text-blue-600">
+                  상세보기
+                  <ChevronRight size={16} />
+                </button>
+              )}
             </div>
           </div>
         );

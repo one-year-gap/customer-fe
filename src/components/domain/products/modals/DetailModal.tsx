@@ -2,6 +2,7 @@
 
 import { BarChart3, Gauge, Mail, Phone, X } from "lucide-react";
 
+import { useLogger } from "@/hooks/useLogger";
 import { usePlanDetail } from "@/lib/tanstack/query/usePlanDetail";
 
 interface DetailModalProps {
@@ -12,22 +13,27 @@ interface DetailModalProps {
 }
 
 export default function DetailModal({ open, productId, onClose, onCompare }: DetailModalProps) {
+  const { trackClick } = useLogger();
   const { data, isLoading } = usePlanDetail(productId);
 
   if (!open) return null;
-  if (isLoading) return <div className="fixed inset-0 bg-black/40">로딩중...</div>;
+  if (isLoading)
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black/40 text-white">
+        로딩중...
+      </div>
+    );
   if (!data) return null;
 
   const d = data;
 
   return (
-    <div
-      className="fixed inset-0 z-100 flex items-end justify-center bg-black/40"
-      onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40" onClick={onClose}>
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-background flex max-h-[90vh] w-full max-w-100.5 flex-col rounded-t-3xl">
+        className="bg-background flex max-h-[90vh] w-full max-w-[402px] flex-col rounded-t-3xl">
         <div className="flex-1 overflow-y-auto px-5 pt-5">
+          {/* 상단 */}
           <div className="mb-4 flex items-center justify-between">
             <span className="bg-secondary-500 rounded-full px-3 py-1 text-xs font-semibold text-white">
               요금제
@@ -37,8 +43,10 @@ export default function DetailModal({ open, productId, onClose, onCompare }: Det
             </button>
           </div>
 
+          {/* 요금제 이름 */}
           <h2 className="text-xl font-bold text-neutral-800">{d.name}</h2>
 
+          {/* 가격 */}
           <div className="mt-2 mb-6 flex items-end gap-1">
             <span className="text-secondary-500 text-3xl font-extrabold">
               {(d.salePrice ?? d.price).toLocaleString("ko-KR")}
@@ -46,6 +54,7 @@ export default function DetailModal({ open, productId, onClose, onCompare }: Det
             <span className="text-sm text-neutral-600">원/월</span>
           </div>
 
+          {/* 주요 스펙 */}
           <div className="mb-6 grid grid-cols-2 gap-3">
             <SpecBox label="데이터" value={d.content.dataAmount ?? "-"} icon={BarChart3} />
             <SpecBox label="통화" value={d.content.benefitVoiceCall ?? "-"} icon={Phone} />
@@ -57,6 +66,7 @@ export default function DetailModal({ open, productId, onClose, onCompare }: Det
             <SpecBox label="문자" value={d.content.benefitSms ?? "-"} icon={Mail} />
           </div>
 
+          {/* 상세 혜택 */}
           <h3 className="mb-3 text-sm font-bold text-neutral-600">상세 정보</h3>
 
           <div className="space-y-3 pb-6">
@@ -75,9 +85,15 @@ export default function DetailModal({ open, productId, onClose, onCompare }: Det
           </div>
         </div>
 
+        {/* 하단 버튼 */}
         <div className="bg-background border-t p-4">
           <button
-            onClick={onCompare}
+            onClick={() => {
+              trackClick("click_compare", {
+                target_id: d.productId,
+              });
+              onCompare();
+            }}
             className="bg-secondary-500 hover:bg-secondary-600 w-full rounded-3xl py-4 text-sm font-semibold text-white shadow-md transition">
             ↓↑ 내 현재 요금과 가격 비교하기
           </button>

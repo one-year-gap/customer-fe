@@ -19,6 +19,7 @@ export interface Plan {
   productCode: string;
   content: PlanContent;
   isBest: boolean;
+  tags: string[];
 }
 
 export interface PlansData {

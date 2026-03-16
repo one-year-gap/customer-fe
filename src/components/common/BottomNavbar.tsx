@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { House, ShoppingBag, User, Users } from "lucide-react";
 
 const items = [
-  { href: "/home", label: "홈", icon: House },
+  { href: "/", label: "홈", icon: House },
   { href: "/products", label: "상품", icon: ShoppingBag },
   { href: "/characters", label: "유형", icon: Users },
   { href: "/my", label: "마이", icon: User },
@@ -16,8 +16,8 @@ export function BottomNavbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed right-0 bottom-0 left-0 z-50 border-t border-neutral-300 bg-neutral-50">
-      <ul className="mx-auto flex h-16 max-w-120">
+    <nav className="fixed bottom-0 left-1/2 z-50 w-full max-w-[402px] -translate-x-1/2 border-t border-neutral-300 bg-neutral-50">
+      <ul className="mx-auto flex h-16">
         {items.map((item) => {
           const Icon = item.icon;
 

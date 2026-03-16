@@ -4,8 +4,6 @@ import { useState } from "react";
 
 import { ArrowRight, ArrowUpDown, ArrowUpRight, X } from "lucide-react";
 
-import { LogProvider } from "@/context/LogContext";
-import { useLogger } from "@/hooks/useLogger";
 import { useChangePlan } from "@/lib/tanstack/mutation/useChangePlan";
 import { usePlanCompare } from "@/lib/tanstack/query/usePlanCompare";
 
@@ -63,7 +61,7 @@ export default function CompareModal({ open, targetPlanId, onClose }: CompareMod
   };
 
   return (
-    <LogProvider value={{ from_plan_id: current?.productId, to_plan_id: target?.productId }}>
+    <>
       <div
         className="fixed inset-0 z-60 flex items-end justify-center bg-black/40"
         onClick={onClose}>
@@ -118,7 +116,12 @@ export default function CompareModal({ open, targetPlanId, onClose }: CompareMod
             </div>
 
             <div className="mt-8">
-              <CompareTrigger onTrigger={() => setConfirmOpen(true)} />
+              <button
+                onClick={() => setConfirmOpen(true)}
+                className="flex w-full items-center justify-center gap-2 rounded-3xl bg-blue-600 py-4 text-sm font-semibold text-white shadow-md hover:bg-blue-700">
+                <ArrowRight size={18} />
+                요금제 바꾸기
+              </button>
             </div>
           </div>
         </div>
@@ -137,7 +140,7 @@ export default function CompareModal({ open, targetPlanId, onClose }: CompareMod
           onClose();
         }}
       />
-    </LogProvider>
+    </>
   );
 }
 
@@ -199,22 +202,5 @@ function Spec({ label, value, highlight }: SpecProps) {
       <p className="mb-0.5 text-gray-500">{label}</p>
       <p className="font-medium">{value}</p>
     </div>
-  );
-}
-
-function CompareTrigger({ onTrigger }: { onTrigger: () => void }) {
-  const { trackClick } = useLogger();
-  return (
-    <button
-      onClick={() => {
-        trackClick("click_change", {
-          is_success: false,
-        });
-        onTrigger();
-      }}
-      className="flex w-full items-center justify-center gap-2 rounded-3xl bg-blue-600 py-4 text-sm font-semibold text-white shadow-md hover:bg-blue-700">
-      <ArrowRight size={18} />
-      요금제 바꾸기
-    </button>
   );
 }

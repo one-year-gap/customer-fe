@@ -136,6 +136,9 @@ body {
   --hit-100: #f5e6e8;
   --hit-500: #ef4444;
 
+  /* Semantic */
+  --danger-500: #ef4444;
+
   /* Chart */
   --chart-1: #5a88e2;
   --chart-2: #6d54cf;

@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import {
   BookUser,
@@ -16,10 +18,14 @@ import {
 
 import hole from "@/assets/images/HoleMan.png";
 import logo from "@/assets/images/Logo.png";
+import LogoutModal from "@/components/domain/my/LogoutModal";
 import { useLogger } from "@/hooks/useLogger";
 import { useCustomerProfile } from "@/lib/tanstack/query/customer/useCustomerProfile";
 
 export default function My() {
+  const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const { data, isLoading, isError } = useCustomerProfile();
   const { trackClick } = useLogger();
 
@@ -33,11 +39,12 @@ export default function My() {
   ];
 
   const supportMenus = [
-    { title: "내 가입 정보", icon: BookUser },
-    { title: "고객 센터", icon: Headset },
-    { title: "로그아웃", icon: LogOut },
-    { title: "약관 및 정책", icon: FileText },
+    { title: "내 가입 정보", icon: BookUser, path: "/my/info" },
+    { title: "고객 센터", icon: Headset, path: "/support" },
+    { title: "로그아웃", icon: LogOut, path: "/logout" },
+    { title: "약관 및 정책", icon: FileText, path: "/policy" },
   ];
+
   const membershipChip = (membership: string | undefined) => {
     if (membership === "GOLD") {
       return {
@@ -92,6 +99,7 @@ export default function My() {
             <p className="text-xs text-neutral-400">23 월요일</p>
             {recentActivities.map((item, idx) => {
               const Icon = item.icon;
+
               return (
                 <div key={idx} className="flex items-center justify-between font-medium">
                   <div className="flex items-center gap-4">
@@ -113,7 +121,7 @@ export default function My() {
         {/* 지원 메뉴 섹션 */}
         <section>
           <h3 className="text-md mb-4 ml-4 font-semibold">지원 메뉴</h3>
-          <div className="divide-y divide-neutral-100 rounded-2xl bg-white text-sm shadow-sm">
+          <div className="bg-neutral-0 divide-y divide-neutral-100 rounded-2xl text-sm shadow-sm">
             {supportMenus.map((menu) => {
               const Icon = menu.icon;
               return (
@@ -123,6 +131,11 @@ export default function My() {
                   onClick={() => {
                     if (menu.title === "약관 및 정책") {
                       trackClick("click_penalty", { page_url: "/my" });
+                    }
+                    if (menu.title === "로그아웃") {
+                      setIsModalOpen(true);
+                    } else {
+                      router.push(menu.path);
                     }
                   }}
                   className="flex w-full items-center justify-between p-4">
@@ -139,6 +152,14 @@ export default function My() {
           </div>
         </section>
       </div>
+
+      <LogoutModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => {
+          setIsModalOpen(false);
+        }}
+      />
     </div>
   );
 }

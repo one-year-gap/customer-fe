@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart3, Gauge, Mail, Phone, X } from "lucide-react";
+import { BarChart3, Gauge, Mail, Phone, Shield, Tv, Wifi, X } from "lucide-react";
 
 import { usePlanDetail } from "@/lib/tanstack/query/usePlanDetail";
 
@@ -15,7 +15,12 @@ export default function DetailModal({ open, productId, onClose, onCompare }: Det
   const { data, isLoading } = usePlanDetail(productId);
 
   if (!open) return null;
-  if (isLoading) return <div className="fixed inset-0 bg-black/40">로딩중...</div>;
+  if (isLoading)
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black/40 text-white">
+        로딩중...
+      </div>
+    );
   if (!data) return null;
 
   const d = data;
@@ -30,8 +35,9 @@ export default function DetailModal({ open, productId, onClose, onCompare }: Det
         <div className="flex-1 overflow-y-auto px-5 pt-5">
           <div className="mb-4 flex items-center justify-between">
             <span className="rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
-              요금제
+              상품 상세
             </span>
+
             <button onClick={onClose} className="rounded-full bg-gray-200 p-2">
               <X size={18} />
             </button>
@@ -46,43 +52,106 @@ export default function DetailModal({ open, productId, onClose, onCompare }: Det
             <span className="text-sm text-gray-500">원/월</span>
           </div>
 
-          <div className="mb-6 grid grid-cols-2 gap-3">
-            <SpecBox label="데이터" value={d.content.dataAmount ?? "-"} icon={BarChart3} />
-            <SpecBox label="통화" value={d.content.benefitVoiceCall ?? "-"} icon={Phone} />
-            <SpecBox
-              label="테더링"
-              value={d.content.tetheringSharingData ? `${d.content.tetheringSharingData}GB` : "-"}
-              icon={Gauge}
-            />
-            <SpecBox label="문자" value={d.content.benefitSms ?? "-"} icon={Mail} />
-          </div>
-
-          <h3 className="mb-3 text-sm font-bold text-gray-700">상세 정보</h3>
-
-          <div className="space-y-3 pb-6">
-            {[
-              d.content.benefitBrands,
-              d.content.benefitMedia,
-              d.content.benefitPremium,
-              d.content.benefitSignatureFamilyDiscount,
-            ]
-              .filter(Boolean)
-              .map((item, i) => (
-                <div key={i} className="rounded-xl bg-gray-100 px-4 py-3 text-sm">
-                  ✓ {item}
-                </div>
-              ))}
-          </div>
+          {d.productType === "MOBILE_PLAN" && <MobilePlanDetail d={d} />}
+          {d.productType === "TAB_WATCH_PLAN" && <TabWatchDetail d={d} />}
+          {d.productType === "INTERNET" && <InternetDetail d={d} />}
+          {d.productType === "IPTV" && <IptvDetail d={d} />}
+          {d.productType === "ADDON" && <AddonDetail d={d} />}
         </div>
 
-        <div className="border-t bg-white p-4">
-          <button
-            onClick={onCompare}
-            className="w-full rounded-3xl bg-blue-600 py-4 text-sm font-semibold text-white shadow-md transition hover:bg-blue-700">
-            ↓↑ 내 현재 요금과 가격 비교하기
-          </button>
-        </div>
+        {d.productType === "MOBILE_PLAN" && (
+          <div className="border-t bg-white p-4">
+            <button
+              onClick={onCompare}
+              className="w-full rounded-3xl bg-blue-600 py-4 text-sm font-semibold text-white shadow-md transition hover:bg-blue-700">
+              ↓↑ 내 현재 요금과 가격 비교하기
+            </button>
+          </div>
+        )}
       </div>
+    </div>
+  );
+}
+
+function MobilePlanDetail({ d }: { d: any }) {
+  const c = d.content;
+
+  return (
+    <>
+      <div className="mb-6 grid grid-cols-2 gap-3">
+        <SpecBox label="데이터" value={c.dataAmount} icon={BarChart3} />
+        <SpecBox label="통화" value={c.benefitVoiceCall} icon={Phone} />
+        <SpecBox
+          label="테더링"
+          value={c.tetheringSharingData ? `${c.tetheringSharingData}GB` : "-"}
+          icon={Gauge}
+        />
+        <SpecBox label="문자" value={c.benefitSms} icon={Mail} />
+      </div>
+
+      <h3 className="mb-3 text-sm font-bold text-gray-700">상세 정보</h3>
+
+      <div className="space-y-3 pb-6">
+        {[c.benefitBrands, c.benefitMedia, c.benefitPremium, c.benefitSignatureFamilyDiscount]
+          .filter(Boolean)
+          .map((item: string, i: number) => (
+            <div key={i} className="rounded-xl bg-gray-100 px-4 py-3 text-sm">
+              ✓ {item}
+            </div>
+          ))}
+      </div>
+    </>
+  );
+}
+
+function TabWatchDetail({ d }: { d: any }) {
+  const c = d.content;
+
+  return (
+    <div className="mb-6 grid grid-cols-2 gap-3">
+      <SpecBox label="데이터" value={c.dataAmount} icon={BarChart3} />
+      <SpecBox label="통화" value={c.benefitVoiceCall} icon={Phone} />
+      <SpecBox label="문자" value={c.benefitSms} icon={Mail} />
+    </div>
+  );
+}
+
+function InternetDetail({ d }: { d: any }) {
+  const c = d.content;
+
+  return (
+    <div className="space-y-4 pb-6">
+      <div className="rounded-xl bg-gray-100 p-4 text-sm">{c.planTitle}</div>
+
+      <SpecBox label="인터넷 속도" value={c.speed} icon={Wifi} />
+
+      <div className="rounded-xl bg-gray-100 p-4 text-sm whitespace-pre-line">{c.benefits}</div>
+    </div>
+  );
+}
+
+function IptvDetail({ d }: { d: any }) {
+  const c = d.content;
+
+  return (
+    <div className="space-y-4 pb-6">
+      <div className="rounded-xl bg-gray-100 p-4 text-sm">{c.planTitle}</div>
+
+      <SpecBox label="채널 수" value={`${c.channelCount}개`} icon={Tv} />
+
+      <div className="rounded-xl bg-gray-100 p-4 text-sm whitespace-pre-line">{c.benefits}</div>
+    </div>
+  );
+}
+
+function AddonDetail({ d }: { d: any }) {
+  const c = d.content;
+
+  return (
+    <div className="space-y-4 pb-6">
+      <SpecBox label="서비스 유형" value={c.addonType} icon={Shield} />
+
+      <div className="rounded-xl bg-gray-100 p-4 text-sm whitespace-pre-line">{c.description}</div>
     </div>
   );
 }
@@ -93,7 +162,7 @@ function SpecBox({
   icon: Icon,
 }: {
   label: string;
-  value: string;
+  value: string | number | null;
   icon: React.ElementType;
 }) {
   return (
@@ -102,7 +171,8 @@ function SpecBox({
         <Icon size={16} />
         <p className="text-xs">{label}</p>
       </div>
-      <p className="text-sm font-semibold text-gray-900">{value}</p>
+
+      <p className="text-sm font-semibold text-gray-900">{value ?? "-"}</p>
     </div>
   );
 }

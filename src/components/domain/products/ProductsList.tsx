@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { Check, ChevronRight, Smartphone, Wifi } from "lucide-react";
+import { Check, ChevronRight, Shield, Smartphone, Tv, Wifi } from "lucide-react";
 
 import { usePlans } from "@/lib/tanstack/query/usePlan";
 
@@ -31,8 +31,9 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
     <div className="space-y-4">
       {plans.map((plan) => {
         const isSelected = selectedPlanId === plan.productId;
+        const content = plan.content as any;
 
-        const brandBenefits = plan.content.benefitBrands?.split(",") ?? [];
+        const brandBenefits = content?.benefitBrands?.split("|") ?? [];
 
         return (
           <div
@@ -41,7 +42,12 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
             className={`relative cursor-pointer rounded-2xl border bg-white p-5 transition ${
               isSelected ? "border-2 border-blue-500" : "border-gray-200"
             }`}>
-            {/* 요금제 이름 / 가격 */}
+            {plan.isBest && (
+              <div className="absolute -top-2 left-3 rounded-full bg-red-500 px-3 py-1 text-xs font-bold text-white shadow">
+                인기
+              </div>
+            )}
+
             <div className="flex items-start justify-between">
               <h3 className="text-base font-extrabold text-gray-900">{plan.name}</h3>
 
@@ -53,29 +59,59 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
               </div>
             </div>
 
-            {/* 데이터 / 통화 */}
-            <div className="mt-4 grid grid-cols-2 gap-6">
-              <div className="flex gap-2">
+            {plan.productType === "MOBILE_PLAN" && (
+              <div className="mt-4 grid grid-cols-2 gap-6">
+                <div className="flex gap-2">
+                  <Wifi size={18} className="mt-1 text-blue-500" />
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500">데이터</p>
+                    <p className="text-sm font-extrabold">{content.dataAmount}</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <Smartphone size={18} className="mt-1 text-blue-500" />
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500">통화</p>
+                    <p className="text-sm font-bold">{content.benefitVoiceCall}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {plan.productType === "INTERNET" && (
+              <div className="mt-4 flex gap-2">
                 <Wifi size={18} className="mt-1 text-blue-500" />
                 <div>
-                  <p className="text-xs font-semibold text-gray-500">데이터</p>
-                  <p className="text-sm font-extrabold">{plan.content.dataAmount}</p>
+                  <p className="text-xs font-semibold text-gray-500">인터넷 속도</p>
+                  <p className="text-sm font-extrabold">{content.speed}</p>
                 </div>
               </div>
+            )}
 
-              <div className="flex gap-2">
-                <Smartphone size={18} className="mt-1 text-blue-500" />
+            {plan.productType === "IPTV" && (
+              <div className="mt-4 flex gap-2">
+                <Tv size={18} className="mt-1 text-blue-500" />
                 <div>
-                  <p className="text-xs font-semibold text-gray-500">통화</p>
-                  <p className="text-sm font-bold">{plan.content.benefitVoiceCall}</p>
+                  <p className="text-xs font-semibold text-gray-500">채널 수</p>
+                  <p className="text-sm font-extrabold">{content.channelCount}개</p>
                 </div>
               </div>
-            </div>
+            )}
 
-            {/* 브랜드 혜택 */}
+            {plan.productType === "ADDON" && (
+              <div className="mt-4 flex gap-2">
+                <Shield size={18} className="mt-1 text-blue-500" />
+                <div>
+                  <p className="text-xs font-semibold text-gray-500">서비스 유형</p>
+                  <p className="text-sm font-extrabold">{content.addonType}</p>
+                </div>
+              </div>
+            )}
+
             {brandBenefits.length > 0 && (
               <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-xs text-blue-600">
-                {brandBenefits.map((brand, index) => (
+                {brandBenefits.map((brand: string, index: number) => (
                   <div key={index} className="flex items-center gap-1">
                     <Check size={14} />
                     {brand.trim()}
@@ -84,7 +120,6 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
               </div>
             )}
 
-            {/* 상세보기 */}
             <div className="mt-3 flex justify-end">
               <button
                 onClick={(e) => {

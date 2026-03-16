@@ -39,42 +39,39 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
             key={plan.productId}
             onClick={() => setSelectedPlanId(plan.productId)}
             className={`relative cursor-pointer rounded-2xl border bg-white p-5 transition ${
-              isSelected ? "border-2 border-blue-500" : "border-gray-200"
+              isSelected ? "border-most-500 border-2" : "border-neutral-400"
             }`}>
-            {/* 요금제 이름 / 가격 */}
             <div className="flex items-start justify-between">
-              <h3 className="text-base font-extrabold text-gray-900">{plan.name}</h3>
+              <h3 className="text-base font-extrabold text-neutral-900">{plan.name}</h3>
 
               <div className="text-right">
-                <p className="text-base font-extrabold text-blue-600">
+                <p className="text-secondary-500 text-base font-extrabold">
                   {formatPrice(plan.salePrice ?? plan.price)}
-                  <span className="ml-1 text-xs font-semibold text-gray-500">원/월</span>
+                  <span className="ml-1 text-xs font-semibold text-neutral-700">원/월</span>
                 </p>
               </div>
             </div>
 
-            {/* 데이터 / 통화 */}
             <div className="mt-4 grid grid-cols-2 gap-6">
               <div className="flex gap-2">
-                <Wifi size={18} className="mt-1 text-blue-500" />
+                <Wifi size={18} className="text-most-500 mt-1" />
                 <div>
-                  <p className="text-xs font-semibold text-gray-500">데이터</p>
+                  <p className="text--neutral-700 text-xs font-semibold">데이터</p>
                   <p className="text-sm font-extrabold">{plan.content.dataAmount}</p>
                 </div>
               </div>
 
               <div className="flex gap-2">
-                <Smartphone size={18} className="mt-1 text-blue-500" />
+                <Smartphone size={18} className="text-secondary-500 mt-1" />
                 <div>
-                  <p className="text-xs font-semibold text-gray-500">통화</p>
+                  <p className="text-xs font-semibold text-neutral-700">통화</p>
                   <p className="text-sm font-bold">{plan.content.benefitVoiceCall}</p>
                 </div>
               </div>
             </div>
 
-            {/* 브랜드 혜택 */}
             {brandBenefits.length > 0 && (
-              <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-blue-600">
+              <div className="text-secondary-500 mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs">
                 {brandBenefits.map((brand, index) => (
                   <div key={index} className="flex items-center gap-1">
                     <Check size={14} />
@@ -84,7 +81,6 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
               </div>
             )}
 
-            {/* 상세보기 */}
             <div className="mt-3 flex justify-end">
               {(category === "mobile" || category === "recommend") && (
                 <button
@@ -92,7 +88,7 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
                     e.stopPropagation();
                     onOpenDetail(plan.productId);
                   }}
-                  className="flex items-center gap-1 text-xs font-bold text-blue-600">
+                  className="text-secondary-600 flex items-center gap-1 text-xs font-bold">
                   상세보기
                   <ChevronRight size={16} />
                 </button>

@@ -8,7 +8,7 @@ interface RecommendRequest {
 
 export async function getRecommendPlan(body: RecommendRequest) {
   const res = await api.get<RecommendPlanResponse>("/api/v1/customer/recommendations", {
-    data: body,
+    params: body,
   });
 
   return res.data.data;

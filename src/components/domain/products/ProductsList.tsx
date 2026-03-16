@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { ChevronRight, Smartphone, Wifi } from "lucide-react";
+import { Check, ChevronRight, Smartphone, Wifi } from "lucide-react";
 
 import { usePlans } from "@/lib/tanstack/query/usePlan";
 
@@ -32,6 +32,8 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
       {plans.map((plan) => {
         const isSelected = selectedPlanId === plan.productId;
 
+        const brandBenefits = plan.content.benefitBrands?.split(",") ?? [];
+
         return (
           <div
             key={plan.productId}
@@ -39,6 +41,7 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
             className={`relative cursor-pointer rounded-2xl border bg-white p-5 transition ${
               isSelected ? "border-2 border-blue-500" : "border-gray-200"
             }`}>
+            {/* 요금제 이름 / 가격 */}
             <div className="flex items-start justify-between">
               <h3 className="text-base font-extrabold text-gray-900">{plan.name}</h3>
 
@@ -50,6 +53,7 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
               </div>
             </div>
 
+            {/* 데이터 / 통화 */}
             <div className="mt-4 grid grid-cols-2 gap-6">
               <div className="flex gap-2">
                 <Wifi size={18} className="mt-1 text-blue-500" />
@@ -68,6 +72,19 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
               </div>
             </div>
 
+            {/* 브랜드 혜택 */}
+            {brandBenefits.length > 0 && (
+              <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-blue-600">
+                {brandBenefits.map((brand, index) => (
+                  <div key={index} className="flex items-center gap-1">
+                    <Check size={14} />
+                    {brand.trim()}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* 상세보기 */}
             <div className="mt-3 flex justify-end">
               {(category === "mobile" || category === "recommend") && (
                 <button

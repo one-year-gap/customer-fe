@@ -22,11 +22,11 @@ export default function DetailModal({ open, productId, onClose, onCompare }: Det
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-black/40"
+      className="fixed inset-0 z-100 flex items-end justify-center bg-black/40"
       onClick={onClose}>
       <div
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[90vh] w-full max-w-[402px] flex-col rounded-t-3xl bg-white">
+        className="flex max-h-[90vh] w-full max-w-100.5 flex-col rounded-t-3xl bg-white">
         <div className="flex-1 overflow-y-auto px-5 pt-5">
           <div className="mb-4 flex items-center justify-between">
             <span className="rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">

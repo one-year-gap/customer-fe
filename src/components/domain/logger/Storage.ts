@@ -30,7 +30,7 @@ export class Storage {
   }
 
   // 전송 완료된 ID들만 삭제
-  async clear(eventIds: number[]) {
+  async clear(eventIds: string[]) {
     const db = await this.getDB();
     const tx = db.transaction(this.storeName, "readwrite");
     await Promise.all(eventIds.map((id) => tx.store.delete(id)));

@@ -47,6 +47,9 @@ importers:
       tailwind-merge:
         specifier: ^3.4.0
         version: 3.4.0
+      tsid-ts:
+        specifier: ^0.0.9
+        version: 0.0.9
       zustand:
         specifier: ^5.0.11
         version: 5.0.11(@types/react@19.2.13)(immer@11.1.4)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
@@ -4351,6 +4354,9 @@ packages:
   tsconfig-paths@4.2.0:
     resolution: {integrity: sha512-NoZ4roiN7LnbKn9QqE1amc9DJfzvZXxF4xDavcOWt1BPkdx+m+0gJuPM+S0vCe7zTJMYUP0R8pO2XMr+Y8oLIg==}
     engines: {node: '>=6'}
+
+  tsid-ts@0.0.9:
+    resolution: {integrity: sha512-UQtHUWLO65lUht9m3Iy9iO7fxy1197L3CWEWP19VMCUpMZ548LSuWaTaLIL7NKdiWRJ6z7HJeuAJoVJ29NllnA==}
 
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
@@ -9029,6 +9035,8 @@ snapshots:
       json5: 2.2.3
       minimist: 1.2.8
       strip-bom: 3.0.0
+
+  tsid-ts@0.0.9: {}
 
   tslib@2.8.1: {}
 

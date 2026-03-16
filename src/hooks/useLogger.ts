@@ -2,13 +2,15 @@
 
 import { useCallback } from "react";
 
+import { getTsid } from "tsid-ts";
+
 import { logger } from "@/components/domain/logger/Logger";
 import { useLogContext } from "@/context/LogContext";
 import type { EventProperties, LogDTO } from "@/models/log";
 
-const generateEventId = (): number => {
-  // 현재 밀리초와 무작위 수를 조합하여 겹치지 않는 정수값 생성
-  return Number(BigInt(Date.now()) * BigInt(1000) + BigInt(Math.floor(Math.random() * 1000)));
+const generateEventId = (): string => {
+  const tsid = getTsid().toString();
+  return tsid;
 };
 
 export const useLogger = () => {

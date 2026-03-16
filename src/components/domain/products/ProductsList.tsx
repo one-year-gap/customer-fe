@@ -4,16 +4,19 @@ import { useState } from "react";
 
 import { ChevronRight, Smartphone, Wifi } from "lucide-react";
 
+import { useLogger } from "@/hooks/useLogger";
 import { usePlans } from "@/lib/tanstack/query/usePlan";
+import type { ProductType } from "@/models/log";
 
 interface ProductsListProps {
-  category: string;
+  category: ProductType;
   onOpenDetail: (planId: number) => void;
 }
 
 const formatPrice = (price?: number) => (price ? price.toLocaleString("ko-KR") : "0");
 
 export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
+  const { trackClick } = useLogger();
   const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null);
 
   const { data, isLoading, isError } = usePlans(category);
@@ -72,6 +75,12 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
+                  trackClick("click_product_detail", {
+                    product_id: plan.productId,
+                    product_name: plan.name,
+                    product_type: category,
+                    tags: plan.tags,
+                  });
                   onOpenDetail(plan.productId);
                 }}
                 className="flex items-center gap-1 text-xs font-bold text-blue-600">

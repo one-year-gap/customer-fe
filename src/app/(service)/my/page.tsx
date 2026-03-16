@@ -23,6 +23,7 @@ import {
 import hole from "@/assets/images/HoleMan.png";
 import logo from "@/assets/images/Logo.png";
 import LogoutModal from "@/components/domain/my/LogoutModal";
+import { useLogger } from "@/hooks/useLogger";
 import { useLogout } from "@/lib/tanstack/query/my/useLogout";
 import { useRecentProducts } from "@/lib/tanstack/query/my/useRecentProducts";
 import { useCustomerProfile } from "@/lib/tanstack/query/profile/useCustomerProfile";
@@ -31,6 +32,8 @@ import type { ProductType } from "@/models/my/RecentProducts";
 export default function My() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { trackClick } = useLogger();
 
   const { data: me, isLoading: meLoading, isError: meError } = useCustomerProfile();
   const {
@@ -209,13 +212,16 @@ export default function My() {
                   type="button"
                   key={menu.title}
                   onClick={() => {
+                    if (menu.title === "약관 및 정책") {
+                      trackClick("click_penalty", { page_url: "/my" });
+                    }
                     if (menu.title === "로그아웃") {
                       setIsModalOpen(true);
                     } else {
                       router.push(menu.path);
                     }
                   }}
-                  className="flex w-full cursor-pointer items-center justify-between p-4">
+                  className="flex w-full items-center justify-between p-4">
                   <div className="flex items-center gap-4">
                     <div className="text-secondary-500 bg-secondary-100 ml-2 flex h-8 w-8 items-center justify-center rounded-lg">
                       <Icon size={20} />

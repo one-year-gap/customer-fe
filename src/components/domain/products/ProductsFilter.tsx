@@ -3,12 +3,15 @@
 import { useRef } from "react";
 import { useRouter } from "next/navigation";
 
+import { useLogger } from "@/hooks/useLogger";
+import type { ProductType } from "@/models/log";
+
 interface ProductsFilterProps {
-  selected: string;
-  onChange: (value: string) => void;
+  selected: ProductType;
+  onChange: (value: ProductType) => void;
 }
 
-const FILTERS = [
+const FILTERS: { label: string; value: ProductType }[] = [
   { label: "추천", value: "recommend" },
   { label: "5G 요금제", value: "mobile" },
   { label: "스마트워치/태블릿", value: "tab-watch" },
@@ -18,6 +21,8 @@ const FILTERS = [
 
 export function ProductsFilter({ selected, onChange }: ProductsFilterProps) {
   const ref = useRef<HTMLDivElement | null>(null);
+
+  const { trackClick } = useLogger();
   const router = useRouter();
 
   return (
@@ -30,6 +35,9 @@ export function ProductsFilter({ selected, onChange }: ProductsFilterProps) {
             <button
               key={item.value}
               onClick={() => {
+                trackClick("click_list_type", {
+                  product_type: item.value,
+                });
                 onChange(item.value);
 
                 if (item.value === "recommend") {

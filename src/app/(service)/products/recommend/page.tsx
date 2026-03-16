@@ -9,6 +9,7 @@ import DetailModal from "@/components/domain/products/modals/DetailModal";
 import { ProductsFilter } from "@/components/domain/products/ProductsFilter";
 import { ProductsHeader } from "@/components/domain/products/ProductsHeader";
 import { useRecommendPlan } from "@/lib/tanstack/query/useRecommendPlan";
+import type { ProductType } from "@/models/log";
 
 type ModalType = "none" | "detail" | "compare";
 
@@ -20,7 +21,7 @@ export default function RecommendPage() {
 
   const [modal, setModal] = useState<ModalType>("none");
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [category, setCategory] = useState("recommend");
+  const [category, setCategory] = useState<ProductType>("recommend");
 
   const plans = data?.recommendedProducts ?? [];
 
@@ -31,6 +32,7 @@ export default function RecommendPage() {
       <ProductsFilter selected={category} onChange={setCategory} />
 
       {isLoading && <div className="px-1 text-sm text-neutral-500">추천 요금제 불러오는 중...</div>}
+
       {isError && <div className="px-1 text-sm text-red-500">추천 요금제 불러오기 실패</div>}
 
       {!isLoading && !isError && plans.length === 0 && (
@@ -115,7 +117,6 @@ function RecommendCard({
         </button>
       </div>
 
-      {/* 추천 이유 */}
       <div className="mt-4 rounded-lg bg-neutral-50 p-3">
         <p className="text-secondary-700 text-xs font-semibold">추천 이유</p>
         <p className="mt-1 text-xs leading-relaxed text-neutral-700">{reason}</p>

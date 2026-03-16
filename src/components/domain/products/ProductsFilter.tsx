@@ -38,6 +38,7 @@ export function ProductsFilter({ selected, onChange }: ProductsFilterProps) {
                 trackClick("click_list_type", {
                   product_type: item.value,
                 });
+
                 onChange(item.value);
 
                 if (item.value === "recommend") {

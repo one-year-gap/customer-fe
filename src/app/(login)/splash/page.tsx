@@ -37,7 +37,7 @@ export default function Splash() {
       className="bg-background flex min-h-screen cursor-pointer flex-col items-center justify-center pt-10">
       <Image src={logo} alt="LG U+NIVERSE 로고" width={70} height={70} priority />
 
-      <h2 className="text-primary-500 font-display2 font-regular mt-6 text-xl">LG U+NIVERSE</h2>
+      <h2 className="text-primary-500 font-display2 font-regular mt-6 text-xl">HOLLIVERSE</h2>
 
       <p className="text-muted-foreground text-sm">우주에서 만나는 새로운 경험</p>
 

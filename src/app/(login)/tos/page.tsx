@@ -108,7 +108,7 @@ function TermCard({
 }: {
   title: string;
   desc: string;
-  required: boolean;
+  required?: boolean;
   checked: boolean;
   onClick: () => void;
 }) {
@@ -124,7 +124,7 @@ function TermCard({
         <div className="flex-1">
           <div className="flex items-center">
             <p className="text-[14px] font-bold text-neutral-900">{title}</p>
-            <Badge required={required} />
+            {required !== undefined && <Badge required={required} />}
           </div>
           <p className="mt-1 text-[12px] text-neutral-500">{desc}</p>
         </div>
@@ -183,7 +183,6 @@ export default function TermsPage() {
           <TermCard
             title="전체 동의하기"
             desc="필수 및 선택 항목을 모두 포함합니다"
-            required={false}
             checked={isAllChecked}
             onClick={toggleAll}
           />

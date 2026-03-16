@@ -141,7 +141,7 @@ export default function SignupJwt() {
       )}
       <div className="bg-card text-card-foreground h-fit w-full max-w-sm rounded-xl p-6">
         <div className="mb-6 flex items-center justify-between">
-          <h1 className="text-primary-500 font-display2 font-regular text-lg">LG U+NIVERSE</h1>
+          <h1 className="text-primary-500 font-display2 font-regular text-lg">HOLLIVERSE</h1>
           <button type="button" onClick={handleBack}>
             <X className="text-muted-foreground h-5 w-5" />
           </button>
@@ -236,13 +236,14 @@ export default function SignupJwt() {
                 placeholder="우편번호"
                 value={addressInfo.zonecode}
                 readOnly
-                className="bg-input text-foreground focus:ring-ring flex-1 rounded-md px-3 py-3 text-sm outline-none focus:ring-2"
+                className="bg-input text-foreground focus:ring-ring min-w-0 flex-1 rounded-md px-3 py-3 text-sm outline-none focus:ring-2 sm:w-60"
               />
               <button
                 type="button"
                 onClick={handleOpenPostcode}
-                className="text-primary-300 hover:bg-accent hover:text-accent-foreground rounded-md px-4 text-sm font-medium">
-                우편번호 찾기
+                className="text-primary-300 bg-input hover:bg-accent hover:text-accent-foreground flex flex-col items-center justify-center rounded-md px-4 text-sm font-medium">
+                <span className="text-xs">우편번호 </span>
+                <span className="text-xs">찾기</span>
               </button>
             </div>
             <input

@@ -1,5 +1,5 @@
 import { api } from "@/lib/axios";
-import type { ApiResponse, CustomerProfile } from "@/models/customer/customerProfile";
+import type { ApiResponse, CustomerProfile } from "@/models/profile/customerProfile";
 
 export async function getCustomerProfile(): Promise<CustomerProfile> {
   const response = await api.get<ApiResponse<CustomerProfile>>(`/api/v1/customer/me`);

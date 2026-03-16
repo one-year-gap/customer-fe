@@ -9,35 +9,44 @@ import {
   ChevronRight,
   Clock,
   FileText,
+  Gift,
   Headset,
+  Info,
   LogOut,
   Search,
-  Settings2,
-  Ticket,
+  Signal,
+  Smartphone,
+  Tv,
+  Wifi,
 } from "lucide-react";
 
 import hole from "@/assets/images/HoleMan.png";
 import logo from "@/assets/images/Logo.png";
 import LogoutModal from "@/components/domain/my/LogoutModal";
 import { useLogger } from "@/hooks/useLogger";
-import { useCustomerProfile } from "@/lib/tanstack/query/customer/useCustomerProfile";
+import { useLogout } from "@/lib/tanstack/query/my/useLogout";
+import { useRecentProducts } from "@/lib/tanstack/query/my/useRecentProducts";
+import { useCustomerProfile } from "@/lib/tanstack/query/profile/useCustomerProfile";
+import type { ProductType } from "@/models/my/RecentProducts";
 
 export default function My() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { data, isLoading, isError } = useCustomerProfile();
   const { trackClick } = useLogger();
 
-  if (isLoading) return <div>로딩중...</div>;
-  if (isError) return <div>에러</div>;
+  const { data: me, isLoading: meLoading, isError: meError } = useCustomerProfile();
+  const {
+    data: recentProduct,
+    isLoading: recentProductLoading,
+    isError: recentProductError,
+  } = useRecentProducts();
+  const { mutate: logoutMutate } = useLogout();
 
-  const recentActivities = [
-    { title: "데이터 쿠폰 사용", desc: "1GB 쿠폰 적용", time: "23:35", icon: Ticket },
-    { title: "요금제 조회", desc: "5G 프리미어 에센셜 조회", time: "23:40", icon: Search },
-    { title: "요금제 변경", desc: "5G 프리미어 에센셜 변경", time: "23:45", icon: Settings2 },
-  ];
+  if (meLoading || recentProductLoading) return <div>로딩중...</div>;
+  if (meError || recentProductError) return <div>에러</div>;
 
+  /* 지원 메뉴 */
   const supportMenus = [
     { title: "내 가입 정보", icon: BookUser, path: "/my/info" },
     { title: "고객 센터", icon: Headset, path: "/support" },
@@ -45,6 +54,7 @@ export default function My() {
     { title: "약관 및 정책", icon: FileText, path: "/policy" },
   ];
 
+  /* 회원 기본 정보 */
   const membershipChip = (membership: string | undefined) => {
     if (membership === "GOLD") {
       return {
@@ -69,59 +79,132 @@ export default function My() {
       style: "bg-secondary-300 text-neutral-0",
     };
   };
-  const { text, style } = membershipChip(data?.membership);
+  const { text, style } = membershipChip(me?.membership);
+
+  const formatPhoneNumber = (phone?: string) => {
+    return phone?.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+  };
+
+  /* 최근에 본 상품 */
+  const recentItems = recentProduct?.data?.items ?? [];
+
+  const latestByProductId = recentItems.reduce((acc, item) => {
+    const prev = acc.get(item.productId);
+
+    if (!prev || new Date(item.viewedAt).getTime() > new Date(prev.viewedAt).getTime()) {
+      acc.set(item.productId, item);
+    }
+
+    return acc;
+  }, new Map<(typeof recentItems)[number]["productId"], (typeof recentItems)[number]>());
+
+  const uniqueRecentProducts = Array.from(latestByProductId.values()).sort(
+    (a, b) => new Date(b.viewedAt).getTime() - new Date(a.viewedAt).getTime(),
+  );
+
+  const productTypeIcon = {
+    mobile: Signal,
+    tablet: Smartphone,
+    internet: Wifi,
+    iptv: Tv,
+    addon: Gift,
+  };
+
+  const formatTime = (iso: string) => {
+    return new Date(iso).toLocaleTimeString("ko-KR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const productTypeLabel: Record<ProductType, string> = {
+    mobile: "모바일",
+    tablet: "태블릿/스마트워치",
+    internet: "인터넷",
+    iptv: "IPTV",
+    addon: "부가서비스",
+  };
 
   return (
-    <div className="flex min-h-full flex-col bg-neutral-50">
+    <div className="bg-neutral-0 flex min-h-full flex-col">
       {/* 헤더 섹션 */}
-      <section className="bg-primary-500 text-neutral-0 relative rounded-b-[40px] p-4 text-center font-medium">
-        <Image src={logo} alt="LG U+NIVERSE 로고" width={95} height={95} className="h-9 w-9" />
-        <div className="\ mx-auto flex flex-col items-center justify-center gap-2">
-          <Image src={hole} alt="holeMan image" width={96} height={96} className="h-24 w-24" />
-
-          <div className="flex items-center justify-center gap-2">
-            <h2 className="text-lg">{data?.name}</h2>
-            <span className={`rounded-full px-2 py-1 text-xs font-semibold ${style}`}>{text}</span>
+      <section className="bg-primary-500 flex flex-col gap-2 rounded-b-[40px] p-4">
+        <div className="flex justify-between">
+          <div className="flex-1">
+            <Image src={logo} alt="LG U+NIVERSE 로고" width={95} height={95} className="h-9 w-9" />
           </div>
+          <div className="flex flex-1 justify-center">
+            <Image src={hole} alt="holeMan image" width={96} height={96} className="h-24 w-24" />
+          </div>
+          <div className="flex-1" />
+        </div>
 
-          <p className="text-md text-neutral-300">{data?.phone}</p>
+        <div className="text-neutral-0 mx-auto flex flex-col items-center justify-center gap-2 text-center font-medium">
+          <div className="flex items-center justify-center gap-2">
+            <h2 className="text-lg">{me?.name}</h2>
+            <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${style}`}>
+              {text}
+            </span>
+          </div>
+          <p className="text-md text-neutral-300">{formatPhoneNumber(me?.phone)}</p>
         </div>
       </section>
 
-      <div className="space-y-6 px-5 py-8">
-        {/* 최근 활동 섹션 */}
-        <section>
-          <div className="mb-4 ml-4 flex items-center gap-2">
+      <div className="flex flex-col gap-6 px-5 py-8">
+        {/* 최근에 본 상품 */}
+        <section className="flex flex-col gap-4">
+          <div className="flex items-center gap-2">
             <Clock size={20} />
-            <h3 className="text-md font-semibold">최근 활동</h3>
+            <h3 className="text-md font-semibold">최근에 본 상품</h3>
           </div>
-          <div className="bg-neutral-0 space-y-5 rounded-2xl p-5 shadow-sm">
-            <p className="text-xs text-neutral-400">23 월요일</p>
-            {recentActivities.map((item, idx) => {
-              const Icon = item.icon;
 
-              return (
-                <div key={idx} className="flex items-center justify-between font-medium">
-                  <div className="flex items-center gap-4">
-                    <div className="text-secondary-500 flex h-10 w-10 items-center justify-center rounded-full">
-                      <Icon size={20} />
+          <div className="bg-neutral-0 space-y-5 rounded-2xl border border-neutral-300 p-5 shadow-sm">
+            {uniqueRecentProducts.length === 0 ? (
+              <div className="flex flex-col items-center gap-2 font-medium">
+                <p className="text-center text-sm text-neutral-500">최근 조회한 상품이 없습니다</p>
+                <button
+                  onClick={() => router.push("/products")}
+                  className="text-primary-500 font cursor-pointer text-xs underline">
+                  상품 보러가기
+                </button>
+              </div>
+            ) : (
+              uniqueRecentProducts.map((item) => {
+                const Icon = productTypeIcon[item.productType] ?? Search;
+
+                return (
+                  <div
+                    key={item.productId}
+                    className="flex items-center justify-between font-medium">
+                    <div className="flex items-center gap-4">
+                      <div className="text-secondary-500 flex h-10 w-10 items-center justify-center rounded-full">
+                        <Icon size={20} />
+                      </div>
+
+                      <div className="flex flex-col gap-1">
+                        <p className="text-sm text-neutral-900">{item.productName}</p>
+                        <p className="text-xs text-neutral-500">
+                          {productTypeLabel[item.productType]}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm">{item.title}</p>
-                      <p className="text-xs text-neutral-400">{item.desc}</p>
-                    </div>
+
+                    <span className="text-xs text-neutral-500">{formatTime(item.viewedAt)}</span>
                   </div>
-                  <span className="text-xs text-neutral-400">{item.time}</span>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         </section>
 
         {/* 지원 메뉴 섹션 */}
-        <section>
-          <h3 className="text-md mb-4 ml-4 font-semibold">지원 메뉴</h3>
-          <div className="bg-neutral-0 divide-y divide-neutral-100 rounded-2xl text-sm shadow-sm">
+        <section className="flex flex-col gap-4">
+          <div className="flex items-center gap-2">
+            <Info size={20} />
+            <h3 className="text-md font-semibold">지원 메뉴</h3>
+          </div>
+
+          <div className="bg-neutral-0 divide-y divide-neutral-100 rounded-2xl border border-neutral-300 text-sm shadow-sm">
             {supportMenus.map((menu) => {
               const Icon = menu.icon;
               return (
@@ -157,7 +240,11 @@ export default function My() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={() => {
-          setIsModalOpen(false);
+          logoutMutate(undefined, {
+            onSuccess: () => {
+              router.replace("/login");
+            },
+          });
         }}
       />
     </div>

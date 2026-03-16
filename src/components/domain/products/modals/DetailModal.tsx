@@ -80,11 +80,11 @@ export default function DetailModal({ open, productId, onClose, onCompare }: Det
         <div className="border-t bg-white p-4">
           <button
             onClick={() => {
-              onCompare();
               trackClick("click_compare", {
                 target_id: d.productId,
                 target_tags: d.tags,
               });
+              onCompare();
             }}
             className="w-full rounded-3xl bg-blue-600 py-4 text-sm font-semibold text-white shadow-md transition hover:bg-blue-700">
             ↓↑ 내 현재 요금과 가격 비교하기

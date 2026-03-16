@@ -6,9 +6,10 @@ import { ChevronRight, Smartphone, Wifi } from "lucide-react";
 
 import { useLogger } from "@/hooks/useLogger";
 import { usePlans } from "@/lib/tanstack/query/usePlan";
+import type { ProductType } from "@/models/log";
 
 interface ProductsListProps {
-  category: string;
+  category: ProductType;
   onOpenDetail: (planId: number) => void;
 }
 
@@ -74,13 +75,13 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  onOpenDetail(plan.productId);
                   trackClick("click_product_detail", {
                     product_id: plan.productId,
                     product_name: plan.name,
-                    product_type: category as "mobile" | "internet" | "tab-watch" | "iptv",
+                    product_type: category,
                     tags: plan.tags,
                   });
+                  onOpenDetail(plan.productId);
                 }}
                 className="flex items-center gap-1 text-xs font-bold text-blue-600">
                 상세보기

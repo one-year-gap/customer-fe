@@ -18,10 +18,10 @@ export default function ChangeCompleteModal({ open, onClose }: ChangeCompleteMod
 
         <button
           onClick={() => {
-            onClose();
             trackClick("click_change_success", {
               is_success: true,
             });
+            onClose();
           }}
           className="mt-4 w-full rounded-xl bg-blue-600 py-2 font-semibold text-white">
           확인

@@ -3,13 +3,14 @@
 import { useRef } from "react";
 
 import { useLogger } from "@/hooks/useLogger";
+import type { ProductType } from "@/models/log";
 
 interface ProductsFilterProps {
-  selected: string;
-  onChange: (value: string) => void;
+  selected: ProductType;
+  onChange: (value: ProductType) => void;
 }
 
-const FILTERS = [
+const FILTERS: { label: string; value: ProductType }[] = [
   { label: "5G 요금제", value: "mobile" },
   { label: "스마트워치/태블릿", value: "tab-watch" },
   { label: "인터넷", value: "internet" },
@@ -30,10 +31,10 @@ export function ProductsFilter({ selected, onChange }: ProductsFilterProps) {
             <button
               key={item.value}
               onClick={() => {
-                onChange(item.value);
                 trackClick("click_list_type", {
-                  product_type: item.value as "mobile" | "internet" | "tab-watch" | "iptv",
+                  product_type: item.value,
                 });
+                onChange(item.value);
               }}
               className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${
                 isActive ? "bg-[#162C5B] text-white" : "bg-gray-200 text-gray-600"

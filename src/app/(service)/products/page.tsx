@@ -11,12 +11,13 @@ import { ProductsHeader } from "@/components/domain/products/ProductsHeader";
 import { ProductsList } from "@/components/domain/products/ProductsList";
 import { LogProvider } from "@/context/LogContext";
 import { useChangePlan } from "@/lib/tanstack/mutation/useChangePlan";
+import type { ProductType } from "@/models/log";
 
 type ModalType = "none" | "detail" | "compare" | "confirmChange" | "changeComplete";
 
 export default function ProductsPage() {
   const [modal, setModal] = useState<ModalType>("none");
-  const [category, setCategory] = useState<string>("mobile");
+  const [category, setCategory] = useState<ProductType>("mobile");
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const { mutateAsync } = useChangePlan();

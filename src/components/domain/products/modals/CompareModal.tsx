@@ -207,10 +207,10 @@ function CompareTrigger({ onTrigger }: { onTrigger: () => void }) {
   return (
     <button
       onClick={() => {
-        onTrigger();
         trackClick("click_change", {
           is_success: false,
         });
+        onTrigger();
       }}
       className="flex w-full items-center justify-center gap-2 rounded-3xl bg-blue-600 py-4 text-sm font-semibold text-white shadow-md hover:bg-blue-700">
       <ArrowRight size={18} />

@@ -6,13 +6,13 @@ import Image from "next/image";
 import { ChevronLeft, Gift, Wifi } from "lucide-react";
 
 import hole from "@/assets/images/HoleUniv.png";
-import { useCoupons } from "@/lib/tanstack/query/coupons/useCoupons";
+import { useCoupon } from "@/lib/tanstack/query/coupons/useCoupon";
 import type { Coupon } from "@/models/coupons/coupon";
 
 export default function Coupon() {
   const [activeCouponId, setActiveCouponId] = useState<string | null>(null);
 
-  const { data: coupons, isLoading, isError } = useCoupons();
+  const { data: coupons, isLoading, isError } = useCoupon();
 
   const mappedCoupons =
     coupons?.map((c) => ({

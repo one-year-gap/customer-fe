@@ -166,7 +166,7 @@ export default function TermsPage() {
   };
   const router = useRouter();
   const handleCompleteTos = () => {
-    router.push("/login");
+    router.push("/onboard");
   };
 
   return (

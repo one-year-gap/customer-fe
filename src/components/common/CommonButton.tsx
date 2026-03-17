@@ -4,7 +4,7 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 type Variant = "primary" | "danger" | "outline" | "disabled" | "light" | "secondary";
 
-type Size = "sm" | "main" | "md" | "compare";
+type Size = "sm" | "main" | "md" | "compare" | "onboard";
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
@@ -18,6 +18,7 @@ export default function CommonButton({ children, variant, size, ...props }: Prop
     main: "w-[318px] h-[46px] rounded-[10px] text-base",
     md: "w-[358px] h-[41px] rounded-[10px] text-base",
     compare: "w-[350px] h-[39px] rounded-[15px] text-base",
+    onboard: "w-[300px] h-[50px] rounded-[10px] text-md",
   };
 
   const variantStyle: Record<Variant, string> = {

@@ -45,7 +45,9 @@ export default function Login() {
     }
     login(formData);
   };
-  const googleLoginUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/oauth2/authorization/google`;
+  const NEXT_PUBLIC_API_BASE_URL = "https://api.holliverse.site";
+
+  const googleLoginUrl = `${NEXT_PUBLIC_API_BASE_URL}/oauth2/authorization/google`;
   const handleGoogleLogin = async () => {
     router.push(googleLoginUrl);
   };

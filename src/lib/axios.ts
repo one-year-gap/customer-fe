@@ -2,8 +2,10 @@ import axios from "axios";
 
 import { useAuthStore } from "@/stores/useAuthStore";
 
+const NEXT_PUBLIC_API_BASE_URL = "https://api.holliverse.site";
+
 export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  baseURL: NEXT_PUBLIC_API_BASE_URL,
   timeout: 10000,
   withCredentials: true,
 });
@@ -16,7 +18,7 @@ const executeRefresh = async (): Promise<string> => {
   refreshPromise = (async () => {
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/auth/refresh`,
+        `${NEXT_PUBLIC_API_BASE_URL}/v1/auth/refresh`,
         {},
         { withCredentials: true },
       );

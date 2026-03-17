@@ -9,6 +9,7 @@ import DetailModal from "@/components/domain/products/modals/DetailModal";
 import { ProductsFilter } from "@/components/domain/products/ProductsFilter";
 import { ProductsHeader } from "@/components/domain/products/ProductsHeader";
 import { useRecommendPlan } from "@/lib/tanstack/query/useRecommendPlan";
+import type { ProductType } from "@/models/log";
 
 type ModalType = "none" | "detail" | "compare";
 
@@ -20,7 +21,7 @@ export default function RecommendPage() {
 
   const [modal, setModal] = useState<ModalType>("none");
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [category, setCategory] = useState("recommend");
+  const [category, setCategory] = useState<ProductType>("recommend");
 
   const plans = data?.recommendedProducts ?? [];
 

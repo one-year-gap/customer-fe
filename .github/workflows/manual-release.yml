@@ -19,7 +19,7 @@ on:
 
 jobs:
   release:
-    uses: one-year-gap/infra/.github/workflows/reusable-customer-web-manual-release.yml@main
+    uses: one-year-gap/infra/.github/workflows/customer-web-manual-release.yml@main
     with:
       source-ref: ${{ inputs.source-ref }}
       release-label: ${{ inputs.release-label }}

@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import { ChevronRight } from "lucide-react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
@@ -13,6 +14,8 @@ import { useCharacterType } from "@/lib/tanstack/query/characters/useCharacterTy
 import { useCustomerProfile } from "@/lib/tanstack/query/profile/useCustomerProfile";
 
 export default function Home() {
+  const router = useRouter();
+
   const { data: me, isLoading: meLoading, isError: meError } = useCustomerProfile();
   const {
     data: character,
@@ -190,7 +193,9 @@ export default function Home() {
       {/* 쿠폰 배너 */}
       <section>
         <div className="mt-8 px-5">
-          <div className="bg-secondary-50 flex items-center justify-between rounded-lg p-6 shadow-sm">
+          <div
+            onClick={() => router.push("/coupons")}
+            className="bg-secondary-50 flex items-center justify-between rounded-lg p-6 shadow-sm">
             <div className="flex flex-col gap-1 text-sm font-medium">
               <p className="text-neutral-900">놓치고 있는 쿠폰이 있어요!</p>
               <h3 className="text-secondary-500 text-lg font-bold">생일 쿠폰 30% 할인</h3>

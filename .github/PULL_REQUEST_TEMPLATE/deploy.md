@@ -21,6 +21,8 @@
 - [ ] deploy:api-server
 - [ ] deploy:worker
 - [ ] deploy:counseling-analytics
+- [ ] deploy:customer-web
+- [ ] deploy:admin-web
 
 <br/>
 

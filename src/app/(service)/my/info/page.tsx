@@ -1,6 +1,9 @@
 "use client";
 
 import { type ReactNode } from "react";
+import { useRouter } from "next/navigation";
+
+import { X } from "lucide-react";
 
 import { useCustomerProfile } from "@/lib/tanstack/query/profile/useCustomerProfile";
 
@@ -28,7 +31,13 @@ function InfoRow({
 }
 
 export default function MyInfoPage() {
+  const router = useRouter();
+
   const { data: profile, isLoading, isError } = useCustomerProfile();
+
+  const formatPhoneNumber = (phone: string) => {
+    return phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+  };
 
   const subscriptionMap = {
     MOBILE_PLAN: "-",
@@ -65,10 +74,14 @@ export default function MyInfoPage() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="relative flex flex-col gap-4">
       <header className="bg-primary-500 font-display2 flex flex-col gap-2 px-6 py-4">
         <span className="text-neutral-0 text-lg">회원 정보</span>
         <span className="text-xs text-neutral-500">내 정보를 확인하고 수정하는 곳입니다.</span>
+        <X
+          onClick={() => router.push("/my")}
+          className="text-neutral-0 absolute top-7 right-7 h-8 w-8"
+        />
       </header>
 
       <section className="flex flex-col px-6">
@@ -77,7 +90,7 @@ export default function MyInfoPage() {
         </div>
         <InfoRow label="이름" value={profile.name} />
         <InfoRow label="이메일" value="asdf@gmail.com" />
-        <InfoRow label="전화번호" value={profile.phone} />
+        <InfoRow label="전화번호" value={formatPhoneNumber(profile.phone)} />
         <InfoRow label="주소" value="서울시 강남구 역삼동 000-11" />
         <InfoRow label="생년월일" value="1998.08.25" />
         <InfoRow label="약정여부" value="24개월" />

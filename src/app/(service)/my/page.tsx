@@ -49,7 +49,7 @@ export default function My() {
   /* 지원 메뉴 */
   const supportMenus = [
     { title: "내 가입 정보", icon: BookUser, path: "/my/info" },
-    { title: "고객 센터", icon: Headset, path: "/support" },
+    { title: "고객 센터", icon: Headset, path: "/faq" },
     { title: "로그아웃", icon: LogOut, path: "/logout" },
     { title: "약관 및 정책", icon: FileText, path: "/policy" },
   ];

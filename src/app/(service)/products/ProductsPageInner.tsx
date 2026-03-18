@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
 
 import CompareModal from "@/components/domain/products/modals/CompareModal";
 import ChangeCompleteModal from "@/components/domain/products/modals/CompleteModal";
@@ -18,10 +17,11 @@ type ModalType = "none" | "detail" | "compare" | "confirmChange" | "changeComple
 export default function ProductsPageInner() {
   const [modal, setModal] = useState<ModalType>("none");
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const { mutateAsync } = useChangePlan();
 
-  const searchParams = useSearchParams();
-  const category = (searchParams.get("type") ?? "mobile") as ProductType;
+  // ✅ category 상태로 관리
+  const [category, setCategory] = useState<ProductType>("mobile");
+
+  const { mutateAsync } = useChangePlan();
 
   const handleConfirmChange = async () => {
     if (!selectedId) return;
@@ -41,7 +41,8 @@ export default function ProductsPageInner() {
     <div className="space-y-6">
       <ProductsHeader />
 
-      <ProductsFilter selected={category} onChange={() => {}} />
+      {/* ✅ 필터 변경 시 상태 업데이트 */}
+      <ProductsFilter selected={category} onChange={setCategory} />
 
       <ProductsList
         category={category}

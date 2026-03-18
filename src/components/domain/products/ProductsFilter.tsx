@@ -20,6 +20,7 @@ const FILTERS: { label: string; value: ProductType; icon: LucideIcon }[] = [
   { label: "스마트워치/태블릿", value: "tab-watch", icon: Smartphone },
   { label: "인터넷", value: "internet", icon: Watch },
   { label: "IPTV", value: "iptv", icon: Tv },
+  { label: "부가서비스", value: "add-on", icon: Tv },
 ];
 
 export function ProductsFilter({ selected, onChange }: ProductsFilterProps) {

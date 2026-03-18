@@ -1,4 +1,12 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+
+import { X } from "lucide-react";
+
 export default function FAQPage() {
+  const router = useRouter();
+
   const faqs = [
     {
       q: "U+NIVERSE는 어떤 서비스인가요?",
@@ -34,8 +42,11 @@ export default function FAQPage() {
       <div className="relative overflow-hidden bg-[#1E3A6D] px-6 py-10 text-white">
         <div className="text-2xl font-bold">FAQ</div>
         <p className="mt-2 text-sm text-white/80">자주하는 질문을 확인해보세요.</p>
-
         <div className="absolute -top-20 -right-20 h-55 w-55 rounded-full border border-white/20" />
+        <X
+          onClick={() => router.push("/my")}
+          className="text-neutral-0 absolute top-12 right-8 h-8 w-8"
+        />
       </div>
 
       <div className="px-6 py-8">

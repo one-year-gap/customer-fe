@@ -39,22 +39,22 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
           <div
             key={plan.productId}
             onClick={() => setSelectedPlanId(plan.productId)}
-            className={`relative cursor-pointer rounded-2xl border bg-white p-5 transition ${
-              isSelected ? "border-2 border-blue-500" : "border-gray-200"
+            className={`bg-neutral-0 relative cursor-pointer rounded-2xl border p-5 transition ${
+              isSelected ? "border-secondary-500 border-2" : "border-neutral-300"
             }`}>
             {plan.isBest && (
-              <div className="absolute -top-2 left-3 rounded-full bg-red-500 px-3 py-1 text-xs font-bold text-white shadow">
+              <div className="bg-hit-500 absolute -top-2 left-3 rounded-full px-3 py-1 text-xs font-bold text-white shadow">
                 인기
               </div>
             )}
 
             <div className="flex items-start justify-between">
-              <h3 className="text-base font-extrabold text-gray-900">{plan.name}</h3>
+              <h3 className="text-base font-extrabold text-neutral-900">{plan.name}</h3>
 
               <div className="text-right">
-                <p className="text-base font-extrabold text-blue-600">
+                <p className="text-secondary-500 text-base font-extrabold">
                   {formatPrice(plan.salePrice ?? plan.price)}
-                  <span className="ml-1 text-xs font-semibold text-gray-500">원/월</span>
+                  <span className="ml-1 text-xs font-semibold text-neutral-500">원/월</span>
                 </p>
               </div>
             </div>
@@ -62,17 +62,17 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
             {plan.productType === "MOBILE_PLAN" && (
               <div className="mt-4 grid grid-cols-2 gap-6">
                 <div className="flex gap-2">
-                  <Wifi size={18} className="mt-1 text-blue-500" />
+                  <Wifi size={18} className="text-secondary-500 mt-1" />
                   <div>
-                    <p className="text-xs font-semibold text-gray-500">데이터</p>
+                    <p className="text-xs font-semibold text-neutral-500">데이터</p>
                     <p className="text-sm font-extrabold">{content.dataAmount}</p>
                   </div>
                 </div>
 
                 <div className="flex gap-2">
-                  <Smartphone size={18} className="mt-1 text-blue-500" />
+                  <Smartphone size={18} className="text-secondary-500 mt-1" />
                   <div>
-                    <p className="text-xs font-semibold text-gray-500">통화</p>
+                    <p className="text-xs font-semibold text-neutral-500">통화</p>
                     <p className="text-sm font-bold">{content.benefitVoiceCall}</p>
                   </div>
                 </div>
@@ -81,9 +81,9 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
 
             {plan.productType === "INTERNET" && (
               <div className="mt-4 flex gap-2">
-                <Wifi size={18} className="mt-1 text-blue-500" />
+                <Wifi size={18} className="text-secondary-500 mt-1" />
                 <div>
-                  <p className="text-xs font-semibold text-gray-500">인터넷 속도</p>
+                  <p className="text-xs font-semibold text-neutral-500">인터넷 속도</p>
                   <p className="text-sm font-extrabold">{content.speed}</p>
                 </div>
               </div>
@@ -91,9 +91,9 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
 
             {plan.productType === "IPTV" && (
               <div className="mt-4 flex gap-2">
-                <Tv size={18} className="mt-1 text-blue-500" />
+                <Tv size={18} className="text-secondary-500 mt-1" />
                 <div>
-                  <p className="text-xs font-semibold text-gray-500">채널 수</p>
+                  <p className="text-xs font-semibold text-neutral-500">채널 수</p>
                   <p className="text-sm font-extrabold">{content.channelCount}개</p>
                 </div>
               </div>
@@ -101,16 +101,16 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
 
             {plan.productType === "ADDON" && (
               <div className="mt-4 flex gap-2">
-                <Shield size={18} className="mt-1 text-blue-500" />
+                <Shield size={18} className="text-secondary-500 mt-1" />
                 <div>
-                  <p className="text-xs font-semibold text-gray-500">서비스 유형</p>
+                  <p className="text-xs font-semibold text-neutral-500">서비스 유형</p>
                   <p className="text-sm font-extrabold">{content.addonType}</p>
                 </div>
               </div>
             )}
 
             {brandBenefits.length > 0 && (
-              <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-xs text-blue-600">
+              <div className="text-secondary-500 mt-4 flex flex-wrap gap-x-3 gap-y-1 text-xs">
                 {brandBenefits.map((brand: string, index: number) => (
                   <div key={index} className="flex items-center gap-1">
                     <Check size={14} />
@@ -126,7 +126,7 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
                   e.stopPropagation();
                   onOpenDetail(plan.productId);
                 }}
-                className="flex items-center gap-1 text-xs font-bold text-blue-600">
+                className="text-secondary-500 flex items-center gap-1 text-xs font-bold">
                 상세보기
                 <ChevronRight size={16} />
               </button>

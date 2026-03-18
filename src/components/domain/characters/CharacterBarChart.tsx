@@ -75,7 +75,9 @@ export function CharacterBarChart({ tscoreIndex, onSubjectClick }: Props) {
                   style={{ width: animated ? `${percentage}%` : "0%" }}
                 />
               </div>
-              <span className="text-xs text-neutral-900">{item.score}점</span>
+              <span className="text-xs font-medium text-neutral-900">
+                {Math.round(item.score)}점
+              </span>
             </div>
           );
         })}

@@ -17,7 +17,7 @@ export function CharacterImage({ character }: Props) {
 
       <h2 className="text-primary-500 text-center text-lg font-semibold">{characterName}</h2>
 
-      <p className="text-md text-center text-neutral-500">{character.shortDesc}</p>
+      <p className="text-md text-center text-neutral-500">{character.characterDescription}</p>
 
       <div className="flex gap-2">
         {character.tags.map((tag) => (

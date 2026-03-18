@@ -22,7 +22,7 @@ const executeRefresh = async (): Promise<string> => {
         {},
         { withCredentials: true },
       );
-      const newAccessToken = response.data?.accessToken;
+      const newAccessToken = response.data.data.accessToken;
 
       if (newAccessToken) {
         useAuthStore.getState().setAccessToken(newAccessToken);

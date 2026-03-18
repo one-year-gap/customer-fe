@@ -26,11 +26,11 @@ export default function Login() {
 
   const router = useRouter();
 
-  const { mutate: refresh } = useRefresh();
+  const { mutateAsync: refreshAsync } = useRefresh();
   const { mutate: login, isPending } = useLogin({
     onSuccess: async () => {
       try {
-        await refresh();
+        await refreshAsync();
         toast.success("로그인 성공!");
         router.push("/");
       } catch {

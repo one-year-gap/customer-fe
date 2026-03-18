@@ -103,6 +103,10 @@ export default function SignupJwt() {
       toast.warning("비밀번호는 8자 이상 입력해주세요.");
       return;
     }
+    if (formData.password.length > 64) {
+      toast.warning("비밀번호는 16자 이하로 입력해주세요.");
+      return;
+    }
     if (formData.password !== formData.passwordConfirm) {
       toast.error("비밀번호가 일치하지 않습니다.");
       return;

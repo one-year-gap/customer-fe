@@ -54,7 +54,9 @@ export default function Home() {
   // 제공통화량
   const callUsed = me?.mobilePlan.usageDetails.voiceMin ?? 0;
   const callMax = Number(me?.mobilePlan.benefitVoiceCall.match(/\d+/));
-  const isCallInfi = me?.mobilePlan.benefitVoiceCall.includes("무제한");
+  const isCallInfi =
+    me?.mobilePlan.benefitVoiceCall.includes("무제한") ||
+    me?.mobilePlan.benefitVoiceCall.includes("부가");
 
   // 제공문자량
   const smsUsed = me?.mobilePlan.usageDetails.smsCnt ?? 0;
@@ -63,7 +65,7 @@ export default function Home() {
 
   const safePercent = (value: number, max: number) =>
     max > 0 ? Math.min(100, Math.max(0, (value / max) * 100)) : 0;
-  const callPercentage = safePercent(callUsed, callMax);
+  const callPercentage = !!isCallInfi ? 100 : safePercent(callUsed, callMax);
   const smsPercentage = !!isSmsInfi ? 100 : safePercent(smsUsed, smsMax);
 
   /* 고객 캐릭터 유형 */
@@ -167,18 +169,16 @@ export default function Home() {
               {/* 전화 사용량 막대바 */}
               <div>
                 <div className="mb-1 flex items-center justify-between">
-                  <span className="font-medium">{!!isCallInfi ? "부가통화량" : "제공통화량"}</span>
-                  <span className="text-xs text-neutral-500">{`${callUsed}분/${callMax}분`}</span>
+                  <span className="font-medium">제공통화량</span>
+                  <span className="text-xs text-neutral-500">
+                    {!!isCallInfi ? "무제한" : `${callUsed}분/${callMax}분`}
+                  </span>
                 </div>
 
                 <div className="h-2 w-full rounded-full bg-neutral-100">
                   <div
                     className="bg-chart-2 h-2 rounded-full"
                     style={{ width: `${callPercentage}%` }}></div>
-                </div>
-
-                <div className="mt-1 flex items-center justify-end text-xs text-neutral-500">
-                  {!!isCallInfi ? <span>기본 통화량 무제한</span> : <span></span>}
                 </div>
               </div>
 

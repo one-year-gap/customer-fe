@@ -6,7 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { isAxiosError } from "axios";
 import { Eye, EyeOff, Lock, User } from "lucide-react";
+import { toast } from "sonner";
 
 import google from "@/assets/images/Google.png";
 import logo from "@/assets/images/Logo.png";
@@ -29,13 +31,19 @@ export default function Login() {
     onSuccess: async () => {
       try {
         await refresh();
+        toast.success("로그인 성공!");
         router.push("/");
-      } catch (error) {
-        console.error("로그인 직후 토큰 갱신 실패:", error);
+      } catch {
+        toast.error("세션 갱신 실패. 다시 로그인해주세요.");
       }
     },
-    onError: (error) => {
-      console.log(error);
+    onError: (error: unknown) => {
+      if (isAxiosError(error)) {
+        const message = error.response?.data?.message;
+        toast.error(message ?? "아이디 또는 비밀번호를 확인해주세요.");
+      } else {
+        toast.error("알 수 없는 오류가 발생했습니다.");
+      }
     },
   });
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +53,7 @@ export default function Login() {
 
   const handleClickLogin = () => {
     if (!formData.email || !formData.password) {
-      alert("아이디와 비밀번호를 확인해주세요.");
+      toast.warning("아이디와 비밀번호를 확인해주세요.");
       return;
     }
     login(formData);

@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+import { toast } from "sonner";
+
 import { useRefresh } from "@/lib/tanstack/mutation/user";
 
 export default function GoogleCallbackPage() {
@@ -13,9 +15,11 @@ export default function GoogleCallbackPage() {
     const processCallback = async () => {
       try {
         await refresh();
-        router.push("/");
-      } catch (error) {
-        router.push("/login");
+        toast.success("로그인 성공!");
+        router.replace("/");
+      } catch {
+        toast.error("로그인에 실패했습니다.");
+        router.replace("/login");
       }
     };
 

@@ -5,7 +5,9 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
 
+import { isAxiosError } from "axios";
 import { X } from "lucide-react";
+import { toast } from "sonner";
 
 import { useGoogleSignup } from "@/lib/tanstack/mutation/user";
 import { useOnboardingMe } from "@/lib/tanstack/query/user";
@@ -49,10 +51,17 @@ function SignupGoogleForm({ initialUser }: { initialUser?: { name: string; email
   const router = useRouter();
   const { mutate: googleSignup } = useGoogleSignup({
     onSuccess: () => {
+      toast.success("회원가입 완료!");
       router.push("/tos");
     },
-    onError: (error) => {
-      console.log(error);
+    onError: (error: unknown) => {
+      if (isAxiosError(error)) {
+        const message = error.response?.data?.message;
+
+        toast.error(message ?? "입력 정보를 다시 확인해주세요.");
+      } else {
+        toast.error("알 수 없는 오류가 발생했습니다.");
+      }
     },
   });
 
@@ -96,7 +105,7 @@ function SignupGoogleForm({ initialUser }: { initialUser?: { name: string; email
       !addressInfo.zonecode ||
       !addressInfo.roadAddress
     ) {
-      alert("필수 정보를 모두 입력해주세요.");
+      toast.warning("필수 정보를 모두 입력해주세요.");
       return;
     }
     const streetAddress = addressInfo.roadAddress

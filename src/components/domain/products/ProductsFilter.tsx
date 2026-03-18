@@ -48,11 +48,11 @@ export function ProductsFilter({ selected, onChange }: ProductsFilterProps) {
                 if (item.value === "recommend") {
                   router.push("/products/recommend");
                 } else {
-                  router.push(`/products?type=${item.value}`); // ✅ 수정
+                  router.push(`/products?type=${item.value}`);
                 }
               }}
               className={`flex shrink-0 items-center justify-center gap-2 rounded-full px-4 py-1 text-sm font-semibold transition ${
-                isActive ? "bg-primary-700 text-neutral-0" : "bg-neutral-200 text-neutral-500"
+                isActive ? "bg-primary-700 text-neutral-0" : "bg-neutral-100 text-neutral-500"
               }`}>
               <Icon size={14} />
               {item.label}

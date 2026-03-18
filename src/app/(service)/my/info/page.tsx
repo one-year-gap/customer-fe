@@ -11,7 +11,7 @@ function InfoRow({ label, value }: { label: string; value: ReactNode }) {
   return (
     <div className="text-md grid w-full grid-cols-4 items-center gap-3 border-b border-neutral-300 px-3 py-2 font-medium">
       <div className="text-primary-500 col-span-1">{label}</div>
-      <div className="overflow-hidde col-span-3 text-neutral-900">
+      <div className="col-span-3 overflow-hidden text-neutral-900">
         <span className="block w-full truncate" title={String(value)}>
           {value ?? "-"}
         </span>

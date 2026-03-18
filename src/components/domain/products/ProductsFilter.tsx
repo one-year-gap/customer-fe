@@ -17,6 +17,7 @@ const FILTERS: { label: string; value: ProductType }[] = [
   { label: "스마트워치/태블릿", value: "tab-watch" },
   { label: "인터넷", value: "internet" },
   { label: "IPTV", value: "iptv" },
+  { label: "부가서비스", value: "add-on" },
 ];
 
 export function ProductsFilter({ selected, onChange }: ProductsFilterProps) {
@@ -44,7 +45,7 @@ export function ProductsFilter({ selected, onChange }: ProductsFilterProps) {
                 if (item.value === "recommend") {
                   router.push("/products/recommend");
                 } else {
-                  router.push("/products");
+                  router.push(`/products?type=${item.value}`); // ✅ 수정
                 }
               }}
               className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${

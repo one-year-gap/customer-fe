@@ -1,4 +1,4 @@
-export type ProductType = "mobile" | "tab-watch" | "internet" | "iptv" | "recommend";
+export type ProductType = "mobile" | "tab-watch" | "internet" | "iptv" | "recommend" | "add-on";
 
 export interface EventProperties {
   page_url?: string;

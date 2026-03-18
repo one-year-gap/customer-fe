@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 
@@ -19,6 +21,7 @@ export default function ProductsPage() {
   const [modal, setModal] = useState<ModalType>("none");
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const { mutateAsync } = useChangePlan();
+
   const searchParams = useSearchParams();
   const category = (searchParams.get("type") ?? "mobile") as ProductType;
 

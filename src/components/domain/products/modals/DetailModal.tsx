@@ -31,22 +31,22 @@ export default function DetailModal({ open, productId, onClose, onCompare }: Det
       onClick={onClose}>
       <div
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[90vh] w-full max-w-[402px] flex-col rounded-t-3xl bg-white">
+        className="bg-neutral-0 flex max-h-[90vh] w-full max-w-[402px] flex-col rounded-t-3xl">
         <div className="flex-1 overflow-y-auto px-5 pt-5">
           <div className="mb-4 flex items-center justify-between">
-            <span className="rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
+            <span className="bg-secondary-500 text-neutral-0 rounded-full px-3 py-1 text-xs font-semibold">
               상품 상세
             </span>
 
-            <button onClick={onClose} className="rounded-full bg-gray-200 p-2">
+            <button onClick={onClose} className="rounded-full bg-neutral-200 p-2">
               <X size={18} />
             </button>
           </div>
 
-          <h2 className="text-xl font-bold text-gray-900">{d.name}</h2>
+          <h2 className="text-xl font-bold text-neutral-900">{d.name}</h2>
 
           <div className="mt-2 mb-6 flex items-end gap-1">
-            <span className="text-3xl font-extrabold text-blue-700">
+            <span className="text-secondary-500 text-3xl font-extrabold">
               {(d.salePrice ?? d.price).toLocaleString("ko-KR")}
             </span>
             <span className="text-sm text-gray-500">원/월</span>
@@ -60,10 +60,10 @@ export default function DetailModal({ open, productId, onClose, onCompare }: Det
         </div>
 
         {d.productType === "MOBILE_PLAN" && (
-          <div className="border-t bg-white p-4">
+          <div className="bg-neutral-0 border-t p-4">
             <button
               onClick={onCompare}
-              className="w-full rounded-3xl bg-blue-600 py-4 text-sm font-semibold text-white shadow-md transition hover:bg-blue-700">
+              className="bg-secondary-500 text-neutral-0 hover:bg-secondary-700 w-full rounded-3xl py-4 text-sm font-semibold shadow-md transition">
               ↓↑ 내 현재 요금과 가격 비교하기
             </button>
           </div>
@@ -95,7 +95,7 @@ function MobilePlanDetail({ d }: { d: any }) {
         {[c.benefitBrands, c.benefitMedia, c.benefitPremium, c.benefitSignatureFamilyDiscount]
           .filter(Boolean)
           .map((item: string, i: number) => (
-            <div key={i} className="rounded-xl bg-gray-100 px-4 py-3 text-sm">
+            <div key={i} className="rounded-xl bg-neutral-100 px-4 py-3 text-sm">
               ✓ {item}
             </div>
           ))}
@@ -121,11 +121,11 @@ function InternetDetail({ d }: { d: any }) {
 
   return (
     <div className="space-y-4 pb-6">
-      <div className="rounded-xl bg-gray-100 p-4 text-sm">{c.planTitle}</div>
+      <div className="rounded-xl bg-neutral-100 p-4 text-sm">{c.planTitle}</div>
 
       <SpecBox label="인터넷 속도" value={c.speed} icon={Wifi} />
 
-      <div className="rounded-xl bg-gray-100 p-4 text-sm whitespace-pre-line">{c.benefits}</div>
+      <div className="rounded-xl bg-neutral-100 p-4 text-sm whitespace-pre-line">{c.benefits}</div>
     </div>
   );
 }
@@ -135,11 +135,11 @@ function IptvDetail({ d }: { d: any }) {
 
   return (
     <div className="space-y-4 pb-6">
-      <div className="rounded-xl bg-gray-100 p-4 text-sm">{c.planTitle}</div>
+      <div className="rounded-xl bg-neutral-100 p-4 text-sm">{c.planTitle}</div>
 
       <SpecBox label="채널 수" value={`${c.channelCount}개`} icon={Tv} />
 
-      <div className="rounded-xl bg-gray-100 p-4 text-sm whitespace-pre-line">{c.benefits}</div>
+      <div className="rounded-xl bg-neutral-100 p-4 text-sm whitespace-pre-line">{c.benefits}</div>
     </div>
   );
 }
@@ -151,7 +151,9 @@ function AddonDetail({ d }: { d: any }) {
     <div className="space-y-4 pb-6">
       <SpecBox label="서비스 유형" value={c.addonType} icon={Shield} />
 
-      <div className="rounded-xl bg-gray-100 p-4 text-sm whitespace-pre-line">{c.description}</div>
+      <div className="rounded-xl bg-neutral-100 p-4 text-sm whitespace-pre-line">
+        {c.description}
+      </div>
     </div>
   );
 }
@@ -166,13 +168,13 @@ function SpecBox({
   icon: React.ElementType;
 }) {
   return (
-    <div className="rounded-2xl border bg-gray-50 p-4 shadow-sm">
-      <div className="mb-2 flex items-center gap-2 text-gray-500">
+    <div className="rounded-2xl border bg-neutral-50 p-4 shadow-sm">
+      <div className="mb-2 flex items-center gap-2 text-neutral-500">
         <Icon size={16} />
         <p className="text-xs">{label}</p>
       </div>
 
-      <p className="text-sm font-semibold text-gray-900">{value ?? "-"}</p>
+      <p className="text-sm font-semibold text-neutral-900">{value ?? "-"}</p>
     </div>
   );
 }

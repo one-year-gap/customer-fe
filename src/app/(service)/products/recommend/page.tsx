@@ -33,7 +33,7 @@ export default function RecommendPage() {
 
       {isLoading && <div className="px-1 text-sm text-neutral-500">추천 요금제 불러오는 중...</div>}
 
-      {isError && <div className="px-1 text-sm text-red-500">추천 요금제 불러오기 실패</div>}
+      {isError && <div className="text-danger-500 px-1 text-sm">추천 요금제 불러오기 실패</div>}
 
       {!isLoading && !isError && plans.length === 0 && (
         <div className="px-1 text-sm text-neutral-500">추천 요금제가 없습니다.</div>

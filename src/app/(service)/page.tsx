@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import { ChevronRight } from "lucide-react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
@@ -11,8 +12,11 @@ import logo from "@/assets/images/Logo.png";
 import { characterImages } from "@/constants/characterImages";
 import { useCharacterType } from "@/lib/tanstack/query/characters/useCharacterType";
 import { useCustomerProfile } from "@/lib/tanstack/query/profile/useCustomerProfile";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
+  const router = useRouter();
+
   const { data: me, isLoading: meLoading, isError: meError } = useCustomerProfile();
   const {
     data: character,
@@ -22,6 +26,13 @@ export default function Home() {
 
   if (meLoading || characterLoading) return <div>로딩중...</div>;
   if (meError || characterError || !me || !character) return <div>에러</div>;
+
+  /* 메뉴 바로가기 */
+  const menus = [
+    { label: "맞춤 요금제 추천", path: "/products/recommend" },
+    { label: "상품 조회", path: "/products" },
+    { label: "나의 가입 정보", path: "/my/info" },
+  ];
 
   /* 고객 기본 정보 */
   const formatPhoneNumber = (phone: string) => {
@@ -43,7 +54,9 @@ export default function Home() {
   // 제공통화량
   const callUsed = me?.mobilePlan.usageDetails.voiceMin ?? 0;
   const callMax = Number(me?.mobilePlan.benefitVoiceCall.match(/\d+/));
-  const isCallInfi = me?.mobilePlan.benefitVoiceCall.includes("무제한");
+  const isCallInfi =
+    me?.mobilePlan.benefitVoiceCall.includes("무제한") ||
+    me?.mobilePlan.benefitVoiceCall.includes("부가");
 
   // 제공문자량
   const smsUsed = me?.mobilePlan.usageDetails.smsCnt ?? 0;
@@ -52,7 +65,7 @@ export default function Home() {
 
   const safePercent = (value: number, max: number) =>
     max > 0 ? Math.min(100, Math.max(0, (value / max) * 100)) : 0;
-  const callPercentage = safePercent(callUsed, callMax);
+  const callPercentage = !!isCallInfi ? 100 : safePercent(callUsed, callMax);
   const smsPercentage = !!isSmsInfi ? 100 : safePercent(smsUsed, smsMax);
 
   /* 고객 캐릭터 유형 */
@@ -90,12 +103,16 @@ export default function Home() {
       <section className="mt-6 px-5 text-neutral-900">
         <h2 className="text-md mb-4 font-semibold">메뉴 바로가기</h2>
         <div className="no-scrollbar flex gap-3 overflow-x-auto">
-          {["맞춤 요금제 추천", "상품 조회", "나의 요금제", "나의 가입 정보"].map((menu, idx) => (
+          {menus.map((menu, idx) => (
             <button
               type="button"
               key={idx}
-              className="bg-neutral-0 rounded-full border border-neutral-300 px-5 py-2 text-xs font-medium whitespace-nowrap">
-              {menu}
+              onClick={() => router.push(menu.path)}
+              className={cn(
+                "bg-neutral-0 rounded-full border border-neutral-300 px-4 py-1 text-sm font-medium whitespace-nowrap",
+                "active:bg-primary-500 active:text-neutral-0 active:border-primary-500",
+              )}>
+              {menu.label}
             </button>
           ))}
         </div>
@@ -152,18 +169,16 @@ export default function Home() {
               {/* 전화 사용량 막대바 */}
               <div>
                 <div className="mb-1 flex items-center justify-between">
-                  <span className="font-medium">{!!isCallInfi ? "부가통화량" : "제공통화량"}</span>
-                  <span className="text-xs text-neutral-500">{`${callUsed}분/${callMax}분`}</span>
+                  <span className="font-medium">제공통화량</span>
+                  <span className="text-xs text-neutral-500">
+                    {!!isCallInfi ? "무제한" : `${callUsed}분/${callMax}분`}
+                  </span>
                 </div>
 
                 <div className="h-2 w-full rounded-full bg-neutral-100">
                   <div
                     className="bg-chart-2 h-2 rounded-full"
                     style={{ width: `${callPercentage}%` }}></div>
-                </div>
-
-                <div className="mt-1 flex items-center justify-end text-xs text-neutral-500">
-                  {!!isCallInfi ? <span>기본 통화량 무제한</span> : <span></span>}
                 </div>
               </div>
 
@@ -190,12 +205,18 @@ export default function Home() {
       {/* 쿠폰 배너 */}
       <section>
         <div className="mt-8 px-5">
-          <div className="bg-secondary-50 flex items-center justify-between rounded-lg p-6 shadow-sm">
+          <div
+            onClick={() => router.push("/coupons")}
+            className="bg-secondary-50 flex items-center justify-between gap-2 rounded-lg p-6 shadow-sm">
             <div className="flex flex-col gap-1 text-sm font-medium">
-              <p className="text-neutral-900">놓치고 있는 쿠폰이 있어요!</p>
-              <h3 className="text-secondary-500 text-lg font-bold">생일 쿠폰 30% 할인</h3>
-              <p className="cursor-pointer text-neutral-500 underline">
-                클릭해서 확인하러 가보세요!
+              <p className="text-neutral-900">놓치고 있는 쿠폰이 있을지도..?</p>
+              <h3 className="text-secondary-500 text-lg font-bold">나만을 위한 쿠폰 혜택!</h3>
+              <p
+                onClick={() => {
+                  router.push("/coupons");
+                }}
+                className="cursor-pointer text-neutral-500 underline">
+                쿠폰함 가기
               </p>
             </div>
             <Image
@@ -210,13 +231,20 @@ export default function Home() {
 
         {/* 상품 추천 배너 */}
         <div className="my-8 px-5">
-          <div className="bg-secondary-50 flex items-center justify-between rounded-lg p-6 shadow-sm">
+          <div
+            onClick={() => {
+              router.push("/products/recommend");
+            }}
+            className="bg-secondary-50 flex items-center justify-between rounded-lg p-6 shadow-sm">
             <div className="flex flex-col gap-1 font-medium">
-              <h3 className="text-sm">{me.name} 님에게 맞는 상품 추천!</h3>
-              <p className="text-xs text-neutral-500">사용패턴을 분석하여 추천해드려요!</p>
+              <h3 className="text-md">{me.name} 님에게 맞는 상품 추천!</h3>
+              <p className="mb-2 text-xs text-neutral-500">사용패턴을 분석하여 추천해드려요!</p>
               <button
                 type="button"
-                className="bg-secondary-500 text-neutral-0 mt-1 flex w-fit cursor-pointer items-center justify-center rounded-full py-1 pr-1 pl-3 text-xs font-semibold">
+                onClick={() => {
+                  router.push("/products/recommend");
+                }}
+                className="bg-secondary-500 text-neutral-0 flex w-fit cursor-pointer items-center justify-center rounded-full py-1 pr-1 pl-3 text-xs font-semibold">
                 확인하기
                 <ChevronRight className="h-4 w-4 text-neutral-100" />
               </button>

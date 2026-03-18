@@ -67,7 +67,7 @@ export default function CompareModal({ open, targetPlanId, onClose }: CompareMod
         onClick={onClose}>
         <div
           onClick={(e) => e.stopPropagation()}
-          className="relative w-full max-w-100.5 rounded-t-3xl bg-white">
+          className="bg-neutral-0 relative w-full max-w-100.5 rounded-t-3xl">
           <div className="max-h-[90vh] overflow-y-auto px-5 pt-5 pb-6">
             <div className="flex items-center justify-between">
               <h2 className="flex items-center gap-2 text-lg font-bold">
@@ -75,14 +75,14 @@ export default function CompareModal({ open, targetPlanId, onClose }: CompareMod
                 요금제 비교하기
               </h2>
 
-              <button onClick={onClose} className="rounded-full bg-gray-200 p-2">
+              <button onClick={onClose} className="rounded-full bg-neutral-200 p-2">
                 <X size={18} />
               </button>
             </div>
 
             {/* 가격 차이 */}
-            <div className="mt-6 rounded-xl bg-red-50 p-4">
-              <p className="text-xs text-gray-500">월 요금 차이</p>
+            <div className="bg-hit-100 mt-6 rounded-xl p-4">
+              <p className="text-xs text-neutral-500">월 요금 차이</p>
 
               <div className="mt-1 flex items-center justify-between">
                 <p className={`text-lg font-bold ${diffColor}`}>
@@ -97,10 +97,10 @@ export default function CompareModal({ open, targetPlanId, onClose }: CompareMod
 
             {/* 변경 혜택 */}
             {changedItems.length > 0 && (
-              <div className="mt-6 rounded-xl bg-gray-50 p-4">
+              <div className="mt-6 rounded-xl bg-neutral-50 p-4">
                 <p className="mb-2 text-sm font-semibold">변경되는 혜택</p>
 
-                <ul className="space-y-1 text-xs text-gray-700">
+                <ul className="space-y-1 text-xs text-neutral-700">
                   {changedItems.map((b, i) => (
                     <li key={i}>
                       <span className="font-semibold">{b.item}</span> : {b.desc}
@@ -118,7 +118,7 @@ export default function CompareModal({ open, targetPlanId, onClose }: CompareMod
             <div className="mt-8">
               <button
                 onClick={() => setConfirmOpen(true)}
-                className="flex w-full items-center justify-center gap-2 rounded-3xl bg-blue-600 py-4 text-sm font-semibold text-white shadow-md hover:bg-blue-700">
+                className="bg-secondary-500 text-neutral-0 hover:bg-secondary-700 flex w-full items-center justify-center gap-2 rounded-3xl py-4 text-sm font-semibold shadow-md">
                 <ArrowRight size={18} />
                 요금제 바꾸기
               </button>

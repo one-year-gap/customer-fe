@@ -1,5 +1,7 @@
 "use client";
 
+import { CheckCircle2 } from "lucide-react";
+
 interface ChangeCompleteModalProps {
   open: boolean;
   onClose: () => void;
@@ -9,13 +11,22 @@ export default function ChangeCompleteModal({ open, onClose }: ChangeCompleteMod
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40">
-      <div className="bg-neutral-0 w-[320px] rounded-2xl p-6 text-center">
-        <h2 className="mb-3 text-lg font-bold">요금제 변경이 완료되었습니다 🎉</h2>
+    <div className="fixed inset-0 z-200 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+      <div className="animate-in fade-in zoom-in-95 bg-background w-90 rounded-3xl p-6 text-center shadow-2xl">
+        <div className="flex justify-center">
+          <div className="bg-background flex h-14 w-14 items-center justify-center rounded-full">
+            <CheckCircle2 className="text-recent-500 h-7 w-7" />
+          </div>
+        </div>
+        <h2 className="mt-4 text-lg font-bold text-neutral-900">요금제 변경 완료</h2>
+
+        <p className="mt-2 text-sm text-neutral-500">
+          새로운 요금제가 정상적으로 적용되었습니다 🎉
+        </p>
 
         <button
           onClick={onClose}
-          className="bg-secondary-500 text-neutral-0 mt-4 w-full rounded-xl py-2 font-semibold">
+          className="bg-secondary-500 mt-6 w-full rounded-xl py-2.5 text-sm font-semibold text-white shadow-md transition hover:scale-[1.02] hover:shadow-lg active:scale-[0.98]">
           확인
         </button>
       </div>

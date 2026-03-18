@@ -48,7 +48,7 @@ export function ProductsFilter({ selected, onChange }: ProductsFilterProps) {
                 if (item.value === "recommend") {
                   router.push("/products/recommend");
                 } else {
-                  router.push("/products");
+                  router.push(`/products?type=${item.value}`); // ✅ 수정
                 }
               }}
               className={`flex shrink-0 items-center justify-center gap-2 rounded-full px-4 py-1 text-sm font-semibold transition ${

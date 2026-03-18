@@ -1,9 +1,13 @@
 "use client";
 
-export const dynamic = "force-dynamic";
+import { Suspense } from "react";
 
 import ProductsPageInner from "./ProductsPageInner";
 
 export default function ProductsPage() {
-  return <ProductsPageInner />;
+  return (
+    <Suspense fallback={<div>로딩중...</div>}>
+      <ProductsPageInner />
+    </Suspense>
+  );
 }

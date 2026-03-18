@@ -8,8 +8,20 @@ export interface CustomerProfile {
   name: string;
   membership: string;
   phone: string;
+  email: string;
+  address: string;
+  birthDate: string;
+
+  contract: CustomerContract;
+
   subscriptions: CustomerSubscription[];
   mobilePlan: CustomerMobilePlan;
+}
+
+export interface CustomerContract {
+  contractStartDate: string | null;
+  contractEndDate: string | null;
+  contractMonths: number | null;
 }
 
 export interface CustomerSubscription {

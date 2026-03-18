@@ -7,15 +7,7 @@ import { X } from "lucide-react";
 
 import { useCustomerProfile } from "@/lib/tanstack/query/profile/useCustomerProfile";
 
-function InfoRow({
-  label,
-  value,
-}: {
-  label: string;
-  value: ReactNode;
-  editable?: boolean;
-  isEditing?: boolean;
-}) {
+function InfoRow({ label, value }: { label: string; value: ReactNode }) {
   return (
     <div className="text-md grid w-full grid-cols-4 items-center gap-3 border-b border-neutral-300 px-3 py-2 font-medium">
       <div className="text-primary-500 col-span-1">{label}</div>
@@ -36,6 +28,8 @@ export default function MyInfoPage() {
   const formatPhoneNumber = (phone: string) => {
     return phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
   };
+
+  const formatDate = (date?: string | null) => (date ? date.replaceAll("-", ".") : "-");
 
   const subscriptionMap = {
     MOBILE_PLAN: "-",
@@ -87,12 +81,24 @@ export default function MyInfoPage() {
           <span>내 가입 정보</span>
         </div>
         <InfoRow label="이름" value={profile.name} />
-        <InfoRow label="이메일" value="asdf@gmail.com" />
+        <InfoRow label="이메일" value={profile.email} />
         <InfoRow label="전화번호" value={formatPhoneNumber(profile.phone)} />
-        <InfoRow label="주소" value="서울시 강남구 역삼동 000-11" />
-        <InfoRow label="생년월일" value="1998.08.25" />
-        <InfoRow label="약정여부" value="24개월" />
-        <InfoRow label="약정기간" value="2025.03.10 - 2027.03.10" />
+        <InfoRow label="주소" value={profile.address} />
+        <InfoRow label="생년월일" value={formatDate(profile.birthDate)} />
+        <InfoRow
+          label="약정여부"
+          value={
+            profile.contract?.contractMonths ? `${profile.contract.contractMonths}개월` : "없음"
+          }
+        />
+        <InfoRow
+          label="약정기간"
+          value={
+            profile.contract?.contractStartDate && profile.contract?.contractEndDate
+              ? `${formatDate(profile.contract.contractStartDate)} - ${formatDate(profile.contract.contractEndDate)}`
+              : "-"
+          }
+        />
       </section>
 
       <section className="flex flex-col px-6">

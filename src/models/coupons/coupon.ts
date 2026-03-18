@@ -1,10 +1,12 @@
 export type CouponType = "DISCOUNT" | "DATA";
 
 export interface Coupon {
-  coupon_id: string;
-  name: string;
-  type: CouponType;
-  is_used: boolean;
+  memberCouponId: number;
+  categoryLabel: string;
+  title: string;
+  subTitle: string;
+  expiredDate: string;
+  usable: boolean;
 }
 
 export interface GetCouponsResponse {

@@ -45,10 +45,10 @@ export function ProductsFilter({ selected, onChange }: ProductsFilterProps) {
                 if (item.value === "recommend") {
                   router.push("/products/recommend");
                 } else {
-                  router.push(`/products?type=${item.value}`); // ✅ 수정
+                  router.push(`/products?type=${item.value}`);
                 }
               }}
-              className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${
+              className={`shrink-0 cursor-pointer rounded-full px-4 py-2 text-sm font-semibold transition ${
                 isActive ? "bg-primary-700 text-neutral-0" : "bg-neutral-200 text-neutral-500"
               }`}>
               {item.label}

@@ -10,8 +10,6 @@ import { useCustomerProfile } from "@/lib/tanstack/query/profile/useCustomerProf
 function InfoRow({
   label,
   value,
-  editable,
-  isEditing,
 }: {
   label: string;
   value: ReactNode;
@@ -79,7 +77,7 @@ export default function MyInfoPage() {
         <span className="text-neutral-0 text-lg">회원 정보</span>
         <span className="text-xs text-neutral-500">내 정보를 확인하고 수정하는 곳입니다.</span>
         <X
-          onClick={() => router.push("/my")}
+          onClick={() => router.back()}
           className="text-neutral-0 absolute top-7 right-7 h-8 w-8"
         />
       </header>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import { ChevronLeft, Gift, Wifi } from "lucide-react";
 
@@ -10,6 +11,7 @@ import { useCoupon } from "@/lib/tanstack/query/coupons/useCoupon";
 import type { Coupon } from "@/models/coupons/coupon";
 
 export default function Coupon() {
+  const router = useRouter();
   const [activeCouponId, setActiveCouponId] = useState<string | null>(null);
 
   const { data: coupons, isLoading, isError } = useCoupon();
@@ -35,7 +37,7 @@ export default function Coupon() {
   return (
     <div className="flex h-full min-h-screen flex-col items-center">
       <div className="bg-neutral-0 relative w-full overflow-hidden">
-        <ChevronLeft size={24} className="mt-4" />
+        <ChevronLeft size={24} className="mt-4 cursor-pointer" onClick={() => router.back()} />
         <header className="font-display2 text-primary-500 px-6 pt-2">
           <h2 className="text-primary-500 mb-6 text-lg">내 쿠폰</h2>
           <div className="relative flex items-end justify-between">
@@ -54,7 +56,7 @@ export default function Coupon() {
               </div>
             </div>
           </div>
-          <div className="my-4 h-[1px] w-full bg-neutral-300" />
+          <div className="my-4 h-px w-full bg-neutral-300" />
         </header>
 
         {/* Coupon List */}
@@ -101,7 +103,7 @@ export default function Coupon() {
                     className={`text-md w-full rounded-3xl py-2 transition-all ${
                       isActive
                         ? "bg-secondary-500 border-secondary-500 text-neutral-0 border-2 shadow-lg" // 클릭 시
-                        : "border-secondary-500 text-secondary-500 border-2 bg-white"
+                        : "border-secondary-500 text-secondary-500 bg-neutral-0 border-2"
                     }`}>
                     {isActive ? "사용완료" : "사용하기"}
                   </button>

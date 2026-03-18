@@ -48,6 +48,7 @@ export function CharacterModal({ subject, onClose }: Props) {
 
         <div className="flex flex-col gap-3">
           <p className="text-primary-500 text-center text-lg font-semibold">{`나는 ${character.name}!`}</p>
+          <p className="text-center text-sm font-semibold text-neutral-700">{`"${character.shortdesc}"`}</p>
           <div className="mt-4 flex justify-center">
             <Image src={character.image} alt={character.name} width={140} height={140} />
           </div>
@@ -59,7 +60,7 @@ export function CharacterModal({ subject, onClose }: Props) {
             ))}
           </div>
           <p className="text-center text-sm font-medium text-neutral-700">
-            {character.description}
+            {`${character.description}분들의 유형입니다.`}
           </p>
         </div>
       </div>

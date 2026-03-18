@@ -1,13 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { queryKeys } from "@/lib/tanstack/query/common/keys";
-import type { ApplyCouponRequest } from "@/models/coupons/applyCoupon";
+import type { ApplyCouponRequest, ApplyCouponResponse } from "@/models/coupons/applyCoupon";
 import { postCoupon } from "@/services/domain/coupons/postCoupon";
 
 export function useApplyCoupon() {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<ApplyCouponResponse, Error, ApplyCouponRequest>({
     mutationFn: (data: ApplyCouponRequest) => postCoupon(data),
 
     onSuccess: () => {

@@ -5,8 +5,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { ChevronLeft, Gift, Wifi } from "lucide-react";
+import { toast } from "sonner";
 
 import hole from "@/assets/images/HoleUniv.png";
+import { useApplyCoupon } from "@/lib/tanstack/query/coupons/useApplyCoupon";
 import { useCoupon } from "@/lib/tanstack/query/coupons/useCoupon";
 import type { Coupon } from "@/models/coupons/coupon";
 
@@ -15,20 +17,23 @@ export default function Coupon() {
   const [activeCouponId, setActiveCouponId] = useState<number | null>(null);
 
   const { data: coupons, isLoading, isError } = useCoupon();
+  const { mutate: applyCoupon, isPending } = useApplyCoupon();
 
   const mappedCoupons =
-    coupons?.map((c) => ({
-      id: c.memberCouponId,
-      type: c.categoryLabel,
-      title: c.title,
-      desc: c.subTitle,
-      value: c.subTitle,
-      unit: "",
-      date: c.expiredDate,
-      code: c.memberCouponId,
-      icon: c.categoryLabel === "요금 할인" ? Gift : Wifi,
-      is_used: !c.usable,
-    })) ?? [];
+    coupons
+      ?.filter((c) => c.usable)
+      .map((c) => ({
+        id: c.memberCouponId,
+        type: c.categoryLabel,
+        title: c.title,
+        desc: c.subTitle,
+        value: c.subTitle,
+        unit: "",
+        date: c.expiredDate,
+        code: c.memberCouponId,
+        icon: c.categoryLabel === "요금 할인" ? Gift : Wifi,
+        is_used: !c.usable,
+      })) ?? [];
 
   if (isLoading) return <div className="p-6">로딩중...</div>;
 
@@ -68,7 +73,7 @@ export default function Coupon() {
             </div>
           ) : (
             mappedCoupons.map((coupon) => {
-              const isActive = activeCouponId === coupon.id;
+              const isActive = activeCouponId === coupon.id || coupon.is_used;
               const Icon = coupon.icon;
 
               return (
@@ -99,10 +104,26 @@ export default function Coupon() {
 
                   <button
                     type="button"
-                    onClick={() => setActiveCouponId(coupon.id)}
+                    disabled={coupon.is_used || isPending}
+                    onClick={() => {
+                      if (coupon.is_used) return;
+
+                      applyCoupon(
+                        {
+                          memberCouponId: coupon.id,
+                          used_at: new Date().toISOString(),
+                        },
+                        {
+                          onSuccess: (data) => {
+                            toast.success(data.data.appliedBenefitSummary);
+                            setActiveCouponId(coupon.id);
+                          },
+                        },
+                      );
+                    }}
                     className={`text-md w-full rounded-3xl py-2 transition-all ${
                       isActive
-                        ? "bg-secondary-500 border-secondary-500 text-neutral-0 border-2 shadow-lg" // 클릭 시
+                        ? "bg-secondary-500 border-secondary-500 text-neutral-0 border-2 shadow-lg"
                         : "border-secondary-500 text-secondary-500 bg-neutral-0 border-2"
                     }`}>
                     {isActive ? "사용완료" : "사용하기"}

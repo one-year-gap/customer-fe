@@ -5,13 +5,11 @@ export async function postCoupon({
   memberCouponId,
   used_at,
 }: ApplyCouponRequest): Promise<ApplyCouponResponse> {
-  const res = await api.post(
-    "/api/v1/customer/coupons/use",
-    { used_at },
-    {
-      params: { memberCouponId },
-    },
-  );
+  const body = used_at ? { used_at } : {};
+
+  const res = await api.post("/api/v1/customer/coupons/use", body, {
+    params: { memberCouponId },
+  });
 
   return res.data;
 }

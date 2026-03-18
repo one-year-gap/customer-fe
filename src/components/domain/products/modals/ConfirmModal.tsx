@@ -23,7 +23,7 @@ export default function ConfirmChangeModal({ open, onCancel, onConfirm }: Confir
 
           <button
             onClick={onConfirm}
-            className="flex-1 rounded-xl bg-blue-600 py-2 font-semibold text-white">
+            className="bg-secondary-500 text-neutral-0 flex-1 rounded-xl py-2 font-semibold">
             확인
           </button>
         </div>

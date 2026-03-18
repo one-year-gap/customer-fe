@@ -2,6 +2,7 @@ import type { UseMutationOptions } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
 
 import type {
+  ApiResponse,
   GoogleSignupRequestDTO,
   LoginRequestDTO,
   LoginResponseDTO,
@@ -12,7 +13,7 @@ import { logIn, onboardingComplete, refreshAccessToken, signUp } from "@/service
 import { useAuthStore } from "@/stores/useAuthStore";
 
 export const useSignup = (
-  options?: UseMutationOptions<SignupResponseDTO, Error, SignupRequestDTO>,
+  options?: UseMutationOptions<ApiResponse<SignupResponseDTO>, Error, SignupRequestDTO>,
 ) => {
   return useMutation({
     mutationFn: signUp,
@@ -21,7 +22,7 @@ export const useSignup = (
 };
 
 export const useLogin = (
-  options?: UseMutationOptions<LoginResponseDTO, Error, LoginRequestDTO>,
+  options?: UseMutationOptions<ApiResponse<LoginResponseDTO>, Error, LoginRequestDTO>,
 ) => {
   return useMutation({
     mutationFn: logIn,
@@ -30,7 +31,7 @@ export const useLogin = (
 };
 
 export const useGoogleSignup = (
-  options?: UseMutationOptions<SignupResponseDTO, Error, GoogleSignupRequestDTO>,
+  options?: UseMutationOptions<ApiResponse<null>, Error, GoogleSignupRequestDTO>,
 ) => {
   return useMutation({
     mutationFn: onboardingComplete,

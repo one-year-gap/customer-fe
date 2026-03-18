@@ -207,16 +207,16 @@ export default function Home() {
         <div className="mt-8 px-5">
           <div
             onClick={() => router.push("/coupons")}
-            className="bg-secondary-50 flex items-center justify-between rounded-lg p-6 shadow-sm">
+            className="bg-secondary-50 flex items-center justify-between gap-2 rounded-lg p-6 shadow-sm">
             <div className="flex flex-col gap-1 text-sm font-medium">
-              <p className="text-neutral-900">놓치고 있는 쿠폰이 있어요!</p>
-              <h3 className="text-secondary-500 text-lg font-bold">생일 쿠폰 30% 할인</h3>
+              <p className="text-neutral-900">놓치고 있는 쿠폰이 있을지도..?</p>
+              <h3 className="text-secondary-500 text-lg font-bold">나만을 위한 쿠폰 혜택!</h3>
               <p
                 onClick={() => {
                   router.push("/coupons");
                 }}
                 className="cursor-pointer text-neutral-500 underline">
-                클릭해서 확인하러 가보세요!
+                쿠폰함 가기
               </p>
             </div>
             <Image
@@ -237,14 +237,14 @@ export default function Home() {
             }}
             className="bg-secondary-50 flex items-center justify-between rounded-lg p-6 shadow-sm">
             <div className="flex flex-col gap-1 font-medium">
-              <h3 className="text-sm">{me.name} 님에게 맞는 상품 추천!</h3>
-              <p className="text-xs text-neutral-500">사용패턴을 분석하여 추천해드려요!</p>
+              <h3 className="text-md">{me.name} 님에게 맞는 상품 추천!</h3>
+              <p className="mb-2 text-xs text-neutral-500">사용패턴을 분석하여 추천해드려요!</p>
               <button
                 type="button"
                 onClick={() => {
                   router.push("/products/recommend");
                 }}
-                className="bg-secondary-500 text-neutral-0 mt-1 flex w-fit cursor-pointer items-center justify-center rounded-full py-1 pr-1 pl-3 text-xs font-semibold">
+                className="bg-secondary-500 text-neutral-0 flex w-fit cursor-pointer items-center justify-center rounded-full py-1 pr-1 pl-3 text-xs font-semibold">
                 확인하기
                 <ChevronRight className="h-4 w-4 text-neutral-100" />
               </button>

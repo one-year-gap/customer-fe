@@ -201,7 +201,7 @@ function PlanCard({ title, plan, highlight }: PlanCardProps) {
         <div>
           <p className={`${highlight ? "text-secondary-500" : "text-neutral-500"} mb-1`}>혜택</p>
 
-          <ul className={`${highlight ? "text-secondary-500" : "text-neutral-00"} space-y-1`}>
+          <ul className={`${highlight ? "text-secondary-500" : "text-neutral-500"} space-y-1`}>
             {brands.length > 0 ? (
               brands.map((b: string, i: number) => <li key={i}>- {b.trim()}</li>)
             ) : (

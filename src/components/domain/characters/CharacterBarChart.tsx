@@ -52,7 +52,7 @@ export function CharacterBarChart({ tscoreIndex, onSubjectClick }: Props) {
 
       <div className="flex flex-col gap-3">
         {visibleData.map((item) => {
-          const percentage = Math.min(item.score, 100);
+          const percentage = Math.max(0, Math.min(item.score, 100));
           const color = "bg-secondary-500";
 
           return (

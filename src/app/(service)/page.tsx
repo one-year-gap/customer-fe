@@ -78,7 +78,7 @@ export default function Home() {
     <div className="bg-neutral-0 flex min-h-full flex-col">
       {/* 헤더 섹션 */}
       <section className="font-display2 bg-primary-500 text-neutral-0 relative rounded-b-[40px] px-6 py-4">
-        <div className="flex items-start justify-between">
+        <div className="flex items-center justify-between">
           <div className="flex flex-col">
             <Image src={logo} alt="LG U+NIVERSE 로고" width={95} height={95} className="h-9 w-9" />
 
@@ -96,7 +96,7 @@ export default function Home() {
               ))}
             </div>
           </div>
-          <div className="justify-center">
+          <div className="flex items-center justify-center">
             <Image src={hole} alt="character" width={150} height={150} />
           </div>
         </div>

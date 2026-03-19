@@ -49,11 +49,6 @@ export default function Coupon() {
             <div>
               <p className="mb-1 text-xs">보유중인 쿠폰을 확인하세요</p>
               <h1 className="text-lg">우주에서 온 특별한 혜택</h1>
-              <button
-                type="button"
-                className="bg-primary-500 text-neutral-0 mt-4 rounded-full px-4 py-1 font-sans text-xs">
-                전체
-              </button>
             </div>
             <div className="absolute -top-12 -right-4">
               <div className="relative flex h-32 w-32 items-center justify-center">

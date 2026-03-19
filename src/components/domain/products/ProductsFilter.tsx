@@ -52,8 +52,10 @@ export function ProductsFilter({ selected, onChange }: ProductsFilterProps) {
                   router.push(`/products?type=${item.value}`);
                 }
               }}
-              className={`flex shrink-0 items-center justify-center gap-2 rounded-full px-4 py-1 text-sm font-semibold transition ${
-                isActive ? "bg-primary-700 text-neutral-0" : "bg-neutral-100 text-neutral-500"
+              className={`flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full px-4 py-1 text-sm font-semibold transition ${
+                isActive
+                  ? "bg-primary-700 text-neutral-0 hover:bg-primary-900"
+                  : "bg-neutral-100 text-neutral-500 hover:bg-neutral-300"
               }`}>
               <Icon size={14} />
               {item.label}

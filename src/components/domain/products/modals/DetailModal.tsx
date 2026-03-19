@@ -1,9 +1,10 @@
 "use client";
 
-import { BarChart3, Gauge, Mail, Phone, Shield, Tv, Wifi, X } from "lucide-react";
+import { ArrowDownUp, BarChart3, Gauge, Mail, Phone, Shield, Tv, Wifi, X } from "lucide-react";
 
 import { useLogger } from "@/hooks/useLogger";
 import { usePlanDetail } from "@/lib/tanstack/query/usePlanDetail";
+import { cn } from "@/lib/utils";
 
 interface DetailModalProps {
   open: boolean;
@@ -40,7 +41,9 @@ export default function DetailModal({ open, productId, onClose, onCompare }: Det
               상품 상세
             </span>
 
-            <button onClick={onClose} className="rounded-full bg-neutral-200 p-2">
+            <button
+              onClick={onClose}
+              className="cursor-pointer rounded-full bg-neutral-200 p-2 hover:bg-neutral-300">
               <X size={18} />
             </button>
           </div>
@@ -51,7 +54,7 @@ export default function DetailModal({ open, productId, onClose, onCompare }: Det
             <span className="text-secondary-500 text-3xl font-extrabold">
               {(d.salePrice ?? d.price).toLocaleString("ko-KR")}
             </span>
-            <span className="text-sm text-gray-500">원/월</span>
+            <span className="text-sm text-neutral-500">원/월</span>
           </div>
 
           {d.productType === "MOBILE_PLAN" && <MobilePlanDetail d={d} />}
@@ -71,8 +74,11 @@ export default function DetailModal({ open, productId, onClose, onCompare }: Det
                 });
                 onCompare();
               }}
-              className="bg-secondary-500 text-neutral-0 hover:bg-secondary-700 w-full rounded-3xl py-4 text-sm font-semibold shadow-md transition">
-              ↓↑ 내 현재 요금과 가격 비교하기
+              className={cn(
+                "bg-secondary-500 text-neutral-0 hover:bg-secondary-700 flex w-full cursor-pointer items-center justify-center gap-2 rounded-3xl py-4 text-sm font-semibold shadow-md transition",
+              )}>
+              <ArrowDownUp className="h-5 w-5" />
+              <span> 내 현재 요금과 가격 비교하기</span>
             </button>
           </div>
         )}
@@ -83,6 +89,11 @@ export default function DetailModal({ open, productId, onClose, onCompare }: Det
 
 function MobilePlanDetail({ d }: { d: any }) {
   const c = d.content;
+  const hasDetailInfo =
+    !!d.content?.benefitBrands ||
+    !!d.content?.benefitMedia ||
+    !!d.content?.benefitPremium ||
+    !!d.content?.benefitSignatureFamilyDiscount;
 
   return (
     <>
@@ -97,7 +108,7 @@ function MobilePlanDetail({ d }: { d: any }) {
         <SpecBox label="문자" value={c.benefitSms} icon={Mail} />
       </div>
 
-      <h3 className="mb-3 text-sm font-bold text-gray-700">상세 정보</h3>
+      {hasDetailInfo && <h3 className="mb-3 text-sm font-bold text-neutral-700">상세 정보</h3>}
 
       <div className="space-y-3 pb-6">
         {[c.benefitBrands, c.benefitMedia, c.benefitPremium, c.benefitSignatureFamilyDiscount]

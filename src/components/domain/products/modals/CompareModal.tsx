@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { ArrowRight, ArrowUpDown, ArrowUpRight, X } from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowUp, ArrowUpDown, X } from "lucide-react";
 
 import { LogProvider } from "@/context/LogContext";
 import { useLogger } from "@/hooks/useLogger";
@@ -44,7 +44,9 @@ export default function CompareModal({ open, targetPlanId, onClose }: CompareMod
   const absPriceDiff = Math.abs(priceDiff);
 
   const diffColor =
-    priceDiff > 0 ? "text-red-500" : priceDiff < 0 ? "text-blue-500" : "text-gray-500";
+    priceDiff > 0 ? "text-hit-500" : priceDiff < 0 ? "text-secondary-500" : "text-gray-500";
+  const diffBackground =
+    priceDiff > 0 ? "bg-hit-100" : priceDiff < 0 ? "bg-secondary-50" : "bg-neutral-200";
 
   const changedItems = comparison?.benefit_changes?.filter((b) => b.is_changed) ?? [];
 
@@ -78,13 +80,15 @@ export default function CompareModal({ open, targetPlanId, onClose }: CompareMod
                 요금제 비교하기
               </h2>
 
-              <button onClick={onClose} className="rounded-full bg-neutral-200 p-2">
+              <button
+                onClick={onClose}
+                className="cursor-pointer rounded-full bg-neutral-200 p-2 hover:bg-neutral-300">
                 <X size={18} />
               </button>
             </div>
 
             {/* 가격 차이 */}
-            <div className="bg-hit-100 mt-6 rounded-xl p-4">
+            <div className={`${diffBackground} mt-6 rounded-xl p-4`}>
               <p className="text-xs text-neutral-500">월 요금 차이</p>
 
               <div className="mt-1 flex items-center justify-between">
@@ -94,7 +98,13 @@ export default function CompareModal({ open, targetPlanId, onClose }: CompareMod
                     : `${priceDiff > 0 ? "+" : "-"}${absPriceDiff.toLocaleString()}원`}
                 </p>
 
-                <ArrowUpRight size={18} className={diffColor} />
+                {priceDiff > 0 ? (
+                  <ArrowUp size={18} className={diffColor} />
+                ) : priceDiff < 0 ? (
+                  <ArrowDown size={18} className={diffColor} />
+                ) : (
+                  <span className={`text-lg font-bold ${diffColor}`}>-</span>
+                )}
               </div>
             </div>
 
@@ -120,19 +130,6 @@ export default function CompareModal({ open, targetPlanId, onClose }: CompareMod
 
             <div className="mt-8">
               <CompareTrigger onTrigger={() => setConfirmOpen(true)} />
-              {/* <button
-                onClick={() => {
-                  trackClick("click_change", {
-                    from_plan_id: current?.productId,
-                    to_plan_id: target?.productId,
-                    is_success: false,
-                  });
-                  setConfirmOpen(true);
-                }}
-                className="bg-secondary-500 text-neutral-0 hover:bg-secondary-700 flex w-full items-center justify-center gap-2 rounded-3xl py-4 text-sm font-semibold shadow-md">
-                <ArrowRight size={18} />
-                요금제 바꾸기
-              </button> */}
             </div>
           </div>
         </div>
@@ -164,7 +161,7 @@ function CompareTrigger({ onTrigger }: { onTrigger: () => void }) {
         });
         onTrigger();
       }}
-      className="bg-secondary-500 text-neutral-0 hover:bg-secondary-700 flex w-full items-center justify-center gap-2 rounded-3xl py-4 text-sm font-semibold shadow-md">
+      className="bg-secondary-500 text-neutral-0 hover:bg-secondary-700 flex w-full cursor-pointer items-center justify-center gap-2 rounded-3xl py-4 text-sm font-semibold shadow-md">
       <ArrowRight size={18} />
       요금제 바꾸기
     </button>
@@ -186,13 +183,13 @@ function PlanCard({ title, plan, highlight }: PlanCardProps) {
   return (
     <div
       className={`rounded-2xl border p-4 ${
-        highlight ? "border-2 border-blue-500 bg-blue-50" : "bg-gray-50"
+        highlight ? "bg-secondary-50 border-secondary-500 border-2" : "bg-neutral-50"
       }`}>
-      <p className="mb-1 text-xs text-gray-500">{title}</p>
+      <p className="mb-1 text-xs text-neutral-500">{title}</p>
 
       <h3 className="text-sm font-bold">{plan?.name}</h3>
 
-      <p className={`mt-1 text-sm font-semibold ${highlight ? "text-blue-700" : ""}`}>
+      <p className={`mt-1 text-sm font-semibold ${highlight ? "text-secondary-500" : ""}`}>
         {price.toLocaleString()} 원
       </p>
 
@@ -202,9 +199,9 @@ function PlanCard({ title, plan, highlight }: PlanCardProps) {
         <Spec label="속도" value="최대 10Gbps" highlight={highlight} />
 
         <div>
-          <p className={`${highlight ? "text-blue-600" : "text-gray-500"} mb-1`}>혜택</p>
+          <p className={`${highlight ? "text-secondary-500" : "text-neutral-500"} mb-1`}>혜택</p>
 
-          <ul className={`${highlight ? "text-blue-600" : "text-gray-600"} space-y-1`}>
+          <ul className={`${highlight ? "text-secondary-500" : "text-neutral-00"} space-y-1`}>
             {brands.length > 0 ? (
               brands.map((b: string, i: number) => <li key={i}>- {b.trim()}</li>)
             ) : (
@@ -225,8 +222,8 @@ interface SpecProps {
 
 function Spec({ label, value, highlight }: SpecProps) {
   return (
-    <div className={`rounded-lg p-2 ${highlight ? "bg-blue-100" : ""}`}>
-      <p className="mb-0.5 text-gray-500">{label}</p>
+    <div className={`rounded-lg p-2 ${highlight ? "bg-secindary-50" : ""}`}>
+      <p className="mb-0.5 text-neutral-500">{label}</p>
       <p className="font-medium">{value}</p>
     </div>
   );

@@ -21,7 +21,7 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
 
   const { data, isLoading, isError } = usePlans(category);
 
-  if (isLoading) return <div>로딩중...</div>;
+  if (isLoading) return <ProductsListSkeleton />;
   if (isError) return <div>요금제 불러오기 실패</div>;
 
   const plans = data?.content ?? [];
@@ -143,6 +143,26 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
           </div>
         );
       })}
+    </div>
+  );
+}
+
+function ProductsListSkeleton() {
+  return (
+    <div className="animate-pulse space-y-4">
+      {[1, 2, 3].map((key) => (
+        <div key={key} className="bg-neutral-0 relative rounded-2xl border border-neutral-300 p-5">
+          <div className="flex items-start justify-between">
+            <div className="h-5 w-32 rounded bg-neutral-200" />
+            <div className="h-5 w-24 rounded bg-neutral-200" />
+          </div>
+
+          <div className="mt-6 grid grid-cols-2 gap-6"></div>
+          <div className="mt-3 flex justify-end">
+            <div className="h-4 w-20 rounded bg-neutral-200" />
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

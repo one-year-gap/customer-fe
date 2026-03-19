@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { PuffLoader } from "react-spinners";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -35,7 +36,12 @@ export default function Coupon() {
         is_used: !c.usable,
       })) ?? [];
 
-  if (isLoading) return <div className="p-6">로딩중...</div>;
+  if (isLoading)
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <PuffLoader color="#132c5e" />
+      </div>
+    );
 
   if (isError) return <div className="text-danger-500 p-6">쿠폰 불러오기 실패</div>;
 

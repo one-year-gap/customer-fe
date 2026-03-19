@@ -19,7 +19,7 @@ export default function DetailModal({ open, productId, onClose, onCompare }: Det
   if (!open) return null;
   if (isLoading)
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black/40 text-white">
+      <div className="text-secondary-500 fixed inset-0 flex items-center justify-center bg-black/40">
         로딩중...
       </div>
     );

@@ -39,7 +39,7 @@ export function CharacterModal({ subject, onClose }: Props) {
         onKeyDown={(e) => {
           if (e.key === "Escape") onClose();
         }}
-        className="relative z-10 w-full rounded-xl border border-neutral-300 bg-neutral-50 p-4 shadow-lg">
+        className="relative z-10 w-[360px] rounded-xl border border-neutral-300 bg-neutral-50 p-4 shadow-lg">
         <button
           className="text-neutral-0 absolute top-3 right-3 cursor-pointer rounded-full bg-neutral-300 p-0.5 hover:bg-neutral-500"
           onClick={onClose}>

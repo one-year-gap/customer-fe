@@ -206,3 +206,21 @@ body {
     @apply bg-background text-foreground font-sans;
   }
 }
+
+.recharts-wrapper,
+.recharts-surface {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.recharts-wrapper:focus,
+.recharts-surface:focus,
+.recharts-sector:focus,
+.recharts-polygon:focus,
+.recharts-dot:focus,
+.recharts-wrapper *:focus,
+.recharts-wrapper *:focus-visible,
+.recharts-surface *:focus,
+.recharts-surface *:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}

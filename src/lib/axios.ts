@@ -23,7 +23,10 @@ const executeRefresh = async (): Promise<string> => {
         { withCredentials: true },
       );
       const newAccessToken = response.data.data.accessToken;
+<<<<<<< feat/HSC-354
 
+=======
+>>>>>>> dev
       if (newAccessToken) {
         useAuthStore.getState().setAccessToken(newAccessToken);
         return newAccessToken;
@@ -46,7 +49,6 @@ const executeRefresh = async (): Promise<string> => {
 // accessToken 헤더에 삽입
 api.interceptors.request.use(async (config) => {
   let token = useAuthStore.getState().accessToken;
-
   const isAuthOrRefresh =
     config.url?.includes("/auth/login") ||
     config.url?.includes("/signup") ||
@@ -92,27 +94,3 @@ api.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-
-// import axios from "axios";
-
-// const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-// if (!baseURL) {
-//   throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined");
-// }
-
-// export const api = axios.create({
-//   baseURL,
-//   timeout: 10000,
-//   withCredentials: true,
-// });
-
-// api.interceptors.request.use((config) => {
-//   const token = process.env.NEXT_PUBLIC_DEV_ACCESS_TOKEN;
-
-//   if (token) {
-//     config.headers.Authorization = `Bearer ${token}`;
-//   }
-
-//   return config;
-// });

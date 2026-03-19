@@ -42,13 +42,13 @@ export default function Home() {
     return phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
   };
 
-  const isDay = me.mobilePlan?.isDay;
+  const isDay = me.mobilePlan?.isDay ?? false;
 
   const dataAmount = me.mobilePlan?.dataAmount ?? "";
   const isDataInfinite = dataAmount.includes(UNLIMITED_SERVICE);
   const totalData = isDataInfinite ? 0 : Number(dataAmount.replace("GB", ""));
 
-  const usedData = me.mobilePlan?.usageDetails.dataGb ?? 0;
+  const usedData = me.mobilePlan?.usageDetails?.dataGb ?? 0;
   const remaining = isDataInfinite ? 0 : Math.max(0, parseFloat((totalData - usedData).toFixed(2)));
   const chartData = isDataInfinite
     ? [{ name: "Remaining", value: 1, isHighlight: true }]
@@ -57,15 +57,16 @@ export default function Home() {
         { name: "Used", value: usedData, isHighlight: false },
       ];
 
-  const callUsed = me.mobilePlan?.usageDetails.voiceMin ?? 0;
-  const callMax = Number(me.mobilePlan?.benefitVoiceCall.match(/\d+/)?.[0] ?? 0);
+  const callUsed = me.mobilePlan?.usageDetails?.voiceMin ?? 0;
+  const callMax = Number(me.mobilePlan?.benefitVoiceCall?.match(/\d+/)?.[0] ?? 0);
   const isCallInfi =
-    me.mobilePlan?.benefitVoiceCall.includes(UNLIMITED_SERVICE) ||
-    me.mobilePlan?.benefitVoiceCall.includes(ADD_SERVICE);
+    me.mobilePlan?.benefitVoiceCall?.includes(UNLIMITED_SERVICE) ||
+    me.mobilePlan?.benefitVoiceCall?.includes(ADD_SERVICE) ||
+    false;
 
-  const smsUsed = me.mobilePlan?.usageDetails.smsCnt ?? 0;
-  const smsMax = Number(me.mobilePlan?.benefitSms.match(/\d+/)?.[0] ?? 0);
-  const isSmsInfi = me.mobilePlan?.benefitSms.includes(BASIC_SERVICE);
+  const smsUsed = me.mobilePlan?.usageDetails?.smsCnt ?? 0;
+  const smsMax = Number(me.mobilePlan?.benefitSms?.match(/\d+/)?.[0] ?? 0);
+  const isSmsInfi = me.mobilePlan?.benefitSms?.includes(BASIC_SERVICE) ?? false;
 
   const safePercent = (value: number, max: number) =>
     max > 0 ? Math.min(100, Math.max(0, (value / max) * 100)) : 0;

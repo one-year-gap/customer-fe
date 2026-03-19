@@ -31,11 +31,11 @@ export interface CustomerSubscription {
 }
 
 export interface CustomerMobilePlan {
-  dataAmount: string;
-  isDay: boolean;
-  benefitSms: string;
-  benefitVoiceCall: string;
-  usageDetails: CustomerUsageDetails;
+  dataAmount: string | null;
+  isDay: boolean | null;
+  benefitSms: string | null;
+  benefitVoiceCall: string | null;
+  usageDetails: CustomerUsageDetails | null;
 }
 
 export interface CustomerUsageDetails {

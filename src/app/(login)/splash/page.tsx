@@ -25,16 +25,14 @@ export default function Splash() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleClick = () => {
+  useEffect(() => {
     if (progress === 100) {
       router.push("/login");
     }
-  };
+  }, [progress, router]);
 
   return (
-    <div
-      onClick={handleClick}
-      className="bg-background flex min-h-screen cursor-pointer flex-col items-center justify-center pt-10">
+    <div className="bg-background flex min-h-screen flex-col items-center justify-center pt-10">
       <Image src={logo} alt="LG U+NIVERSE 로고" width={70} height={70} priority />
 
       <h2 className="text-primary-500 font-display2 font-regular mt-6 text-xl">HOLLIVERSE</h2>

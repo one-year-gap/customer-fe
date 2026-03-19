@@ -9,6 +9,7 @@ import DetailModal from "@/components/domain/products/modals/DetailModal";
 import { ProductsFilter } from "@/components/domain/products/ProductsFilter";
 import { ProductsHeader } from "@/components/domain/products/ProductsHeader";
 import { ProductsList } from "@/components/domain/products/ProductsList";
+import { LogProvider } from "@/context/LogContext";
 import { useChangePlan } from "@/lib/tanstack/mutation/useChangePlan";
 import type { ProductType } from "@/models/log";
 
@@ -18,7 +19,6 @@ export default function ProductsPageInner() {
   const [modal, setModal] = useState<ModalType>("none");
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
-  // ✅ category 상태로 관리
   const [category, setCategory] = useState<ProductType>("mobile");
 
   const { mutateAsync } = useChangePlan();
@@ -38,40 +38,43 @@ export default function ProductsPageInner() {
   };
 
   return (
-    <div className="space-y-6">
-      <ProductsHeader />
+    <LogProvider
+      value={{
+        page_url: "/products",
+      }}>
+      <div className="space-y-6">
+        <ProductsHeader />
+        <ProductsFilter selected={category} onChange={setCategory} />
 
-      {/* ✅ 필터 변경 시 상태 업데이트 */}
-      <ProductsFilter selected={category} onChange={setCategory} />
+        <ProductsList
+          category={category}
+          onOpenDetail={(id) => {
+            setSelectedId(id);
+            setModal("detail");
+          }}
+        />
 
-      <ProductsList
-        category={category}
-        onOpenDetail={(id) => {
-          setSelectedId(id);
-          setModal("detail");
-        }}
-      />
+        <DetailModal
+          open={modal === "detail"}
+          productId={selectedId}
+          onClose={() => setModal("none")}
+          onCompare={() => setModal("compare")}
+        />
 
-      <DetailModal
-        open={modal === "detail"}
-        productId={selectedId}
-        onClose={() => setModal("none")}
-        onCompare={() => setModal("compare")}
-      />
+        <CompareModal
+          open={modal === "compare"}
+          targetPlanId={selectedId}
+          onClose={() => setModal("none")}
+        />
 
-      <CompareModal
-        open={modal === "compare"}
-        targetPlanId={selectedId}
-        onClose={() => setModal("none")}
-      />
+        <ConfirmChangeModal
+          open={modal === "confirmChange"}
+          onCancel={() => setModal("compare")}
+          onConfirm={handleConfirmChange}
+        />
 
-      <ConfirmChangeModal
-        open={modal === "confirmChange"}
-        onCancel={() => setModal("compare")}
-        onConfirm={handleConfirmChange}
-      />
-
-      <ChangeCompleteModal open={modal === "changeComplete"} onClose={() => setModal("none")} />
-    </div>
+        <ChangeCompleteModal open={modal === "changeComplete"} onClose={() => setModal("none")} />
+      </div>
+    </LogProvider>
   );
 }

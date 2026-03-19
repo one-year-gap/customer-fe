@@ -31,7 +31,7 @@ export default function RecommendPage() {
 
       <ProductsFilter selected={category} onChange={setCategory} />
 
-      {isLoading && <div className="px-1 text-sm text-neutral-500">추천 요금제 불러오는 중...</div>}
+      {isLoading && <RecommendSkeleton />}
 
       {isError && <div className="text-hit-500 px-1 text-sm">추천 요금제 불러오기 실패</div>}
 
@@ -121,6 +121,29 @@ function RecommendCard({
         <p className="text-primary-500 text-xs font-semibold">추천 이유</p>
         <p className="mt-1 text-xs leading-relaxed text-neutral-700">{reason}</p>
       </div>
+    </div>
+  );
+}
+
+function RecommendSkeleton() {
+  return (
+    <div className="animate-pulse space-y-4">
+      {[1, 2, 3].map((key) => (
+        <div
+          key={key}
+          className="border-primary-200 bg-background rounded-2xl border-2 p-5 shadow-sm">
+          <div className="h-5 w-12 rounded-full bg-neutral-200" />
+
+          <div className="mt-2 flex items-center justify-between">
+            <div className="h-6 w-32 rounded bg-neutral-200" />
+            <div className="h-6 w-24 rounded bg-neutral-200" />
+          </div>
+
+          <div className="mt-4 flex justify-end">
+            <div className="h-4 w-20 rounded bg-neutral-200" />
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

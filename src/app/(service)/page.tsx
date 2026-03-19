@@ -24,7 +24,7 @@ export default function Home() {
     isError: characterError,
   } = useCharacterType();
 
-  if (meLoading || characterLoading) return <div>로딩중...</div>;
+  if (meLoading || characterLoading) return <HomeSkeleton />;
   if (meError || characterError || !me || !character) return <div>에러</div>;
 
   /* 메뉴 바로가기 */
@@ -258,6 +258,78 @@ export default function Home() {
             />
           </div>
         </div>
+      </section>
+    </div>
+  );
+}
+
+function HomeSkeleton() {
+  return (
+    <div className="bg-neutral-0 flex min-h-full flex-col">
+      {/* 헤더 섹션 스켈레톤 */}
+      <section className="bg-primary-500 relative rounded-b-[40px] px-6 py-4">
+        <div className="flex items-start justify-between">
+          <div className="flex flex-col">
+            <div className="h-9 w-9 rounded bg-white/20" />
+            <div className="pt-6">
+              <div className="h-6 w-32 rounded bg-white/20" />
+            </div>
+            <div className="mt-2 flex gap-2 pb-3">
+              <div className="h-4 w-12 rounded bg-white/20" />
+              <div className="h-4 w-12 rounded bg-white/20" />
+              <div className="h-4 w-12 rounded bg-white/20" />
+            </div>
+          </div>
+          <div className="justify-center">
+            <div className="h-[150px] w-[150px] rounded-full bg-white/20" />
+          </div>
+        </div>
+      </section>
+
+      {/* 메뉴 바로가기 스켈레톤 */}
+      <section className="mt-6 px-5">
+        <div className="mb-4 h-5 w-24" />
+        <div className="flex gap-3">
+          <div className="h-7 w-24 rounded-full bg-neutral-200" />
+          <div className="h-7 w-20 rounded-full bg-neutral-200" />
+          <div className="h-7 w-28 rounded-full bg-neutral-200" />
+        </div>
+      </section>
+
+      {/* 데이터/통화 사용량 스켈레톤 */}
+      <section className="mt-8 px-5">
+        <div className="mb-4 h-5 w-32" />
+        <div className="bg-neutral-0 rounded-lg border border-neutral-100 p-4 shadow-sm">
+          <div className="mb-3 flex justify-between">
+            <div className="h-5 w-28 rounded bg-neutral-200" />
+            <div className="h-5 w-24 rounded bg-neutral-200" />
+          </div>
+          <div className="flex items-center gap-8">
+            <div className="h-32 w-32 rounded-full bg-neutral-200" />
+            <div className="flex-1 space-y-4">
+              <div>
+                <div className="mb-1 flex justify-between">
+                  <div className="h-4 w-16 rounded bg-neutral-200" />
+                  <div className="h-4 w-12 rounded bg-neutral-200" />
+                </div>
+                <div className="h-2 w-full rounded-full bg-neutral-200" />
+              </div>
+              <div>
+                <div className="mb-1 flex justify-between">
+                  <div className="h-4 w-16 rounded bg-neutral-200" />
+                  <div className="h-4 w-12 rounded bg-neutral-200" />
+                </div>
+                <div className="h-2 w-full rounded-full bg-neutral-200" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 배너 2개 스켈레톤 */}
+      <section className="mt-8 space-y-8 px-5 pb-8">
+        <div className="h-[130px] rounded-lg bg-neutral-100" />
+        <div className="h-[109px] rounded-lg bg-neutral-100" />
       </section>
     </div>
   );

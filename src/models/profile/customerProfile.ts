@@ -12,10 +12,10 @@ export interface CustomerProfile {
   address: string;
   birthDate: string;
 
-  contract: CustomerContract;
+  contract: CustomerContract | null;
 
   subscriptions: CustomerSubscription[];
-  mobilePlan: CustomerMobilePlan;
+  mobilePlan: CustomerMobilePlan | null;
 }
 
 export interface CustomerContract {

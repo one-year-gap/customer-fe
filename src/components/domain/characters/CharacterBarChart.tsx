@@ -53,7 +53,7 @@ export function CharacterBarChart({ tscoreIndex, onSubjectClick }: Props) {
       <div className="flex flex-col gap-3">
         {visibleData.map((item) => {
           const percentage = Math.min(item.score, 100);
-          const color = item.score >= 70 ? "bg-secondary-700" : "bg-secondary-500";
+          const color = "bg-secondary-500";
 
           return (
             <div
@@ -68,14 +68,16 @@ export function CharacterBarChart({ tscoreIndex, onSubjectClick }: Props) {
                   onSubjectClick(item.subject);
                 }
               }}>
-              <span className="text-xs font-medium text-neutral-900">{item.subject}</span>
-              <div className="bg-secondary-300 h-2 flex-1 rounded-full">
+              <span className="cursor-pointer text-xs font-medium text-neutral-900 hover:text-neutral-500">
+                {item.subject}
+              </span>
+              <div className="bg-secondary-300 h-2 flex-1 cursor-pointer rounded-full">
                 <div
-                  className={`${color} h-2 rounded-full transition-all duration-700 ease-out`}
+                  className={`${color} hover:bg-secondary-700 h-2 rounded-full transition-all duration-700 ease-out`}
                   style={{ width: animated ? `${percentage}%` : "0%" }}
                 />
               </div>
-              <span className="text-xs font-medium text-neutral-900">
+              <span className="cursor-pointer text-xs font-medium text-neutral-900 hover:text-neutral-500">
                 {Math.round(item.score)}점
               </span>
             </div>

@@ -11,7 +11,6 @@ export default function Splash() {
   const [progress, setProgress] = useState(0);
   const router = useRouter();
 
-  // progress 증가
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress((prev) => {

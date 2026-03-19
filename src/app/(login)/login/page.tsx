@@ -6,11 +6,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { isAxiosError } from "axios";
 import { Eye, EyeOff, Lock, User } from "lucide-react";
+import { toast } from "sonner";
 
 import google from "@/assets/images/Google.png";
 import logo from "@/assets/images/Logo.png";
 import { useLogin, useRefresh } from "@/lib/tanstack/mutation/user";
+import { cn } from "@/lib/utils";
 
 export default function Login() {
   const [show, setShow] = useState(false);
@@ -18,19 +21,29 @@ export default function Login() {
     email: "",
     password: "",
   });
+
+  const isValid = formData.email && formData.password;
+
   const router = useRouter();
-  const { mutate: refresh } = useRefresh();
+
+  const { mutateAsync: refreshAsync } = useRefresh();
   const { mutate: login, isPending } = useLogin({
     onSuccess: async () => {
       try {
-        await refresh();
+        await refreshAsync();
+        toast.success("로그인 성공!");
         router.push("/");
-      } catch (error) {
-        console.error("로그인 직후 토큰 갱신 실패:", error);
+      } catch {
+        toast.error("세션 갱신 실패. 다시 로그인해주세요.");
       }
     },
-    onError: (error) => {
-      console.log(error);
+    onError: (error: unknown) => {
+      if (isAxiosError(error)) {
+        const message = error.response?.data?.message;
+        toast.error(message ?? "아이디 또는 비밀번호를 확인해주세요.");
+      } else {
+        toast.error("알 수 없는 오류가 발생했습니다.");
+      }
     },
   });
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +53,7 @@ export default function Login() {
 
   const handleClickLogin = () => {
     if (!formData.email || !formData.password) {
-      alert("아이디와 비밀번호를 확인해주세요.");
+      toast.warning("아이디와 비밀번호를 확인해주세요.");
       return;
     }
     login(formData);
@@ -59,9 +72,9 @@ export default function Login() {
           <Image src={logo} alt="logo" width={96} height={96} className="rounded-2xl" priority />
 
           <h2 className="text-primary-500 font-display2 font-regular mt-6 text-[20px]">
-            LG U+NIVERSE
+            HOLLIVERSE
           </h2>
-          <p className="mt-2 text-[13px] text-neutral-500">계정에 로그인하세요</p>
+          <p className="mt-2 text-sm text-neutral-500">계정에 로그인하세요</p>
         </div>
 
         <div className="mt-12 space-y-5">
@@ -90,20 +103,26 @@ export default function Login() {
             <button
               type="button"
               onClick={() => setShow((prev) => !prev)}
-              className="ml-3 text-neutral-400">
+              className="ml-3 cursor-pointer text-neutral-400">
               {show ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
             </button>
           </div>
 
           <button
             type="button"
-            disabled={isPending}
+            disabled={!isValid || isPending}
             onClick={handleClickLogin}
-            className="text-neutral-0 mt-2 w-full rounded-xl bg-neutral-300 py-3 text-[14px] font-semibold">
+            className={cn(
+              "text-neutral-0 text-md mt-2 w-full rounded-xl bg-neutral-300 py-3 font-semibold",
+              "cursor-pointer",
+              isValid
+                ? "bg-primary-500 hover:opacity-60 active:opacity-60"
+                : "cursor-default bg-neutral-300",
+            )}>
             로그인
           </button>
 
-          <Link href="/sign" className="block text-center text-[12px] text-neutral-500">
+          <Link href="/sign" className="text-md block text-center font-medium text-neutral-500">
             회원가입
           </Link>
         </div>
@@ -113,7 +132,10 @@ export default function Login() {
         <button
           type="button"
           onClick={handleGoogleLogin}
-          className="bg-neutral-0 flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 p-1 text-sm text-neutral-500">
+          className={cn(
+            "bg-neutral-0 flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 p-1 text-sm text-neutral-500",
+            "cursor-pointer hover:opacity-60 active:opacity-60",
+          )}>
           <Image src={google} alt="google image" />
         </button>
       </div>

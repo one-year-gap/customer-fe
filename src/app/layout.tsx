@@ -31,8 +31,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <body className={`${pretendard.variable} ${dunggeunmo.variable} ${mulmaru.variable}`}>
-        <TanstackProvider>{children}</TanstackProvider>
-        <Toaster />
+        <TanstackProvider>
+          {children}
+          <Toaster position="top-center" richColors />
+        </TanstackProvider>
       </body>
     </html>
   );

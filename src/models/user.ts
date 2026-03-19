@@ -14,7 +14,7 @@ export interface SignupRequestDTO {
   };
 }
 export interface SignupResponseDTO {
-  username: string;
+  memberId: number;
 }
 
 export interface LoginRequestDTO {

@@ -5,7 +5,9 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
 
+import { isAxiosError } from "axios";
 import { Eye, EyeOff, X } from "lucide-react";
+import { toast } from "sonner";
 
 import { useSignup } from "@/lib/tanstack/mutation/user";
 import type { SignupRequestDTO } from "@/models/user";
@@ -38,10 +40,17 @@ export default function SignupJwt() {
   const router = useRouter();
   const { mutate: signup, isPending } = useSignup({
     onSuccess: () => {
+      toast.success("회원가입 완료!");
       router.push("/tos");
     },
-    onError: (error) => {
-      console.log(error);
+    onError: (error: unknown) => {
+      if (isAxiosError(error)) {
+        const message = error.response?.data?.message;
+
+        toast.error(message ?? "입력 정보를 다시 확인해주세요.");
+      } else {
+        toast.error("알 수 없는 오류가 발생했습니다.");
+      }
     },
   });
 
@@ -87,11 +96,19 @@ export default function SignupJwt() {
       !addressInfo.zonecode ||
       !addressInfo.roadAddress
     ) {
-      alert("필수 항목을 입력해주세요");
+      toast.warning("필수 항목을 입력해주세요");
+      return;
+    }
+    if (formData.password.length < 8) {
+      toast.warning("비밀번호는 8자 이상 입력해주세요.");
+      return;
+    }
+    if (formData.password.length > 64) {
+      toast.warning("비밀번호는 16자 이하로 입력해주세요.");
       return;
     }
     if (formData.password !== formData.passwordConfirm) {
-      alert("비밀번호가 일치하지 않습니다.");
+      toast.error("비밀번호가 일치하지 않습니다.");
       return;
     }
     // 주소 가공: roadAddress에서 sido + sigungu 부분을 제거

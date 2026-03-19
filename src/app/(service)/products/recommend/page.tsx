@@ -33,7 +33,7 @@ export default function RecommendPage() {
 
       {isLoading && <div className="px-1 text-sm text-neutral-500">추천 요금제 불러오는 중...</div>}
 
-      {isError && <div className="text-danger-500 px-1 text-sm">추천 요금제 불러오기 실패</div>}
+      {isError && <div className="text-hit-500 px-1 text-sm">추천 요금제 불러오기 실패</div>}
 
       {!isLoading && !isError && plans.length === 0 && (
         <div className="px-1 text-sm text-neutral-500">추천 요금제가 없습니다.</div>
@@ -100,25 +100,25 @@ function RecommendCard({
       </span>
 
       <div className="mt-2 flex items-center justify-between">
-        <div className="text-base font-bold text-neutral-800">{name}</div>
+        <div className="text-base font-bold text-neutral-900">{name}</div>
 
-        <p className="text-primary-500 font-bold">
+        <p className="text-secondary-500 font-bold">
           {savings.toLocaleString()}
-          <span className="ml-1 text-xs">원 절약</span>
+          <span className="ml-1 text-xs text-neutral-500">원 절약</span>
         </p>
       </div>
 
       <div className="mt-3 flex justify-end">
         <button
           onClick={() => onOpenDetail(planId)}
-          className="text-secondary-700 flex items-center gap-1 text-xs font-bold">
+          className="text-secondary-500 flex items-center gap-1 text-xs font-bold">
           상세보기
           <ChevronRight size={16} />
         </button>
       </div>
 
       <div className="mt-4 rounded-lg bg-neutral-50 p-3">
-        <p className="text-secondary-700 text-xs font-semibold">추천 이유</p>
+        <p className="text-primary-500 text-xs font-semibold">추천 이유</p>
         <p className="mt-1 text-xs leading-relaxed text-neutral-700">{reason}</p>
       </div>
     </div>

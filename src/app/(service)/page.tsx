@@ -74,6 +74,9 @@ export default function Home() {
   const smsPercentage = isSmsInfi ? 100 : safePercent(smsUsed, smsMax);
 
   const characterType = characterImages[character.characterName];
+  const mobileSubscription = me.subscriptions.find(
+    (subscription) => subscription.productType === "MOBILE_PLAN",
+  );
 
   return (
     <div className="bg-neutral-0 flex min-h-full flex-col">
@@ -126,7 +129,9 @@ export default function Home() {
         <div className="bg-neutral-0 rounded-lg p-4 shadow-sm">
           <div className="text-md mb-3 flex items-center justify-between font-medium">
             <span className="text-neutral-500">{formatPhoneNumber(me.phone)}</span>
-            <span>{me.subscriptions?.[0]?.productName}</span>
+            <span>
+              {mobileSubscription?.productName ?? me.subscriptions?.[0]?.productName ?? "-"}
+            </span>
           </div>
 
           <div className="flex items-center gap-8">

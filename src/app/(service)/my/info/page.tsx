@@ -104,7 +104,7 @@ export default function MyInfoPage() {
     <div className="relative flex flex-col gap-4">
       <header className="bg-primary-500 font-display2 flex flex-col gap-2 px-6 py-4">
         <span className="text-neutral-0 text-lg">회원 정보</span>
-        <span className="text-xs text-neutral-500">내 정보를 확인하고 수정하는 곳입니다.</span>
+        <span className="text-xs text-neutral-500">내 정보를 확인하는 곳입니다.</span>
         <X
           onClick={() => router.back()}
           className="text-neutral-0 absolute top-7 right-7 h-8 w-8"

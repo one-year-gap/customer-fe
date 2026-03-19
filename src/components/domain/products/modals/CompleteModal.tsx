@@ -34,7 +34,7 @@ export default function ChangeCompleteModal({ open, onClose }: ChangeCompleteMod
             });
             onClose();
           }}
-          className="bg-secondary-500 mt-6 w-full rounded-xl py-2.5 text-sm font-semibold text-white shadow-md transition hover:scale-[1.02] hover:shadow-lg active:scale-[0.98]">
+          className="bg-secondary-500 text-neutral-0 hover:bg-secondary-700 mt-6 w-full cursor-pointer rounded-xl py-2.5 text-sm font-semibold shadow-md transition">
           확인
         </button>
       </div>

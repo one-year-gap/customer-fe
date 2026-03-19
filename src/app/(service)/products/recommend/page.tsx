@@ -111,7 +111,7 @@ function RecommendCard({
       <div className="mt-3 flex justify-end">
         <button
           onClick={() => onOpenDetail(planId)}
-          className="text-secondary-500 flex items-center gap-1 text-xs font-bold">
+          className="text-secondary-500 hover:text-secondary-700 flex cursor-pointer items-center gap-1 text-xs font-bold">
           상세보기
           <ChevronRight size={16} />
         </button>

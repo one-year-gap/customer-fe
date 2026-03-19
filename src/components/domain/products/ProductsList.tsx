@@ -42,7 +42,7 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
           <div
             key={plan.productId}
             onClick={() => setSelectedPlanId(plan.productId)}
-            className={`bg-neutral-0 relative cursor-pointer rounded-2xl border p-5 transition ${
+            className={`bg-neutral-0 relative rounded-2xl border p-5 transition ${
               isSelected ? "border-secondary-500 border-2" : "border-neutral-300"
             }`}>
             {plan.isBest && (
@@ -135,7 +135,7 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
                   });
                   onOpenDetail(plan.productId);
                 }}
-                className="text-secondary-500 flex items-center gap-1 text-xs font-bold">
+                className="text-secondary-500 hover:text-secondary-700 flex cursor-pointer items-center gap-1 text-xs font-bold">
                 상세보기
                 <ChevronRight size={16} />
               </button>

@@ -27,6 +27,11 @@ export default function Home() {
   if (meLoading || characterLoading) return <div>로딩중...</div>;
   if (meError || characterError || !me || !character) return <div>에러</div>;
 
+  /* 상수 모음 */
+  const UNLIMITED_SERVICE = "무제한";
+  const ADD_SERVICE = "부가";
+  const PLANE_SERVICE = "기본제공";
+
   /* 메뉴 바로가기 */
   const menus = [
     { label: "맞춤 요금제 추천", path: "/products/recommend" },
@@ -43,10 +48,12 @@ export default function Home() {
   const isDay = me?.mobilePlan.isDay;
 
   // 제공 데이터량
-  const isDataInfinite = me?.mobilePlan.dataAmount.includes("무제한");
-  const totalData = isDataInfinite ? 0 : Number(me?.mobilePlan.dataAmount.replace("GB", ""));
+  const dataAmount = me?.mobilePlan?.dataAmount ?? "";
+  const isDataInfinite = dataAmount.includes(UNLIMITED_SERVICE);
+  const totalData = isDataInfinite ? 0 : Number(dataAmount.replace("GB", ""));
+
   const usedData = me?.mobilePlan.usageDetails.dataGb ?? 0;
-  const remaining = isDataInfinite ? 0 : parseFloat((totalData - usedData).toFixed(2));
+  const remaining = isDataInfinite ? 0 : Math.max(0, parseFloat((totalData - usedData).toFixed(2)));
   const chartData = isDataInfinite
     ? [{ name: "Remaining", value: 1, isHighlight: true }]
     : [
@@ -58,13 +65,13 @@ export default function Home() {
   const callUsed = me?.mobilePlan.usageDetails.voiceMin ?? 0;
   const callMax = Number(me?.mobilePlan.benefitVoiceCall.match(/\d+/));
   const isCallInfi =
-    me?.mobilePlan.benefitVoiceCall.includes("무제한") ||
-    me?.mobilePlan.benefitVoiceCall.includes("부가");
+    me?.mobilePlan.benefitVoiceCall.includes(UNLIMITED_SERVICE) ||
+    me?.mobilePlan.benefitVoiceCall.includes(ADD_SERVICE);
 
   // 제공문자량
   const smsUsed = me?.mobilePlan.usageDetails.smsCnt ?? 0;
   const smsMax = Number(me?.mobilePlan.benefitSms.match(/\d+/));
-  const isSmsInfi = me?.mobilePlan.benefitSms.includes("기본제공");
+  const isSmsInfi = me?.mobilePlan.benefitSms.includes(PLANE_SERVICE);
 
   const safePercent = (value: number, max: number) =>
     max > 0 ? Math.min(100, Math.max(0, (value / max) * 100)) : 0;

@@ -45,7 +45,7 @@ export default function FAQPage() {
         <div className="absolute -top-20 -right-20 h-55 w-55 rounded-full border border-white/20" />
         <X
           onClick={() => router.push("/my")}
-          className="text-neutral-0 absolute top-12 right-8 h-8 w-8"
+          className="text-neutral-0 absolute top-12 right-8 h-8 w-8 cursor-pointer hover:bg-neutral-300"
         />
       </div>
 

@@ -107,7 +107,7 @@ export default function MyInfoPage() {
         <span className="text-xs text-neutral-500">내 정보를 확인하는 곳입니다.</span>
         <X
           onClick={() => router.back()}
-          className="text-neutral-0 absolute top-7 right-7 h-8 w-8"
+          className="text-neutral-0 absolute top-7 right-7 h-8 w-8 cursor-pointer hover:text-neutral-300"
         />
       </header>
 

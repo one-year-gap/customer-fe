@@ -7,55 +7,55 @@ import { X } from "lucide-react";
 
 import { useCustomerProfile } from "@/lib/tanstack/query/profile/useCustomerProfile";
 
-function InfoRow({ label, value }: { label: string; value: ReactNode }) {
+function InfoRow({
+  label,
+  value,
+  multiline = false,
+}: {
+  label: string;
+  value: ReactNode;
+  multiline?: boolean;
+}) {
+  const displayValue = value ?? "-";
+
   return (
     <div className="text-md grid w-full grid-cols-4 items-center gap-3 border-b border-neutral-300 px-3 py-2 font-medium">
       <div className="text-primary-500 col-span-1">{label}</div>
       <div className="col-span-3 overflow-hidden text-neutral-900">
-        <span className="block w-full truncate" title={String(value)}>
-          {value ?? "-"}
+        <span
+          className={
+            multiline ? "block w-full break-words whitespace-normal" : "block w-full truncate"
+          }
+          title={typeof displayValue === "string" ? displayValue : undefined}>
+          {displayValue}
         </span>
       </div>
     </div>
   );
 }
 
+type SubscriptionMap = {
+  MOBILE_PLAN: string;
+  TABLET_WATCH: string;
+  INTERNET: string;
+  IPTV: string;
+  ADDON: string[];
+};
+
+const formatPhoneNumber = (phone?: string) => {
+  if (!phone) {
+    return "-";
+  }
+
+  return phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+};
+
+const formatDate = (date?: string | null) => (date ? date.replaceAll("-", ".") : "-");
+
 export default function MyInfoPage() {
   const router = useRouter();
 
   const { data: profile, isLoading, isError } = useCustomerProfile();
-
-  const formatPhoneNumber = (phone: string) => {
-    return phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
-  };
-
-  const formatDate = (date?: string | null) => (date ? date.replaceAll("-", ".") : "-");
-
-  const subscriptionMap = {
-    MOBILE_PLAN: "-",
-    TABLET_WATCH: "-",
-    INTERNET: "-",
-    IPTV: "-",
-    ADDON: "-",
-  };
-
-  profile?.subscriptions.forEach((s) => {
-    if (s.productType === "MOBILE_PLAN") {
-      subscriptionMap.MOBILE_PLAN = s.productName;
-    }
-    if (s.productType === "TABLET_WATCH") {
-      subscriptionMap.TABLET_WATCH = s.productName;
-    }
-    if (s.productType === "INTERNET") {
-      subscriptionMap.INTERNET = s.productName;
-    }
-    if (s.productType === "IPTV") {
-      subscriptionMap.IPTV = s.productName;
-    }
-    if (s.productType === "ADDON") {
-      subscriptionMap.ADDON = s.productName;
-    }
-  });
 
   if (isLoading) {
     return <div className="p-6">로딩중...</div>;
@@ -64,6 +64,41 @@ export default function MyInfoPage() {
   if (isError || !profile) {
     return <div className="text-danger-500 p-6">회원 정보 불러오기 실패</div>;
   }
+
+  const subscriptionMap: SubscriptionMap = {
+    MOBILE_PLAN: "-",
+    TABLET_WATCH: "-",
+    INTERNET: "-",
+    IPTV: "-",
+    ADDON: [],
+  };
+
+  profile.subscriptions.forEach((subscription) => {
+    if (subscription.productType === "ADDON") {
+      subscriptionMap.ADDON.push(subscription.productName);
+      return;
+    }
+
+    if (subscription.productType in subscriptionMap) {
+      subscriptionMap[subscription.productType as Exclude<keyof SubscriptionMap, "ADDON">] =
+        subscription.productName;
+    }
+  });
+
+  const addonContent =
+    subscriptionMap.ADDON.length > 0 ? (
+      <div className="flex flex-wrap gap-2 py-1">
+        {subscriptionMap.ADDON.map((addon) => (
+          <span
+            key={addon}
+            className="bg-primary-50 text-primary-600 inline-flex rounded-full px-3 py-1 text-sm font-semibold">
+            {addon}
+          </span>
+        ))}
+      </div>
+    ) : (
+      "-"
+    );
 
   return (
     <div className="relative flex flex-col gap-4">
@@ -83,7 +118,7 @@ export default function MyInfoPage() {
         <InfoRow label="이름" value={profile.name} />
         <InfoRow label="이메일" value={profile.email} />
         <InfoRow label="전화번호" value={formatPhoneNumber(profile.phone)} />
-        <InfoRow label="주소" value={profile.address} />
+        <InfoRow label="주소" value={profile.address} multiline />
         <InfoRow label="생년월일" value={formatDate(profile.birthDate)} />
         <InfoRow
           label="약정여부"
@@ -107,7 +142,7 @@ export default function MyInfoPage() {
         <InfoRow label="태블릿/스마트워치" value={subscriptionMap.TABLET_WATCH} />
         <InfoRow label="인터넷" value={subscriptionMap.INTERNET} />
         <InfoRow label="IPTV" value={subscriptionMap.IPTV} />
-        <InfoRow label="부가서비스" value={subscriptionMap.ADDON} />
+        <InfoRow label="부가서비스" value={addonContent} multiline />
       </section>
     </div>
   );

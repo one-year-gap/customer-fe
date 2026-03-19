@@ -9,32 +9,53 @@ import { ChevronLeft, Gift, Wifi } from "lucide-react";
 import { toast } from "sonner";
 
 import hole from "@/assets/images/HoleUniv.png";
-import { useApplyCoupon } from "@/lib/tanstack/query/coupons/useApplyCoupon";
+import { ConfirmModal } from "@/components/domain/coupons/CouponModal";
+import { useApplyCoupon } from "@/lib/tanstack/mutation/useApplyCoupon";
 import { useCoupon } from "@/lib/tanstack/query/coupons/useCoupon";
 import type { Coupon } from "@/models/coupons/coupon";
 
 export default function Coupon() {
   const router = useRouter();
-  const [activeCouponId, setActiveCouponId] = useState<number | null>(null);
+  // const [activeCouponId, setActiveCouponId] = useState<number | null>(null);
+  const [selectedCouponId, setSelectedCouponId] = useState<number | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data: coupons, isLoading, isError } = useCoupon();
   const { mutate: applyCoupon, isPending } = useApplyCoupon();
 
   const mappedCoupons =
-    coupons
-      ?.filter((c) => c.usable)
-      .map((c) => ({
-        id: c.memberCouponId,
-        type: c.categoryLabel,
-        title: c.title,
-        desc: c.subTitle,
-        value: c.subTitle,
-        unit: "",
-        date: c.expiredDate,
-        code: c.memberCouponId,
-        icon: c.categoryLabel === "요금 할인" ? Gift : Wifi,
-        is_used: !c.usable,
-      })) ?? [];
+    coupons?.map((c) => ({
+      id: c.memberCouponId,
+      type: c.categoryLabel,
+      title: c.title,
+      desc: c.subTitle,
+      value: c.subTitle,
+      unit: "",
+      date: c.expiredDate,
+      code: c.memberCouponId,
+      icon: c.categoryLabel === "요금 할인" ? Gift : Wifi,
+      is_used: !c.usable,
+    })) ?? [];
+
+  const handleApplyCoupon = () => {
+    if (!selectedCouponId) return;
+
+    applyCoupon(
+      {
+        memberCouponId: selectedCouponId,
+        used_at: new Date().toISOString(),
+      },
+      {
+        onSuccess: () => {
+          toast.success("쿠폰을 사용하였습니다.");
+          setIsModalOpen(false);
+          setSelectedCouponId(null);
+        },
+      },
+    );
+  };
+
+  const selectedCoupon = mappedCoupons.find((c) => c.id === selectedCouponId);
 
   if (isLoading)
     return (
@@ -48,20 +69,18 @@ export default function Coupon() {
   return (
     <div className="flex h-full min-h-screen flex-col items-center">
       <div className="bg-neutral-0 relative w-full overflow-hidden">
-        <ChevronLeft size={24} className="mt-4 cursor-pointer" onClick={() => router.back()} />
-        <header className="font-display2 text-primary-500 px-6 pt-2">
-          <h2 className="text-primary-500 mb-6 text-lg">내 쿠폰</h2>
+        {/* 헤더 */}
+        <header className="font-display2 text-primary-500 p-4">
+          <div className="mb-6 flex items-center justify-start gap-2">
+            <ChevronLeft size={24} className="cursor-pointer" onClick={() => router.back()} />
+            <h2 className="text-primary-500 text-lg">내 쿠폰</h2>
+          </div>
           <div className="relative flex items-end justify-between">
             <div>
               <p className="mb-1 text-xs">보유중인 쿠폰을 확인하세요</p>
               <h1 className="text-lg">우주에서 온 특별한 혜택</h1>
-              <button
-                type="button"
-                className="bg-primary-500 text-neutral-0 mt-4 rounded-full px-4 py-1 font-sans text-xs">
-                전체
-              </button>
             </div>
-            <div className="absolute -top-12 -right-4">
+            <div className="absolute -top-16 -right-2">
               <div className="relative flex h-32 w-32 items-center justify-center">
                 <Image className="z-10" src={hole} alt="holeMan image" width={100} height={100} />
               </div>
@@ -70,7 +89,7 @@ export default function Coupon() {
           <div className="my-4 h-px w-full bg-neutral-300" />
         </header>
 
-        {/* Coupon List */}
+        {/* 쿠폰함 */}
         <main className="space-y-5 px-5 py-2 text-neutral-500">
           {mappedCoupons.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-neutral-400">
@@ -79,7 +98,7 @@ export default function Coupon() {
             </div>
           ) : (
             mappedCoupons.map((coupon) => {
-              const isActive = activeCouponId === coupon.id || coupon.is_used;
+              const isActive = coupon.is_used;
               const Icon = coupon.icon;
 
               return (
@@ -113,23 +132,12 @@ export default function Coupon() {
                     disabled={coupon.is_used || isPending}
                     onClick={() => {
                       if (coupon.is_used) return;
-
-                      applyCoupon(
-                        {
-                          memberCouponId: coupon.id,
-                          used_at: new Date().toISOString(),
-                        },
-                        {
-                          onSuccess: (data) => {
-                            toast.success(data.data.appliedBenefitSummary);
-                            setActiveCouponId(coupon.id);
-                          },
-                        },
-                      );
+                      setSelectedCouponId(coupon.id);
+                      setIsModalOpen(true);
                     }}
                     className={`text-md w-full rounded-3xl py-2 transition-all ${
                       isActive
-                        ? "bg-secondary-500 border-secondary-500 text-neutral-0 border-2 shadow-lg"
+                        ? "text-neutral-0 border-2 border-neutral-500 bg-neutral-300 shadow-lg"
                         : "border-secondary-500 text-secondary-500 bg-neutral-0 border-2"
                     }`}>
                     {isActive ? "사용완료" : "사용하기"}
@@ -140,6 +148,19 @@ export default function Coupon() {
           )}
         </main>
       </div>
+      <ConfirmModal
+        open={isModalOpen}
+        couponType={`${selectedCoupon?.title}`}
+        description="사용 후에는 되돌릴 수 없습니다."
+        confirmText="확인"
+        cancelText="취소"
+        isLoading={isPending}
+        onConfirm={handleApplyCoupon}
+        onCancel={() => {
+          setIsModalOpen(false);
+          setSelectedCouponId(null);
+        }}
+      />
     </div>
   );
 }

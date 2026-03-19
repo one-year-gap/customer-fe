@@ -229,14 +229,16 @@ export default function My() {
                       router.push(menu.path);
                     }
                   }}
-                  className="flex w-full items-center justify-between p-4">
-                  <div className="flex items-center gap-4">
-                    <div className="text-secondary-500 bg-secondary-100 ml-2 flex h-8 w-8 items-center justify-center rounded-lg">
-                      <Icon size={20} />
+                  className="flex w-full px-2 py-1">
+                  <div className="hover:bg-secondary-50 flex w-full cursor-pointer items-center justify-between rounded-sm px-4 py-3 transition-colors">
+                    <div className="flex items-center gap-4">
+                      <div className="text-secondary-500 bg-secondary-100 ml-2 flex h-8 w-8 items-center justify-center rounded-lg">
+                        <Icon size={20} />
+                      </div>
+                      <span className="font-medium">{menu.title}</span>
                     </div>
-                    <span className="font-medium">{menu.title}</span>
+                    <ChevronRight size={20} className="text-neutral-300" />
                   </div>
-                  <ChevronRight size={20} className="text-neutral-300" />
                 </button>
               );
             })}

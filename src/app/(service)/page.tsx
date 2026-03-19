@@ -86,11 +86,13 @@ export default function Home() {
             <Image src={logo} alt="LG U+NIVERSE 로고" width={95} height={95} className="h-9 w-9" />
 
             <div className="pt-6 text-xl">
-              <span className="text-lg">
+              <div className="text-lg">
                 <span className="pr-2">{characterType.name}</span>
-                <span className="pr-1">{me.name}</span>
-                <span className="text-md text-neutral-400">님</span>
-              </span>
+                <div>
+                  <span className="pr-1">{me.name}</span>
+                  <span className="text-md text-neutral-400">님</span>
+                </div>
+              </div>
             </div>
 
             <div className="mt-2 flex gap-2 pb-3 text-sm text-neutral-400">
@@ -115,7 +117,7 @@ export default function Home() {
               onClick={() => router.push(menu.path)}
               className={cn(
                 "bg-neutral-0 rounded-full border border-neutral-300 px-4 py-1 text-sm font-medium whitespace-nowrap",
-                "active:bg-primary-500 active:text-neutral-0 active:border-primary-500",
+                "hover:bg-primary-500 hover:text-neutral-0 hover:border-primary-500 cursor-pointer",
               )}>
               {menu.label}
             </button>
@@ -219,7 +221,7 @@ export default function Home() {
         <div className="mt-8 px-5">
           <div
             onClick={() => router.push("/coupons")}
-            className="bg-secondary-50 flex items-center justify-between gap-2 rounded-lg p-6 shadow-sm">
+            className="bg-secondary-50 flex cursor-pointer items-center justify-between gap-2 rounded-lg p-6 shadow-sm">
             <div className="flex flex-col gap-1 text-sm font-medium">
               <p className="text-neutral-900">놓치고 있는 쿠폰이 있을지도 몰라요.</p>
               <h3 className="text-secondary-500 text-lg font-bold">나만을 위한 쿠폰 확인!</h3>
@@ -246,7 +248,7 @@ export default function Home() {
             onClick={() => {
               router.push("/products/recommend");
             }}
-            className="bg-secondary-50 flex items-center justify-between rounded-lg p-6 shadow-sm">
+            className="bg-secondary-50 flex cursor-pointer items-center justify-between rounded-lg p-6 shadow-sm">
             <div className="flex flex-col gap-1 font-medium">
               <h3 className="text-md">{me.name} 님에게 맞는 상품 추천!</h3>
               <p className="mb-2 text-xs text-neutral-500">사용패턴을 분석해서 추천해드려요!</p>

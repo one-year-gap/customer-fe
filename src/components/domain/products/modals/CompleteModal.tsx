@@ -2,12 +2,15 @@
 
 import { CheckCircle2 } from "lucide-react";
 
+import { useLogger } from "@/hooks/useLogger";
+
 interface ChangeCompleteModalProps {
   open: boolean;
   onClose: () => void;
 }
 
 export default function ChangeCompleteModal({ open, onClose }: ChangeCompleteModalProps) {
+  const { trackClick } = useLogger();
   if (!open) return null;
 
   return (
@@ -25,7 +28,12 @@ export default function ChangeCompleteModal({ open, onClose }: ChangeCompleteMod
         </p>
 
         <button
-          onClick={onClose}
+          onClick={() => {
+            trackClick("click_change_success", {
+              is_success: true,
+            });
+            onClose();
+          }}
           className="bg-secondary-500 mt-6 w-full rounded-xl py-2.5 text-sm font-semibold text-white shadow-md transition hover:scale-[1.02] hover:shadow-lg active:scale-[0.98]">
           확인
         </button>

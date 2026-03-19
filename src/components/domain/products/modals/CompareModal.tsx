@@ -4,6 +4,8 @@ import { useState } from "react";
 
 import { ArrowRight, ArrowUpDown, ArrowUpRight, X } from "lucide-react";
 
+import { LogProvider } from "@/context/LogContext";
+import { useLogger } from "@/hooks/useLogger";
 import { useChangePlan } from "@/lib/tanstack/mutation/useChangePlan";
 import { usePlanCompare } from "@/lib/tanstack/query/usePlanCompare";
 
@@ -22,6 +24,7 @@ export default function CompareModal({ open, targetPlanId, onClose }: CompareMod
 
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [completeOpen, setCompleteOpen] = useState(false);
+  const { trackClick } = useLogger();
 
   if (!open) return null;
 
@@ -61,7 +64,7 @@ export default function CompareModal({ open, targetPlanId, onClose }: CompareMod
   };
 
   return (
-    <>
+    <LogProvider value={{ from_plan_id: current?.productId, to_plan_id: target?.productId }}>
       <div
         className="fixed inset-0 z-60 flex items-end justify-center bg-black/40"
         onClick={onClose}>
@@ -116,12 +119,20 @@ export default function CompareModal({ open, targetPlanId, onClose }: CompareMod
             </div>
 
             <div className="mt-8">
-              <button
-                onClick={() => setConfirmOpen(true)}
+              <CompareTrigger onTrigger={() => setConfirmOpen(true)} />
+              {/* <button
+                onClick={() => {
+                  trackClick("click_change", {
+                    from_plan_id: current?.productId,
+                    to_plan_id: target?.productId,
+                    is_success: false,
+                  });
+                  setConfirmOpen(true);
+                }}
                 className="bg-secondary-500 text-neutral-0 hover:bg-secondary-700 flex w-full items-center justify-center gap-2 rounded-3xl py-4 text-sm font-semibold shadow-md">
                 <ArrowRight size={18} />
                 요금제 바꾸기
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
@@ -140,7 +151,23 @@ export default function CompareModal({ open, targetPlanId, onClose }: CompareMod
           onClose();
         }}
       />
-    </>
+    </LogProvider>
+  );
+}
+function CompareTrigger({ onTrigger }: { onTrigger: () => void }) {
+  const { trackClick } = useLogger();
+  return (
+    <button
+      onClick={() => {
+        trackClick("click_change", {
+          is_success: false,
+        });
+        onTrigger();
+      }}
+      className="bg-secondary-500 text-neutral-0 hover:bg-secondary-700 flex w-full items-center justify-center gap-2 rounded-3xl py-4 text-sm font-semibold shadow-md">
+      <ArrowRight size={18} />
+      요금제 바꾸기
+    </button>
   );
 }
 

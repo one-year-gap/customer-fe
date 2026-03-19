@@ -36,7 +36,7 @@ function InfoRow({
 
 type SubscriptionMap = {
   MOBILE_PLAN: string;
-  TABLET_WATCH: string;
+  TAB_WATCH_PLAN: string;
   INTERNET: string;
   IPTV: string;
   ADDON: string[];
@@ -67,7 +67,7 @@ export default function MyInfoPage() {
 
   const subscriptionMap: SubscriptionMap = {
     MOBILE_PLAN: "-",
-    TABLET_WATCH: "-",
+    TAB_WATCH_PLAN: "-",
     INTERNET: "-",
     IPTV: "-",
     ADDON: [],
@@ -139,7 +139,7 @@ export default function MyInfoPage() {
       <section className="flex flex-col px-6">
         <div className="border-b border-neutral-500 p-2 text-lg font-semibold">가입 요금제</div>
         <InfoRow label="모바일" value={subscriptionMap.MOBILE_PLAN} />
-        <InfoRow label="태블릿/스마트워치" value={subscriptionMap.TABLET_WATCH} />
+        <InfoRow label="태블릿/스마트워치" value={subscriptionMap.TAB_WATCH_PLAN} />
         <InfoRow label="인터넷" value={subscriptionMap.INTERNET} />
         <InfoRow label="IPTV" value={subscriptionMap.IPTV} />
         <InfoRow label="부가서비스" value={addonContent} multiline />

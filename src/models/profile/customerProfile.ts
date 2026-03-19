@@ -1,3 +1,5 @@
+import type { ProductType } from "@/models/plan";
+
 export interface ApiResponse<T> {
   status: string;
   data: T;
@@ -27,7 +29,7 @@ export interface CustomerContract {
 export interface CustomerSubscription {
   subscriptionId: number;
   productName: string;
-  productType: string;
+  productType: ProductType;
 }
 
 export interface CustomerMobilePlan {

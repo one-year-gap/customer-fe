@@ -23,10 +23,6 @@ const executeRefresh = async (): Promise<string> => {
         { withCredentials: true },
       );
       const newAccessToken = response.data.data.accessToken;
-<<<<<<< feat/HSC-354
-
-=======
->>>>>>> dev
       if (newAccessToken) {
         useAuthStore.getState().setAccessToken(newAccessToken);
         return newAccessToken;

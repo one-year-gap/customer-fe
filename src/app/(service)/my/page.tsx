@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { PuffLoader } from "react-spinners";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -44,7 +45,12 @@ export default function My() {
   } = useRecentProducts();
   const { mutate: logoutMutate } = useLogout();
 
-  if (meLoading || recentProductLoading) return <div>로딩중...</div>;
+  if (meLoading || recentProductLoading)
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <PuffLoader color="#132c5e" />
+      </div>
+    );
   if (meError || recentProductError) return <div>에러</div>;
 
   /* 지원 메뉴 */

@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { PuffLoader } from "react-spinners";
 
 import { CharacterBarChart } from "@/components/domain/characters/CharacterBarChart";
 import { CharacterImage } from "@/components/domain/characters/CharacterImage";
@@ -13,7 +14,12 @@ export default function CharacterPage() {
 
   const { data, isLoading } = useCharacterType();
 
-  if (isLoading) return <div>캐릭터 배정중...</div>;
+  if (isLoading)
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <PuffLoader color="#132c5e" />
+      </div>
+    );
 
   if (!data) {
     return <div>에러</div>;

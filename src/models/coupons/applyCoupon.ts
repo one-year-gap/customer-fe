@@ -1,6 +1,6 @@
 export interface ApplyCouponRequest {
   memberCouponId: number;
-  used_at: string;
+  used_at?: string;
 }
 
 export interface ApplyCouponResponse {

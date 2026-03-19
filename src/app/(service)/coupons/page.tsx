@@ -5,30 +5,35 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { ChevronLeft, Gift, Wifi } from "lucide-react";
+import { toast } from "sonner";
 
 import hole from "@/assets/images/HoleUniv.png";
+import { useApplyCoupon } from "@/lib/tanstack/query/coupons/useApplyCoupon";
 import { useCoupon } from "@/lib/tanstack/query/coupons/useCoupon";
 import type { Coupon } from "@/models/coupons/coupon";
 
 export default function Coupon() {
   const router = useRouter();
-  const [activeCouponId, setActiveCouponId] = useState<string | null>(null);
+  const [activeCouponId, setActiveCouponId] = useState<number | null>(null);
 
   const { data: coupons, isLoading, isError } = useCoupon();
+  const { mutate: applyCoupon, isPending } = useApplyCoupon();
 
   const mappedCoupons =
-    coupons?.map((c) => ({
-      id: c.coupon_id,
-      type: c.type === "DISCOUNT" ? "요금 할인" : "데이터",
-      title: c.name,
-      desc: c.type === "DISCOUNT" ? "요금 할인 쿠폰" : "데이터 제공 쿠폰",
-      value: c.type === "DISCOUNT" ? "할인" : "데이터",
-      unit: "",
-      date: "-",
-      code: c.coupon_id,
-      icon: c.type === "DISCOUNT" ? Gift : Wifi,
-      is_used: c.is_used,
-    })) ?? [];
+    coupons
+      ?.filter((c) => c.usable)
+      .map((c) => ({
+        id: c.memberCouponId,
+        type: c.categoryLabel,
+        title: c.title,
+        desc: c.subTitle,
+        value: c.subTitle,
+        unit: "",
+        date: c.expiredDate,
+        code: c.memberCouponId,
+        icon: c.categoryLabel === "요금 할인" ? Gift : Wifi,
+        is_used: !c.usable,
+      })) ?? [];
 
   if (isLoading) return <div className="p-6">로딩중...</div>;
 
@@ -64,11 +69,11 @@ export default function Coupon() {
           {mappedCoupons.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-neutral-400">
               <Gift className="mb-3 h-8 w-8 opacity-50" />
-              <p className="text-sm">보유한 쿠폰함이 없습니다.</p>
+              <p className="text-sm">쿠폰함이 비어있습니다.</p>
             </div>
           ) : (
             mappedCoupons.map((coupon) => {
-              const isActive = activeCouponId === coupon.id;
+              const isActive = activeCouponId === coupon.id || coupon.is_used;
               const Icon = coupon.icon;
 
               return (
@@ -99,10 +104,26 @@ export default function Coupon() {
 
                   <button
                     type="button"
-                    onClick={() => setActiveCouponId(coupon.id)}
+                    disabled={coupon.is_used || isPending}
+                    onClick={() => {
+                      if (coupon.is_used) return;
+
+                      applyCoupon(
+                        {
+                          memberCouponId: coupon.id,
+                          used_at: new Date().toISOString(),
+                        },
+                        {
+                          onSuccess: (data) => {
+                            toast.success(data.data.appliedBenefitSummary);
+                            setActiveCouponId(coupon.id);
+                          },
+                        },
+                      );
+                    }}
                     className={`text-md w-full rounded-3xl py-2 transition-all ${
                       isActive
-                        ? "bg-secondary-500 border-secondary-500 text-neutral-0 border-2 shadow-lg" // 클릭 시
+                        ? "bg-secondary-500 border-secondary-500 text-neutral-0 border-2 shadow-lg"
                         : "border-secondary-500 text-secondary-500 bg-neutral-0 border-2"
                     }`}>
                     {isActive ? "사용완료" : "사용하기"}

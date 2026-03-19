@@ -43,13 +43,16 @@ export default function Home() {
   const isDay = me?.mobilePlan.isDay;
 
   // 제공 데이터량
-  const totalData = Number(me?.mobilePlan.dataAmount.replace("GB", ""));
+  const isDataInfinite = me?.mobilePlan.dataAmount.includes("무제한");
+  const totalData = isDataInfinite ? 0 : Number(me?.mobilePlan.dataAmount.replace("GB", ""));
   const usedData = me?.mobilePlan.usageDetails.dataGb ?? 0;
-  const remaining = parseFloat((totalData - usedData).toFixed(2));
-  const chartData = [
-    { name: "Remaining", value: remaining, isHighlight: true },
-    { name: "Used", value: usedData, isHighlight: false },
-  ];
+  const remaining = isDataInfinite ? 0 : parseFloat((totalData - usedData).toFixed(2));
+  const chartData = isDataInfinite
+    ? [{ name: "Remaining", value: 1, isHighlight: true }]
+    : [
+        { name: "Remaining", value: remaining, isHighlight: true },
+        { name: "Used", value: usedData, isHighlight: false },
+      ];
 
   // 제공통화량
   const callUsed = me?.mobilePlan.usageDetails.voiceMin ?? 0;
@@ -155,13 +158,24 @@ export default function Home() {
 
               {/* 도넛 차트 중앙 텍스트 */}
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <div className="flex items-baseline gap-1 text-neutral-900">
-                  <span className="text-md font-bold">{remaining}GB</span>
-                  <span className="text-xs font-medium text-neutral-500">남음</span>
-                </div>
-                <div className="mt-0.5 text-xs text-neutral-500">
-                  {!!isDay ? "매일" : "총"} {totalData}GB
-                </div>
+                {isDataInfinite ? (
+                  <>
+                    <div className="flex items-baseline gap-1 text-neutral-900">
+                      <span className="text-sm font-bold">데이터</span>
+                    </div>
+                    <div className="text-md mt-0.5 font-bold">무제한</div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-baseline gap-1 text-neutral-900">
+                      <span className="text-md font-bold">{remaining}GB</span>
+                      <span className="text-xs font-medium text-neutral-500">남음</span>
+                    </div>
+                    <div className="mt-0.5 text-xs text-neutral-500">
+                      {!!isDay ? "매일" : "총"} {totalData}GB
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 

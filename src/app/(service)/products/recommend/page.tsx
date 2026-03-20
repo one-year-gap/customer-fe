@@ -13,6 +13,8 @@ import type { ProductType } from "@/models/log";
 
 type ModalType = "none" | "detail" | "compare";
 
+const formatPrice = (price: number) => price.toLocaleString("ko-KR");
+
 export default function RecommendPage() {
   const memberId = 1;
   const profileText = "사용자 프로필 텍스트";
@@ -86,13 +88,11 @@ interface RecommendCardProps {
 function RecommendCard({
   planId,
   name,
-  price,
+
   salePrice,
   reason,
   onOpenDetail,
 }: RecommendCardProps) {
-  const savings = price - salePrice;
-
   return (
     <div className="border-primary-200 bg-background rounded-2xl border-2 p-5 shadow-sm">
       <span className="bg-primary-500 text-neutral-0 rounded-full px-3 py-1 text-xs font-semibold">
@@ -102,10 +102,9 @@ function RecommendCard({
       <div className="mt-2 flex items-center justify-between">
         <div className="text-base font-bold text-neutral-900">{name}</div>
 
-        <p className="text-secondary-500 font-bold">
-          {savings.toLocaleString()}
-          <span className="ml-1 text-xs text-neutral-500">원 절약</span>
-        </p>
+        <div className="flex flex-col items-end">
+          <span className="text-secondary-500 text-base font-bold">{formatPrice(salePrice)}원</span>
+        </div>
       </div>
 
       <div className="mt-3 flex justify-end">

@@ -20,7 +20,12 @@ import { cn } from "@/lib/utils";
 export default function Home() {
   const router = useRouter();
 
-  const { data: me, isLoading: meLoading, isError: meError } = useCustomerProfile();
+  const {
+    data: me,
+    isLoading: meLoading,
+    isError: meError,
+    refetch: refetchProfile,
+  } = useCustomerProfile();
   const {
     data: character,
     isLoading: characterLoading,
@@ -136,7 +141,7 @@ export default function Home() {
         <h2 className="text-md mb-4 font-semibold">나의 데이터 / 통화</h2>
 
         {hasProfileError ? (
-          <HomeProfileErrorCard onRetry={() => router.refresh()} />
+          <HomeProfileErrorCard onRetry={() => refetchProfile()} />
         ) : (
           <div className="bg-neutral-0 rounded-lg p-4 shadow-sm">
             <div className="text-md mb-3 flex items-center justify-between font-medium">

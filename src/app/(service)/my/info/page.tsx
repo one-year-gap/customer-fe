@@ -61,7 +61,7 @@ export default function MyInfoPage() {
     return <div className="p-6">로딩중...</div>;
   }
 
-  if (!isError || !profile) {
+  if (isError || !profile) {
     return (
       <div className="relative flex flex-col gap-4">
         <header className="bg-primary-500 font-display2 flex flex-col gap-2 px-6 py-4">

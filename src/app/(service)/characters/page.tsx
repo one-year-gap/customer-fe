@@ -17,7 +17,7 @@ export default function CharacterPage() {
   const router = useRouter();
   const [selectedSubject, setSelectedSubject] = useState<ChartSubject | null>(null);
 
-  const { data, isLoading } = useCharacterType();
+  const { data, isLoading, isError, refetch } = useCharacterType();
 
   if (isLoading)
     return (
@@ -41,7 +41,7 @@ export default function CharacterPage() {
           <p className="text-sm text-neutral-500">잠시 후 다시 시도해주세요.</p>
           <button
             type="button"
-            onClick={() => router.refresh()}
+            onClick={() => refetch()}
             className="bg-primary-500 text-neutral-0 hover:bg-primary-900 cursor-pointer rounded-full px-4 py-2 text-sm font-medium">
             다시 시도
           </button>

@@ -17,7 +17,15 @@ const formatPrice = (price?: number) => (price ? price.toLocaleString("ko-KR") :
 
 export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
   const { trackClick } = useLogger();
+
   const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null);
+
+  // ✅ 페이지네이션 state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [inputPage, setInputPage] = useState(1);
+
+  const pageSize = 10;
+  const GROUP_SIZE = 5;
 
   const { data, isLoading, isError } = usePlans(category);
 
@@ -30,12 +38,28 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
     return <div>등록된 요금제가 없습니다.</div>;
   }
 
+  // ✅ pagination 계산
+  const totalPages = Math.ceil(plans.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const paginatedPlans = plans.slice(startIndex, startIndex + pageSize);
+
+  // ✅ 그룹 계산
+  const currentGroup = Math.ceil(currentPage / GROUP_SIZE);
+  const startPage = (currentGroup - 1) * GROUP_SIZE + 1;
+  const endPage = Math.min(startPage + GROUP_SIZE - 1, totalPages);
+
+  const changePage = (page: number) => {
+    setCurrentPage(page);
+    setInputPage(page);
+    setSelectedPlanId(null); // UX 개선
+  };
+
   return (
     <div className="space-y-4">
-      {plans.map((plan) => {
+      {/* 리스트 */}
+      {paginatedPlans.map((plan) => {
         const isSelected = selectedPlanId === plan.productId;
         const content = plan.content as any;
-
         const brandBenefits = content?.benefitBrands?.split("|") ?? [];
 
         return (
@@ -135,7 +159,7 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
                   });
                   onOpenDetail(plan.productId);
                 }}
-                className="text-secondary-500 hover:text-secondary-700 flex cursor-pointer items-center gap-1 text-xs font-bold">
+                className="text-secondary-500 hover:text-secondary-700 flex items-center gap-1 text-xs font-bold">
                 상세보기
                 <ChevronRight size={16} />
               </button>
@@ -143,6 +167,78 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
           </div>
         );
       })}
+
+      {/* ✅ 페이지네이션 */}
+      <div className="mt-10 flex flex-col items-center gap-6">
+        {/* 이전 / 다음 */}
+        <div className="flex items-center gap-6 text-neutral-400">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => changePage(currentPage - 1)}
+            className="disabled:opacity-30">
+            &lt; 이전
+          </button>
+
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => changePage(currentPage + 1)}
+            className="disabled:opacity-30">
+            다음 &gt;
+          </button>
+        </div>
+
+        {/* 숫자 */}
+        <div className="flex items-center gap-4">
+          {startPage > 1 && (
+            <>
+              <button onClick={() => changePage(1)}>1</button>
+              <span>...</span>
+            </>
+          )}
+
+          {Array.from({ length: endPage - startPage + 1 }).map((_, i) => {
+            const page = startPage + i;
+            return (
+              <button
+                key={page}
+                onClick={() => changePage(page)}
+                className={`h-10 w-10 rounded-lg ${
+                  page === currentPage ? "bg-secondary-500 text-white" : "text-neutral-600"
+                }`}>
+                {page}
+              </button>
+            );
+          })}
+
+          {endPage < totalPages && (
+            <>
+              <span>...</span>
+              <button onClick={() => changePage(totalPages)}>{totalPages}</button>
+            </>
+          )}
+        </div>
+
+        {/* 직접 이동 */}
+        <div className="flex items-center gap-3">
+          <input
+            type="number"
+            value={inputPage}
+            onChange={(e) => setInputPage(Number(e.target.value))}
+            className="h-12 w-16 rounded-lg border text-center"
+          />
+          <span>/ {totalPages}</span>
+
+          <button
+            onClick={() => {
+              if (inputPage >= 1 && inputPage <= totalPages) {
+                changePage(inputPage);
+              }
+            }}
+            className="border-secondary-500 text-secondary-500 h-12 rounded-lg border px-4">
+            이동
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -151,15 +247,10 @@ function ProductsListSkeleton() {
   return (
     <div className="animate-pulse space-y-4">
       {[1, 2, 3].map((key) => (
-        <div key={key} className="bg-neutral-0 relative rounded-2xl border border-neutral-300 p-5">
-          <div className="flex items-start justify-between">
+        <div key={key} className="bg-neutral-0 rounded-2xl border border-neutral-300 p-5">
+          <div className="flex justify-between">
             <div className="h-5 w-32 rounded bg-neutral-200" />
             <div className="h-5 w-24 rounded bg-neutral-200" />
-          </div>
-
-          <div className="mt-6 grid grid-cols-2 gap-6"></div>
-          <div className="mt-3 flex justify-end">
-            <div className="h-4 w-20 rounded bg-neutral-200" />
           </div>
         </div>
       ))}

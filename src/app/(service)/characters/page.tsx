@@ -1,7 +1,13 @@
 "use client";
-import { useState } from "react";
-import { PuffLoader } from "react-spinners";
 
+import { useEffect, useState } from "react";
+import { PuffLoader } from "react-spinners";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+import { toast } from "sonner";
+
+import failImage from "@/assets/images/notfound.png";
 import { CharacterBarChart } from "@/components/domain/characters/CharacterBarChart";
 import { CharacterImage } from "@/components/domain/characters/CharacterImage";
 import { CharacterModal } from "@/components/domain/characters/CharacterModal";
@@ -10,9 +16,16 @@ import { useCharacterType } from "@/lib/tanstack/query/characters/useCharacterTy
 import type { ChartSubject } from "@/models/characters/characterTypes";
 
 export default function CharacterPage() {
+  const router = useRouter();
   const [selectedSubject, setSelectedSubject] = useState<ChartSubject | null>(null);
 
-  const { data, isLoading } = useCharacterType();
+  const { data, isLoading, isError } = useCharacterType();
+
+  useEffect(() => {
+    if (isError) {
+      toast.error("캐릭터 정보를 불러오지 못했습니다.");
+    }
+  }, [isError]);
 
   if (isLoading)
     return (
@@ -22,7 +35,27 @@ export default function CharacterPage() {
     );
 
   if (!data) {
-    return <div>에러</div>;
+    return (
+      <div className="flex h-[80vh] flex-col gap-4 p-4">
+        <div className="font-display2 flex flex-col gap-3 pb-4">
+          <span className="text-primary-500 text-lg">나의 고객 유형</span>
+          <span className="text-xs text-neutral-500">MBTI처럼 알아보는 나의 통신 스타일</span>
+        </div>
+
+        <div className="bg-neutral-0 flex flex-1 flex-col items-center justify-center gap-4 rounded-2xl p-6 text-center">
+          <Image src={failImage} alt={"notFound"} width={1024} height={1536} />
+
+          <p className="text-hit-500 text-md font-medium">캐릭터 정보를 불러오지 못했습니다.</p>
+          <p className="text-sm text-neutral-500">잠시 후 다시 시도해주세요.</p>
+          <button
+            type="button"
+            onClick={() => router.refresh()}
+            className="bg-primary-500 text-neutral-0 hover:bg-primary-900 cursor-pointer rounded-full px-4 py-2 text-sm font-medium">
+            다시 시도
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (

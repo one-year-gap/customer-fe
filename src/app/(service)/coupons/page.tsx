@@ -12,11 +12,9 @@ import hole from "@/assets/images/HoleUniv.png";
 import { ConfirmModal } from "@/components/domain/coupons/CouponModal";
 import { useApplyCoupon } from "@/lib/tanstack/mutation/useApplyCoupon";
 import { useCoupon } from "@/lib/tanstack/query/coupons/useCoupon";
-import type { Coupon } from "@/models/coupons/coupon";
 
 export default function Coupon() {
   const router = useRouter();
-  // const [activeCouponId, setActiveCouponId] = useState<number | null>(null);
   const [selectedCouponId, setSelectedCouponId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -51,6 +49,9 @@ export default function Coupon() {
           setIsModalOpen(false);
           setSelectedCouponId(null);
         },
+        onError: () => {
+          toast.error("쿠폰 사용에 실패했습니다. 다시 시도해주세요.");
+        },
       },
     );
   };
@@ -69,7 +70,6 @@ export default function Coupon() {
   return (
     <div className="flex h-full min-h-screen flex-col items-center">
       <div className="bg-neutral-0 relative w-full overflow-hidden">
-        {/* 헤더 */}
         <header className="font-display2 text-primary-500 p-4">
           <div className="mb-6 flex items-center justify-start gap-2">
             <ChevronLeft size={24} className="cursor-pointer" onClick={() => router.back()} />
@@ -77,7 +77,7 @@ export default function Coupon() {
           </div>
           <div className="relative flex items-end justify-between">
             <div>
-              <p className="mb-1 text-xs">보유중인 쿠폰을 확인하세요</p>
+              <p className="mb-1 text-xs">보유중인 쿠폰을 확인해보세요</p>
               <h1 className="text-lg">우주에서 온 특별한 혜택</h1>
             </div>
             <div className="absolute -top-16 -right-2">
@@ -89,7 +89,6 @@ export default function Coupon() {
           <div className="my-4 h-px w-full bg-neutral-300" />
         </header>
 
-        {/* 쿠폰함 */}
         <main className="space-y-5 px-5 py-2 text-neutral-500">
           {mappedCoupons.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-neutral-400">
@@ -116,8 +115,6 @@ export default function Coupon() {
                         <p className="mt-0.5 text-xs">{coupon.desc}</p>
                         <div className="mt-3 flex items-center space-x-2 text-xs">
                           <span>{coupon.date}</span>
-                          <span>|</span>
-                          <span>{coupon.code}</span>
                         </div>
                       </div>
                     </div>
@@ -138,7 +135,7 @@ export default function Coupon() {
                     className={`text-md w-full rounded-3xl py-2 transition-all ${
                       isActive
                         ? "text-neutral-0 border-2 border-neutral-500 bg-neutral-300 shadow-lg"
-                        : "border-secondary-500 text-secondary-500 bg-neutral-0 border-2"
+                        : "border-secondary-500 text-secondary-500 bg-neutral-0 hover:bg-secondary-500 hover:text-neutral-0 cursor-pointer border-2"
                     }`}>
                     {isActive ? "사용완료" : "사용하기"}
                   </button>

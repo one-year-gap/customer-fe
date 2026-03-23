@@ -14,11 +14,11 @@ import {
   Headset,
   Info,
   LogOut,
-  Search,
   Signal,
   Smartphone,
   Ticket,
   Tv,
+  Watch,
   Wifi,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -58,22 +58,19 @@ export default function My() {
         <PuffLoader color="#132c5e" />
       </div>
     );
-  if (meError || recentProductError) return <div>에러</div>;
 
-  /* 지원 메뉴 */
   const supportMenus = [
     { title: "내 가입 정보", icon: BookUser, path: "/my/info" },
     { title: "쿠폰함", icon: Ticket, path: "/coupons" },
     { title: "고객 센터", icon: Headset, path: "/faq" },
-    { title: "약관 및 정책", icon: FileText, path: "/policy" },
+    { title: "요금 및 정책", icon: FileText, path: "/policy" },
     { title: "로그아웃", icon: LogOut, path: "/logout" },
   ];
 
-  /* 회원 기본 정보 */
   const membershipChip = (membership: string | undefined) => {
     if (membership === "GOLD") {
       return {
-        text: "우수",
+        text: "골드",
         style: "bg-secondary-300 text-neutral-0",
       };
     }
@@ -90,7 +87,7 @@ export default function My() {
       };
     }
     return {
-      text: membership || "우수",
+      text: membership || "골드",
       style: "bg-secondary-300 text-neutral-0",
     };
   };
@@ -100,8 +97,7 @@ export default function My() {
     return phone?.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
   };
 
-  /* 최근에 본 상품 */
-  const recentItems = recentProduct?.data?.items ?? [];
+  const recentItems = recentProductError ? [] : (recentProduct?.data?.items ?? []);
 
   const latestByProductId = recentItems.reduce((acc, item) => {
     const prev = acc.get(item.productId);
@@ -142,7 +138,6 @@ export default function My() {
 
   return (
     <div className="bg-neutral-0 flex min-h-full flex-col">
-      {/* 헤더 섹션 */}
       <section className="bg-primary-500 flex flex-col gap-2 rounded-b-[40px] p-4">
         <div className="flex justify-between">
           <div className="flex-1">
@@ -156,21 +151,26 @@ export default function My() {
 
         <div className="text-neutral-0 mx-auto flex flex-col items-center justify-center gap-2 text-center font-medium">
           <div className="flex items-center justify-center gap-2">
-            <h2 className="text-lg">{me?.name}</h2>
-            <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${style}`}>
-              {text}
-            </span>
+            <h2 className="text-lg">{me?.name ?? "고객"}</h2>
+            {!meError && (
+              <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${style}`}>
+                {text}
+              </span>
+            )}
           </div>
-          <p className="text-md text-neutral-300">{formatPhoneNumber(me?.phone)}</p>
+          {meError ? (
+            <p className="text-sm text-red-200">프로필 정보를 불러오지 못했어요.</p>
+          ) : (
+            <p className="text-md text-neutral-300">{formatPhoneNumber(me?.phone)}</p>
+          )}
         </div>
       </section>
 
       <div className="flex flex-col gap-6 px-5 py-8">
-        {/* 최근에 본 상품 */}
         <section className="flex flex-col gap-4">
           <div className="flex items-center gap-2">
             <Clock size={20} />
-            <h3 className="text-md font-semibold">최근에 본 상품</h3>
+            <h3 className="text-md font-semibold">최근 본 상품</h3>
           </div>
 
           <div className="bg-neutral-0 space-y-5 rounded-2xl border border-neutral-300 p-5 shadow-sm">
@@ -185,7 +185,7 @@ export default function My() {
               </div>
             ) : (
               uniqueRecentProducts.map((item) => {
-                const Icon = productTypeIcon[item.productType] ?? Search;
+                const Icon = productTypeIcon[item.productType] ?? Watch;
 
                 return (
                   <div
@@ -212,7 +212,6 @@ export default function My() {
           </div>
         </section>
 
-        {/* 지원 메뉴 섹션 */}
         <section className="flex flex-col gap-4">
           <div className="flex items-center gap-2">
             <Info size={20} />
@@ -227,7 +226,7 @@ export default function My() {
                   type="button"
                   key={menu.title}
                   onClick={() => {
-                    if (menu.title === "약관 및 정책") {
+                    if (menu.title === "요금 및 정책") {
                       trackClick("click_penalty", { page_url: "/my" });
                     }
                     if (menu.title === "로그아웃") {

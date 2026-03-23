@@ -20,7 +20,6 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
 
   const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null);
 
-  // ✅ 페이지네이션 state
   const [currentPage, setCurrentPage] = useState(1);
   const [inputPage, setInputPage] = useState(1);
 
@@ -38,12 +37,10 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
     return <div>등록된 요금제가 없습니다.</div>;
   }
 
-  // ✅ pagination 계산
   const totalPages = Math.ceil(plans.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const paginatedPlans = plans.slice(startIndex, startIndex + pageSize);
 
-  // ✅ 그룹 계산
   const currentGroup = Math.ceil(currentPage / GROUP_SIZE);
   const startPage = (currentGroup - 1) * GROUP_SIZE + 1;
   const endPage = Math.min(startPage + GROUP_SIZE - 1, totalPages);
@@ -56,7 +53,6 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
 
   return (
     <div className="space-y-4">
-      {/* 리스트 */}
       {paginatedPlans.map((plan) => {
         const isSelected = selectedPlanId === plan.productId;
         const content = plan.content as any;
@@ -168,9 +164,7 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
         );
       })}
 
-      {/* ✅ 페이지네이션 */}
       <div className="mt-10 flex flex-col items-center gap-6">
-        {/* 이전 / 다음 */}
         <div className="flex items-center gap-6 text-neutral-400">
           <button
             disabled={currentPage === 1}
@@ -187,7 +181,6 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
           </button>
         </div>
 
-        {/* 숫자 */}
         <div className="flex items-center gap-4">
           {startPage > 1 && (
             <>
@@ -218,7 +211,6 @@ export function ProductsList({ category, onOpenDetail }: ProductsListProps) {
           )}
         </div>
 
-        {/* 직접 이동 */}
         <div className="flex items-center gap-3">
           <input
             type="number"

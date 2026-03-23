@@ -4,7 +4,7 @@ const config = {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
-      /* Fonts */
+      /* 글씨체 */
       fontFamily: {
         // 프리텐다드
         sans: ["var(--font-pretendard)"],
@@ -14,7 +14,7 @@ const config = {
         display2: ["var(--font-mulmaru)"],
       },
 
-      /* Font sizes (UNIVERSE spec)
+      /* 글씨 크기 (UNIVERSE spec)
        * - size + line-height까지 함께 고정 (가독성/일관성 목적)
        * - text 크기 속성은 xs, sm, md, lg, xl, 2xl로 통일
        */
@@ -25,6 +25,18 @@ const config = {
         lg: ["20px", { lineHeight: "28px" }],
         xl: ["24px", { lineHeight: "32px" }],
         "2xl": ["32px", { lineHeight: "40px" }],
+      },
+
+      /* 애니메이션 */
+      keyframes: {
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-15px)" },
+        },
+      },
+
+      animation: {
+        float: "float 3s ease-in-out infinite",
       },
 
       /**

@@ -62,7 +62,22 @@ export default function MyInfoPage() {
   }
 
   if (isError || !profile) {
-    return <div className="text-danger-500 p-6">회원 정보 불러오기 실패</div>;
+    return (
+      <div className="relative flex flex-col gap-4">
+        <header className="bg-primary-500 font-display2 flex flex-col gap-2 px-6 py-4">
+          <span className="text-neutral-0 text-lg">회원 정보</span>
+          <span className="text-xs text-neutral-500">내 정보를 확인하는 곳입니다.</span>
+          <X
+            onClick={() => router.back()}
+            className="text-neutral-0 absolute top-7 right-7 h-8 w-8 cursor-pointer hover:text-neutral-300"
+          />
+        </header>
+
+        <section className="px-6 py-2">
+          <p className="text-sm font-medium text-red-500">데이터를 불러오는데 실패했습니다.</p>
+        </section>
+      </div>
+    );
   }
 
   const subscriptionMap: SubscriptionMap = {

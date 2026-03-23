@@ -90,7 +90,7 @@ export default function Home() {
 
   return (
     <div className="bg-neutral-0 flex min-h-full flex-col">
-      <section className="font-display2 bg-primary-500 text-neutral-0 pb- relative rounded-b-[30px] px-6 pt-4 pb-1">
+      <section className="font-display2 bg-primary-500 text-neutral-0 relative rounded-b-[30px] px-6 pt-4 pb-1">
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
             <Image src={logo} alt="LG U+NIVERSE 로고" width={95} height={95} className="h-9 w-9" />

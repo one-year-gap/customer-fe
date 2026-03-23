@@ -1,10 +1,9 @@
 "use client";
 
-import { type ReactNode, useEffect } from "react";
+import { type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 
 import { X } from "lucide-react";
-import { toast } from "sonner";
 
 import { useCustomerProfile } from "@/lib/tanstack/query/profile/useCustomerProfile";
 
@@ -57,12 +56,6 @@ export default function MyInfoPage() {
   const router = useRouter();
 
   const { data: profile, isLoading, isError } = useCustomerProfile();
-
-  useEffect(() => {
-    if (isError) {
-      toast.error("데이터를 불러오는데 실패했습니다.");
-    }
-  }, [isError]);
 
   if (isLoading) {
     return <div className="p-6">로딩중...</div>;

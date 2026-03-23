@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PuffLoader } from "react-spinners";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
-import { toast } from "sonner";
 
 import failImage from "@/assets/images/notfound.png";
 import { CharacterBarChart } from "@/components/domain/characters/CharacterBarChart";
@@ -19,13 +17,7 @@ export default function CharacterPage() {
   const router = useRouter();
   const [selectedSubject, setSelectedSubject] = useState<ChartSubject | null>(null);
 
-  const { data, isLoading, isError } = useCharacterType();
-
-  useEffect(() => {
-    if (isError) {
-      toast.error("캐릭터 정보를 불러오지 못했습니다.");
-    }
-  }, [isError]);
+  const { data, isLoading } = useCharacterType();
 
   if (isLoading)
     return (

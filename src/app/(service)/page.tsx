@@ -1,12 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { ChevronRight } from "lucide-react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
-import { toast } from "sonner";
 
 import hole3 from "@/assets/images/HoleFlag.png";
 import hole from "@/assets/images/HoleStar.png";
@@ -28,12 +26,6 @@ export default function Home() {
     isLoading: characterLoading,
     isError: characterError,
   } = useCharacterType();
-
-  useEffect(() => {
-    if (meError) {
-      toast.error("프로필 정보를 불러오지 못했습니다.");
-    }
-  }, [meError]);
 
   if (meLoading || characterLoading) return <HomeSkeleton />;
 

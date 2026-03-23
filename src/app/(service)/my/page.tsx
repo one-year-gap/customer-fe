@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PuffLoader } from "react-spinners";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -45,12 +45,6 @@ export default function My() {
     isError: recentProductError,
   } = useRecentProducts();
   const { mutate: logoutMutate } = useLogout();
-
-  useEffect(() => {
-    if (meError) {
-      toast.error("프로필 정보를 불러오지 못했습니다.");
-    }
-  }, [meError]);
 
   if (meLoading || recentProductLoading)
     return (

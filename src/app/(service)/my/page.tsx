@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PuffLoader } from "react-spinners";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -21,6 +21,7 @@ import {
   Tv,
   Wifi,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import hole from "@/assets/images/HoleMan.png";
 import logo from "@/assets/images/Logo.png";
@@ -44,6 +45,12 @@ export default function My() {
     isError: recentProductError,
   } = useRecentProducts();
   const { mutate: logoutMutate } = useLogout();
+
+  useEffect(() => {
+    if (meError) {
+      toast.error("프로필 정보를 불러오지 못했습니다.");
+    }
+  }, [meError]);
 
   if (meLoading || recentProductLoading)
     return (
@@ -252,7 +259,11 @@ export default function My() {
         onConfirm={() => {
           logoutMutate(undefined, {
             onSuccess: () => {
+              toast.success("로그아웃되었습니다.");
               router.replace("/login");
+            },
+            onError: () => {
+              toast.error("로그아웃에 실패했습니다. 다시 시도해주세요");
             },
           });
         }}

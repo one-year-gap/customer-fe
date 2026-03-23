@@ -72,7 +72,13 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    const isAuthOrRefresh =
+      originalRequest.url?.includes("/auth/login") ||
+      originalRequest.url?.includes("/signup") ||
+      originalRequest.url?.includes("/auth/refresh");
+
+    // 로그인, 회원가입, 리프레시 도중 발생한 401은 만료가 아니라 인증 실패이므로 Refresh를 시도하지 않음
+    if (error.response?.status === 401 && !isAuthOrRefresh && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
